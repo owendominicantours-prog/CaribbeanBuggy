@@ -53,7 +53,7 @@ export const products: BuggyProduct[] = [
       'La excursion mas popular de Punta Cana para compartir adrenalina y cambiar de conductor si lo desean.',
     longDescription:
       'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos. Incluye transporte desde zonas principales, guia, parada cultural, cenote y Playa Macao.',
-    regular: 75,
+    regular: 95,
     promo: 75,
     capacityLabel: 'Piloto + copiloto',
     capacityNumber: 2,
@@ -73,7 +73,7 @@ export const products: BuggyProduct[] = [
       'Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao.',
     longDescription:
       'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, seguridad, recogida y paradas principales.',
-    regular: 120,
+    regular: 180,
     promo: 140,
     capacityLabel: 'Hasta 4 personas',
     capacityNumber: 4,

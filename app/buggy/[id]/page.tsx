@@ -219,6 +219,11 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <a href="/#precios">Ver precios</a>
           </div>
         </div>
+        <div className="wrap footer-credit">
+          <a href="https://cynador.com" target="_blank" rel="noreferrer">
+            Desarrollada por Cynador - Advertising, Marketing Online & Design - Diseño y Desarrollo Web
+          </a>
+        </div>
       </footer>
     </main>
   );

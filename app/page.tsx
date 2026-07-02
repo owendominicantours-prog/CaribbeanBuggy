@@ -58,7 +58,7 @@ const products = [
     hook: 'Perfecto para parejas y amigos.',
     description:
       'La excursion mas popular de Punta Cana. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos el lado salvaje del Caribe.',
-    regular: 75,
+    regular: 95,
     promo: 75,
     capacity: 'Piloto + copiloto',
     note: 'Precio total por 2 pasajeros',
@@ -72,7 +72,7 @@ const products = [
     hook: 'Diversion para toda la familia.',
     description:
       'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas, seguro y espacioso para disfrutar lodo, cultura dominicana, cenote y Playa Macao en grupo.',
-    regular: 120,
+    regular: 180,
     promo: 140,
     capacity: 'Hasta 4 personas',
     note: 'Precio total por las 4 plazas',
@@ -396,6 +396,11 @@ export default function Home() {
             <a href="#ruta">Cenote privado</a>
             <a href="#ruta">Rancho dominicano</a>
           </div>
+        </div>
+        <div className="wrap footer-credit">
+          <a href="https://cynador.com" target="_blank" rel="noreferrer">
+            Desarrollada por Cynador - Advertising, Marketing Online & Design - Diseño y Desarrollo Web
+          </a>
         </div>
       </footer>
 

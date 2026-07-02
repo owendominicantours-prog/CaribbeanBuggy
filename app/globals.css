@@ -676,6 +676,23 @@ a {
   color: #fff;
 }
 
+.footer-credit {
+  margin-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding-top: 18px;
+}
+
+.footer-credit a {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.54);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.footer-credit a:hover {
+  color: #fff;
+}
+
 .floating-whatsapp {
   position: fixed;
   right: 18px;
