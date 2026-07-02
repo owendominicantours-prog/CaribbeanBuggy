@@ -5,7 +5,10 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://caribbeanbuggy.com'),
   title: 'Buggies en Punta Cana al Mejor Precio | Caribbean Buggy Tours',
   description:
-    'Reserva el tour de buggies mas barato en Punta Cana. Explora Playa Macao, banate en un cenote y descubre el campo dominicano desde 35 USD. Sin intermediarios.',
+    'Reserva tours de buggies en Punta Cana. Explora Playa Macao, banate en un cenote y descubre el campo dominicano desde 40 USD. Sin intermediarios.',
+  verification: {
+    google: 'JLsVcMBEgvZM3eun203eBUPvswVTLFbuGzEj-4l4Puk',
+  },
   keywords: [
     'buggy punta cana',
     'boogie punta cana',
@@ -16,7 +19,7 @@ export const metadata: Metadata = {
     'caribbean buggy',
   ],
   openGraph: {
-    title: 'Caribbean Buggy Tours | Buggy en Punta Cana desde 35 USD',
+    title: 'Caribbean Buggy Tours | Buggy en Punta Cana desde 40 USD',
     description: 'Buggy tour con recogida, cenote, Playa Macao y precio directo de rancho.',
     type: 'website',
     locale: 'es_DO',

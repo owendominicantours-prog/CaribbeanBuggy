@@ -45,7 +45,7 @@ const products = [
     description:
       'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para devorar el lodo, manejar a tu ritmo y vivir la ruta de Macao sin compartir el volante.',
     regular: 55,
-    promo: 35,
+    promo: 40,
     capacity: '1 adulto',
     note: 'Precio por vehiculo',
     image: '/buggy/individual.jpeg',
@@ -59,7 +59,7 @@ const products = [
     description:
       'La excursion mas popular de Punta Cana. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos el lado salvaje del Caribe.',
     regular: 75,
-    promo: 49,
+    promo: 75,
     capacity: 'Piloto + copiloto',
     note: 'Precio total por 2 pasajeros',
     image: '/buggy/doble.jpeg',
@@ -73,7 +73,7 @@ const products = [
     description:
       'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas, seguro y espacioso para disfrutar lodo, cultura dominicana, cenote y Playa Macao en grupo.',
     regular: 120,
-    promo: 79,
+    promo: 140,
     capacity: 'Hasta 4 personas',
     note: 'Precio total por las 4 plazas',
     image: '/buggy/familiar.jpeg',
@@ -225,7 +225,7 @@ export default function Home() {
 
           <aside className="deal-card">
             <span>Desde</span>
-            <strong>US$35</strong>
+            <strong>US$40</strong>
             <p>Buggy individual con transporte incluido.</p>
             <ul>
               <li><CheckCircle2 size={17} /> Recogida en hotel</li>

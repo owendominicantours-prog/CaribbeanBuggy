@@ -34,7 +34,7 @@ export const products: BuggyProduct[] = [
     longDescription:
       'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe y cacao, y disfrutas paradas en cenote y Playa Macao.',
     regular: 55,
-    promo: 35,
+    promo: 40,
     capacityLabel: '1 adulto',
     capacityNumber: 1,
     note: 'Precio por vehiculo',
@@ -54,7 +54,7 @@ export const products: BuggyProduct[] = [
     longDescription:
       'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos. Incluye transporte desde zonas principales, guia, parada cultural, cenote y Playa Macao.',
     regular: 75,
-    promo: 49,
+    promo: 75,
     capacityLabel: 'Piloto + copiloto',
     capacityNumber: 2,
     note: 'Precio total por 2 pasajeros',
@@ -74,7 +74,7 @@ export const products: BuggyProduct[] = [
     longDescription:
       'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, seguridad, recogida y paradas principales.',
     regular: 120,
-    promo: 79,
+    promo: 140,
     capacityLabel: 'Hasta 4 personas',
     capacityNumber: 4,
     note: 'Precio total por las 4 plazas',
