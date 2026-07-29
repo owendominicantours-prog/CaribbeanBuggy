@@ -20,9 +20,20 @@ html {
 
 body {
   margin: 0;
+  overflow-x: clip;
   background: #fff;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
 }
 
 a {
@@ -33,6 +44,14 @@ a {
 .wrap {
   width: min(100% - 48px, 1180px);
   margin: 0 auto;
+}
+
+.wrap > *,
+.hero-grid > *,
+.detail-hero-grid > *,
+.detail-booking-grid > *,
+.detail-route-grid > * {
+  min-width: 0;
 }
 
 .site-header {
@@ -108,6 +127,7 @@ a {
 }
 
 .header-cta {
+  flex-shrink: 0;
   padding: 12px 18px;
   font-size: 14px;
 }
@@ -905,6 +925,7 @@ a {
 
 .booking-widget input,
 .booking-widget select {
+  min-width: 0;
   width: 100%;
   min-height: 45px;
   border: 1px solid var(--line);
@@ -914,6 +935,18 @@ a {
   padding: 0 13px;
   font: inherit;
   font-weight: 750;
+}
+
+.booking-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.booking-contact-grid > div {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
 }
 
 .extras {
@@ -941,11 +974,40 @@ a {
   align-items: center;
   justify-content: center;
   min-height: 50px;
+  border: 0;
   border-radius: 999px;
   background: #25d366;
   color: #fff;
   padding: 0 18px;
   font-weight: 1000;
+}
+
+.booking-submit:hover {
+  background: #1fb958;
+}
+
+.booking-submit:focus-visible,
+.booking-widget input:focus-visible,
+.booking-widget select:focus-visible {
+  outline: 3px solid rgba(239, 125, 34, 0.28);
+  outline-offset: 2px;
+}
+
+.booking-assurance {
+  display: grid;
+  gap: 7px;
+  border-radius: 14px;
+  background: #f2fbf5;
+  padding: 12px;
+  color: #245c37;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.booking-assurance span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .booking-note {
@@ -1029,6 +1091,10 @@ a {
   font-size: 28px;
 }
 
+.detail-floating-cta {
+  display: none;
+}
+
 @media (max-width: 980px) {
   .site-header nav {
     display: none;
@@ -1072,6 +1138,7 @@ a {
 
   .site-header {
     min-height: 68px;
+    gap: 12px;
     padding: 0 16px;
   }
 
@@ -1084,6 +1151,7 @@ a {
   }
 
   .header-cta {
+    white-space: nowrap;
     padding: 10px 13px;
   }
 
@@ -1118,5 +1186,49 @@ a {
 
   .deal-card strong {
     font-size: 58px;
+  }
+
+  .detail-hero {
+    padding: 52px 0 68px;
+  }
+
+  .detail-hero h1 {
+    font-size: 43px;
+    overflow-wrap: anywhere;
+  }
+
+  .detail-hero p {
+    font-size: 16px;
+  }
+
+  .eyebrow {
+    max-width: 100%;
+    line-height: 1.45;
+  }
+
+  .booking-contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-page {
+    padding-bottom: 72px;
+  }
+
+  .detail-floating-cta {
+    position: fixed;
+    right: 14px;
+    bottom: 12px;
+    left: 14px;
+    z-index: 95;
+    display: inline-flex;
+    min-height: 52px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 999px;
+    background: var(--yellow);
+    color: #14110a;
+    font-weight: 1000;
+    box-shadow: 0 18px 42px rgba(37, 24, 5, 0.3);
   }
 }

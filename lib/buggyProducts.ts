@@ -16,7 +16,7 @@ export type BuggyProduct = {
   popular: boolean;
 };
 
-export const siteUrl = 'https://caribbeanbuggy.com';
+export const siteUrl = 'https://www.caribbeanboggie.com';
 export const whatsappBase = 'https://wa.me/18294756298';
 export const proactivitisPhone = '+1-829-475-6298';
 
@@ -26,11 +26,11 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Individual',
     seoTitle: 'Tour en Buggy Individual Punta Cana | Mejor Precio',
     seoDescription:
-      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 35 USD con recogida incluida.',
+      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 40 USD con recogida incluida.',
     subtitle: '1 persona',
     hook: 'Para los amantes de la adrenalina pura.',
     description:
-      'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti.',
+      'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para recorrer el lodo, manejar a tu ritmo y vivir la ruta de Macao sin compartir el volante.',
     longDescription:
       'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe y cacao, y disfrutas paradas en cenote y Playa Macao.',
     regular: 55,
@@ -46,11 +46,11 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Doble',
     seoTitle: 'Excursion en Buggy Doble en Punta Cana | Oferta Especial',
     seoDescription:
-      'Disfruta con tu pareja o amigo del mejor tour en buggy doble en Punta Cana por 49 USD por vehiculo, con hotel pickup incluido.',
+      'Disfruta con tu pareja o amigo un tour en buggy doble en Punta Cana desde 75 USD por vehiculo, con recogida en el hotel incluida.',
     subtitle: '2 personas',
     hook: 'Perfecto para parejas y amigos.',
     description:
-      'La excursion mas popular de Punta Cana para compartir adrenalina y cambiar de conductor si lo desean.',
+      'La excursion mas popular de Punta Cana. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos el lado salvaje del Caribe.',
     longDescription:
       'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos. Incluye transporte desde zonas principales, guia, parada cultural, cenote y Playa Macao.',
     regular: 95,
@@ -66,11 +66,11 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Familiar',
     seoTitle: 'Buggy Familiar en Punta Cana de 4 Plazas | Economico',
     seoDescription:
-      'Reserva buggy familiar de 4 plazas en Punta Cana por 79 USD. Ruta por Macao, cenote, playa y recogida incluida.',
+      'Reserva un buggy familiar de 4 plazas en Punta Cana desde 140 USD por vehiculo. Ruta por Macao, cenote, playa y recogida incluida.',
     subtitle: 'hasta 4 personas',
     hook: 'Diversion para toda la familia.',
     description:
-      'Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao.',
+      'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en grupo.',
     longDescription:
       'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, seguridad, recogida y paradas principales.',
     regular: 180,

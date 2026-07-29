@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, BadgeDollarSign, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
+import { ArrowLeft, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../components/BookingCalculator';
 import { bring, faqs, getProduct, included, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
 
@@ -78,7 +78,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
   };
 
   return (
-    <main>
+    <main className="detail-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
       <header className="site-header">
@@ -115,16 +115,16 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
       <section id="reservar" className="section detail-booking-section">
         <div className="wrap detail-booking-grid">
           <div className="detail-copy">
-            <span className="kicker">Reserva con calculo automatico</span>
-            <h2>Calcula tu total antes de escribir por WhatsApp.</h2>
+            <span className="kicker">Reserva con datos completos</span>
+            <h2>Calcula el total y solicita tu plaza.</h2>
             <p>
-              La logica calcula cuantos vehiculos necesitas segun pasajeros y capacidad. Tambien suma zonas especiales
-              y extras opcionales para que el mensaje llegue completo al equipo de Proactivitis.
+              El sistema calcula los vehiculos necesarios segun el grupo, suma la zona y los extras, y prepara una
+              solicitud completa para que el equipo confirme disponibilidad sin volver a pedirte todos los datos.
             </p>
             <div className="logic-grid">
-              <article><b>1</b><span>Eliges fecha, hotel y zona.</span></article>
-              <article><b>2</b><span>El sistema calcula vehiculos necesarios.</span></article>
-              <article><b>3</b><span>WhatsApp recibe total, extras y datos.</span></article>
+              <article><b>1</b><span>Elige fecha, hotel, zona y cantidad de personas.</span></article>
+              <article><b>2</b><span>Selecciona si prefieres deposito, pago total o confirmar primero.</span></article>
+              <article><b>3</b><span>Recibe confirmacion y un enlace de pago seguro por WhatsApp.</span></article>
             </div>
           </div>
           <BookingCalculator product={product} />
@@ -225,6 +225,10 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           </a>
         </div>
       </footer>
+
+      <a className="detail-floating-cta" href="#reservar">
+        <CalendarCheck2 size={19} /> Reservar desde US${product.promo}
+      </a>
     </main>
   );
 }
