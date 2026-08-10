@@ -23,6 +23,7 @@ import {
   siteUrl,
   whatsappHref,
 } from '../lib/buggyProducts';
+import { hotelBuggyLandings, hotelBuggyUrl } from '../lib/hotelBuggyLandings';
 
 function bookingMessage(option = 'Buggy tour en Punta Cana') {
   return [
@@ -211,6 +212,23 @@ export default function Home() {
                 Ver detalle y reservar
               </a>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section hotel-link-section">
+        <div className="wrap section-head">
+          <span className="kicker">Recogida por hotel</span>
+          <h2>Reserva buggy desde hoteles populares de Punta Cana.</h2>
+          <p>Elige tu hotel y abre una pagina preparada con zona, recogida y reserva directa.</p>
+        </div>
+        <div className="wrap hotel-link-grid">
+          {hotelBuggyLandings.slice(0, 18).map((hotel) => (
+            <a key={hotel.slug} href={hotelBuggyUrl(hotel.slug).replace(siteUrl, '')}>
+              <span>{hotel.zone}</span>
+              <b>{hotel.name}</b>
+              <small>{hotel.driveTime} al rancho aprox.</small>
+            </a>
           ))}
         </div>
       </section>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { products, siteUrl } from '../lib/buggyProducts';
+import { hotelBuggyLandings, hotelBuggyUrl } from '../lib/hotelBuggyLandings';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -16,6 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
+    })),
+    ...hotelBuggyLandings.map((hotel) => ({
+      url: hotelBuggyUrl(hotel.slug),
+      lastModified,
+      changeFrequency: 'weekly' as const,
+      priority: 0.85,
     })),
   ];
 }

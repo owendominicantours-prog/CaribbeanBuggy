@@ -39,9 +39,9 @@ export const products: BuggyProduct[] = [
     subtitle: '1 persona',
     hook: 'Para los amantes de la adrenalina pura.',
     description:
-      'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para recorrer el lodo, manejar a tu ritmo y vivir la ruta de Macao sin compartir el volante.',
+      'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para viajeros solos que quieren conducir durante toda la ruta, ensuciarse en el lodo y vivir Macao sin compartir el volante.',
     longDescription:
-      'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe y cacao, y disfrutas paradas en cenote y Playa Macao.',
+      'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en hoteles principales de Bavaro, Punta Cana, Macao, Cabeza de Toro y zonas cercanas segun disponibilidad.',
     regular: 55,
     promo: 40,
     capacityLabel: '1 adulto',
@@ -59,9 +59,9 @@ export const products: BuggyProduct[] = [
     subtitle: '2 personas',
     hook: 'Perfecto para parejas y amigos.',
     description:
-      'La excursion mas popular de Punta Cana. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos el lado salvaje del Caribe.',
+      'La excursion mas popular de Punta Cana para parejas y amigos. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos caminos de lodo, rancho dominicano, cenote y Playa Macao.',
     longDescription:
-      'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos. Incluye transporte desde zonas principales, guia, parada cultural, cenote y Playa Macao.',
+      'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos sin pagar de mas por persona. Incluye transporte desde zonas principales, guia, parada cultural con cafe y cacao, cenote, Playa Macao y asistencia por WhatsApp antes de la recogida.',
     regular: 95,
     promo: 75,
     capacityLabel: 'Piloto + copiloto',
@@ -79,9 +79,9 @@ export const products: BuggyProduct[] = [
     subtitle: 'hasta 4 personas',
     hook: 'Diversion para toda la familia.',
     description:
-      'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en grupo.',
+      'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en familia o grupo pequeno.',
     longDescription:
-      'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, seguridad, recogida y paradas principales.',
+      'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, casco, instrucciones de seguridad, recogida coordinada, rancho dominicano, cenote y parada en Playa Macao segun la operacion del dia.',
     regular: 180,
     promo: 140,
     capacityLabel: 'Hasta 4 personas',

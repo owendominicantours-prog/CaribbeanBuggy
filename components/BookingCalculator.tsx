@@ -7,6 +7,8 @@ import { calculateBookingTotal, pickupZones, whatsappHref } from '../lib/buggyPr
 
 type BookingCalculatorProps = {
   product: BuggyProduct;
+  defaultHotel?: string;
+  defaultPickupZone?: string;
 };
 
 type PayPalActions = {
@@ -34,11 +36,11 @@ declare global {
   }
 }
 
-export default function BookingCalculator({ product }: BookingCalculatorProps) {
+export default function BookingCalculator({ product, defaultHotel = '', defaultPickupZone }: BookingCalculatorProps) {
   const [date, setDate] = useState('');
   const [passengers, setPassengers] = useState(product.capacityNumber);
-  const [pickupZone, setPickupZone] = useState(pickupZones[0].label);
-  const [hotel, setHotel] = useState('');
+  const [pickupZone, setPickupZone] = useState(defaultPickupZone || pickupZones[0].label);
+  const [hotel, setHotel] = useState(defaultHotel);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -54,6 +56,7 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
   const [bookingReference, setBookingReference] = useState('');
   const [renderToken, setRenderToken] = useState(0);
   const paypalContainerRef = useRef<HTMLDivElement>(null);
+  const bookingReferenceRef = useRef('');
 
   const minDate = new Date().toLocaleDateString('en-CA', {
     timeZone: 'America/Santo_Domingo',
@@ -125,14 +128,21 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
             throw new Error(data.error || 'No se pudo crear la orden de PayPal.');
           }
 
-          if (data.reference) setBookingReference(data.reference);
+          if (data.reference) {
+            bookingReferenceRef.current = data.reference;
+            setBookingReference(data.reference);
+          }
           return data.id;
         },
         onApprove: async (data) => {
           const response = await fetch('/api/paypal/capture-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ orderID: data.orderID }),
+            body: JSON.stringify({
+              orderID: data.orderID,
+              reference: bookingReferenceRef.current || bookingReference,
+              booking: buildPayload(),
+            }),
           });
           const capture = (await response.json()) as { error?: string; status?: string };
 
@@ -143,7 +153,7 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
           window.dataLayer?.push({
             event: 'purchase',
             transaction_id: data.orderID,
-            booking_reference: bookingReference,
+            booking_reference: bookingReferenceRef.current || bookingReference,
             product_id: product.id,
             product_name: product.title,
             value: total,
