@@ -34,7 +34,7 @@ function bookingMessage(option = 'Buggy tour en Punta Cana') {
     'Nombre del cliente:',
     'Idioma:',
     '',
-    'Por favor confirmame disponibilidad, hora de recogida, precio final y detalles para completar la reserva por WhatsApp.',
+    'Por favor confirmame disponibilidad, hora de recogida y detalles de la reserva.',
   ].join('\n');
 }
 
@@ -42,7 +42,7 @@ const highlights: Array<{ title: string; text: string; icon: LucideIcon }> = [
   { title: 'Recogida incluida', text: 'Te buscamos y te dejamos en tu hotel en Bavaro o Punta Cana sin costo extra.', icon: Car },
   { title: 'Ruta autentica', text: 'Off-road real, Playa Macao, parada cultural y bano en cenote privado.', icon: MapPin },
   { title: 'Precio de rancho', text: 'Tarifas directas, claras y sin comisiones de hotel ni intermediarios.', icon: BadgeDollarSign },
-  { title: 'Confirmacion rapida', text: 'Reserva por WhatsApp y recibe instrucciones claras antes del tour.', icon: MessageCircle },
+  { title: 'Pago seguro', text: 'Reserva con PayPal o tarjeta y recibe instrucciones claras antes del tour.', icon: MessageCircle },
 ];
 
 const route: Array<{ title: string; text: string; icon: LucideIcon }> = [
@@ -122,7 +122,7 @@ export default function Home() {
           <a href="#incluye">Incluye</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="header-cta" href={whatsappHref(bookingMessage())}>
+        <a className="header-cta" href="#precios">
           Reservar
         </a>
       </header>
@@ -143,8 +143,8 @@ export default function Home() {
               <a className="primary-btn" href="#precios">
                 Ver precios <ArrowRight size={18} />
               </a>
-              <a className="secondary-btn" href={whatsappHref(bookingMessage())}>
-                WhatsApp
+              <a className="secondary-btn" href="#precios">
+                Reservar ahora
               </a>
             </div>
           </div>
@@ -158,8 +158,8 @@ export default function Home() {
               <li><CheckCircle2 size={17} /> Cenote + Playa Macao</li>
               <li><CheckCircle2 size={17} /> Cafe, cacao y cultura local</li>
             </ul>
-            <a href={whatsappHref(bookingMessage('buggy para hoy'))}>
-              Reservar y confirmar por WhatsApp
+            <a href="#precios">
+              Ver opciones y pagar seguro
             </a>
           </aside>
         </div>
@@ -297,9 +297,9 @@ export default function Home() {
       <section className="final-cta">
         <div className="wrap">
           <h2>Reserva tu buggy directo y evita comisiones.</h2>
-          <p>Pregunta disponibilidad para hoy o para la fecha de tu viaje. Te confirmamos horario, recogida y modalidad por WhatsApp.</p>
-          <a className="primary-btn" href={whatsappHref(bookingMessage())}>
-            Reservar y confirmar ahora <ArrowRight size={18} />
+          <p>Elige fecha, calcula el total y completa el pago seguro con tarjeta o PayPal.</p>
+          <a className="primary-btn" href="#precios">
+            Ver precios y reservar <ArrowRight size={18} />
           </a>
         </div>
       </section>
@@ -312,7 +312,7 @@ export default function Home() {
           </div>
           <div>
             <h3>Reservas</h3>
-            <a href={whatsappHref(bookingMessage())}>WhatsApp Proactivitis</a>
+            <a href={whatsappHref(bookingMessage())}>Ayuda por WhatsApp</a>
             <a href="#precios">Precios</a>
             <a href="#faq">FAQ</a>
           </div>

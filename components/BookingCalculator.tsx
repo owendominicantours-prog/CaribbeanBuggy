@@ -1,22 +1,38 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
-import { CheckCircle2, LockKeyhole, MessageCircle } from 'lucide-react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { CheckCircle2, CreditCard, Loader2, LockKeyhole, MessageCircle } from 'lucide-react';
 import type { BuggyProduct } from '../lib/buggyProducts';
-import { whatsappHref } from '../lib/buggyProducts';
+import { calculateBookingTotal, pickupZones, whatsappHref } from '../lib/buggyProducts';
 
 type BookingCalculatorProps = {
   product: BuggyProduct;
 };
 
-const pickupZones = [
-  { label: 'Bavaro / Punta Cana', fee: 0 },
-  { label: 'Cabeza de Toro', fee: 0 },
-  { label: 'Cap Cana', fee: 10 },
-  { label: 'Uvero Alto', fee: 15 },
-  { label: 'Macao', fee: 0 },
-  { label: 'Otra zona - confirmar por WhatsApp', fee: 0 },
-];
+type PayPalActions = {
+  order: {
+    create: () => Promise<string>;
+    capture?: () => Promise<unknown>;
+  };
+};
+
+type PayPalButtonsOptions = {
+  style?: Record<string, string>;
+  createOrder: () => Promise<string>;
+  onApprove: (data: { orderID?: string }, actions: PayPalActions) => Promise<void>;
+  onError: (error: unknown) => void;
+};
+
+declare global {
+  interface Window {
+    paypal?: {
+      Buttons: (options: PayPalButtonsOptions) => {
+        render: (selector: HTMLElement) => Promise<void>;
+      };
+    };
+    dataLayer?: Array<Record<string, unknown>>;
+  }
+}
 
 export default function BookingCalculator({ product }: BookingCalculatorProps) {
   const [date, setDate] = useState('');
@@ -28,30 +44,154 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
   const [email, setEmail] = useState('');
   const [language, setLanguage] = useState('Espanol');
   const [pickupWindow, setPickupWindow] = useState('Primera salida disponible');
-  const [paymentPreference, setPaymentPreference] = useState('Confirmar disponibilidad primero');
+  const [paymentPreference, setPaymentPreference] = useState('Pagar total ahora');
   const [photos, setPhotos] = useState(false);
   const [privatePickup, setPrivatePickup] = useState(false);
+  const [paypalReady, setPaypalReady] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState<'idle' | 'loading' | 'paid'>('idle');
+  const [paymentError, setPaymentError] = useState('');
+  const [bookingReference, setBookingReference] = useState('');
+  const [renderToken, setRenderToken] = useState(0);
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const minDate = new Date().toLocaleDateString('en-CA', {
     timeZone: 'America/Santo_Domingo',
   });
-  const selectedZone = pickupZones.find((zone) => zone.label === pickupZone) ?? pickupZones[0];
-  const vehicles = Math.max(1, Math.ceil(passengers / product.capacityNumber));
-  const baseTotal = vehicles * product.promo;
-  const zoneFee = selectedZone.fee;
-  const photosFee = photos ? 25 : 0;
-  const privatePickupFee = privatePickup ? 30 : 0;
-  const total = baseTotal + zoneFee + photosFee + privatePickupFee;
+  const pricing = calculateBookingTotal({
+    product,
+    passengers,
+    pickupZone,
+    photos,
+    privatePickup,
+  });
+  const total = pricing.total;
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const reference = `CB-${Date.now().toString(36).slice(-6).toUpperCase()}`;
+  useEffect(() => {
+    const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+    if (!clientId) {
+      setPaymentError('PayPal aun no esta configurado en esta instalacion.');
+      return;
+    }
+
+    if (window.paypal) {
+      setPaypalReady(true);
+      return;
+    }
+
+    const existingScript = document.querySelector<HTMLScriptElement>('script[data-caribbean-paypal]');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => setPaypalReady(true), { once: true });
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&intent=capture&components=buttons&enable-funding=card`;
+    script.async = true;
+    script.dataset.caribbeanPaypal = 'true';
+    script.onload = () => setPaypalReady(true);
+    script.onerror = () => setPaymentError('No pudimos cargar PayPal. Intenta de nuevo o contacta por WhatsApp.');
+    document.body.appendChild(script);
+  }, []);
+
+  useEffect(() => {
+    if (!showPayment || !paypalReady || !paypalContainerRef.current || paymentStatus === 'paid') return;
+
+    paypalContainerRef.current.innerHTML = '';
+    setPaymentError('');
+
+    window.paypal
+      ?.Buttons({
+        style: {
+          layout: 'vertical',
+          color: 'gold',
+          shape: 'rect',
+          label: 'pay',
+        },
+        createOrder: async () => {
+          setPaymentStatus('loading');
+          const response = await fetch('/api/paypal/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(buildPayload()),
+          });
+          const data = (await response.json()) as {
+            id?: string;
+            reference?: string;
+            error?: string;
+          };
+
+          if (!response.ok || !data.id) {
+            throw new Error(data.error || 'No se pudo crear la orden de PayPal.');
+          }
+
+          if (data.reference) setBookingReference(data.reference);
+          return data.id;
+        },
+        onApprove: async (data) => {
+          const response = await fetch('/api/paypal/capture-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ orderID: data.orderID }),
+          });
+          const capture = (await response.json()) as { error?: string; status?: string };
+
+          if (!response.ok) {
+            throw new Error(capture.error || 'No se pudo capturar el pago.');
+          }
+
+          window.dataLayer?.push({
+            event: 'purchase',
+            transaction_id: data.orderID,
+            booking_reference: bookingReference,
+            product_id: product.id,
+            product_name: product.title,
+            value: total,
+            currency: 'USD',
+            passengers,
+          });
+          setPaymentStatus('paid');
+        },
+        onError: (error) => {
+          console.error('paypal_checkout_error', error);
+          setPaymentStatus('idle');
+          setPaymentError('PayPal no pudo completar el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.');
+        },
+      })
+      .render(paypalContainerRef.current)
+      .catch((error) => {
+        console.error('paypal_render_error', error);
+        setPaymentStatus('idle');
+        setPaymentError('No pudimos mostrar el formulario de pago. Intenta de nuevo.');
+      });
+  }, [showPayment, paypalReady, renderToken, paymentStatus]);
+
+  function buildPayload() {
+    return {
+      productId: product.id,
+      date,
+      passengers,
+      pickupZone,
+      hotel: hotel.trim(),
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      language,
+      pickupWindow,
+      paymentPreference,
+      photos,
+      privatePickup,
+    };
+  }
+
+  function bookingMessage(reference = bookingReference || 'Pendiente') {
     const extras =
       [photos ? 'Fotos del tour' : '', privatePickup ? 'Recogida privada' : '']
         .filter(Boolean)
         .join(', ') || 'Sin extras';
-    const message = [
-      `Hola Proactivitis, quiero solicitar ${product.title} con Caribbean Buggy.`,
+
+    return [
+      `Hola Proactivitis, necesito ayuda con ${product.title} en Caribbean Buggy.`,
       `Referencia web: ${reference}`,
       '',
       `Fecha del tour: ${date}`,
@@ -62,43 +202,44 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
       `Hotel o punto de recogida: ${hotel.trim()}`,
       `Zona: ${pickupZone}`,
       `Cantidad de personas: ${passengers}`,
-      `Vehiculos necesarios: ${vehicles}`,
+      `Vehiculos necesarios: ${pricing.vehicles}`,
       `Idioma: ${language}`,
       `Extras: ${extras}`,
       `Preferencia de pago: ${paymentPreference}`,
       `Total estimado web: US$${total}`,
-      '',
-      'Por favor confirma disponibilidad, hora exacta de recogida y el enlace seguro para completar el pago.',
     ].join('\n');
+  }
 
-    const dataLayer = (window as Window & { dataLayer?: Array<Record<string, unknown>> }).dataLayer;
-    dataLayer?.push({
-      event: 'begin_booking',
-      booking_reference: reference,
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setShowPayment(true);
+    setPaymentStatus('idle');
+    setPaymentError('');
+    setRenderToken(Date.now());
+    window.dataLayer?.push({
+      event: 'begin_checkout',
       product_id: product.id,
       product_name: product.title,
       value: total,
       currency: 'USD',
       passengers,
     });
-
-    window.location.href = whatsappHref(message);
   };
 
   return (
     <form className="booking-widget" onSubmit={handleSubmit}>
       <div className="booking-widget-head">
-        <span>Solicitud de reserva</span>
+        <span>Reserva segura</span>
         <strong>US${total}</strong>
         <small>Total calculado para {passengers} persona(s)</small>
       </div>
 
       <div className="booking-breakdown" aria-live="polite">
-        <p><b>{vehicles}</b> vehiculo(s) x US${product.promo}</p>
-        <p>Base: <b>US${baseTotal}</b></p>
-        {zoneFee ? <p>Zona: <b>US${zoneFee}</b></p> : null}
-        {photosFee ? <p>Fotos: <b>US${photosFee}</b></p> : null}
-        {privatePickupFee ? <p>Recogida privada: <b>US${privatePickupFee}</b></p> : null}
+        <p><b>{pricing.vehicles}</b> vehiculo(s) x US${product.promo}</p>
+        <p>Base: <b>US${pricing.baseTotal}</b></p>
+        {pricing.zoneFee ? <p>Zona: <b>US${pricing.zoneFee}</b></p> : null}
+        {pricing.photosFee ? <p>Fotos: <b>US${pricing.photosFee}</b></p> : null}
+        {pricing.privatePickupFee ? <p>Recogida privada: <b>US${pricing.privatePickupFee}</b></p> : null}
       </div>
 
       <label>Fecha del tour</label>
@@ -188,14 +329,14 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
         <option>Frances</option>
       </select>
 
-      <label>Como prefieres completar el pago</label>
+      <label>Forma de pago</label>
       <select
         value={paymentPreference}
         onChange={(event) => setPaymentPreference(event.target.value)}
       >
-        <option>Confirmar disponibilidad primero</option>
-        <option>Pagar un deposito</option>
-        <option>Pagar el total</option>
+        <option>Pagar total ahora</option>
+        <option>Intentar tarjeta primero</option>
+        <option>Necesito ayuda antes de pagar</option>
       </select>
 
       <div className="extras">
@@ -209,15 +350,40 @@ export default function BookingCalculator({ product }: BookingCalculatorProps) {
         </label>
       </div>
 
-      <button className="booking-submit" type="submit">
-        <MessageCircle size={19} /> Enviar solicitud por WhatsApp
+      <button className="booking-submit" type="submit" disabled={paymentStatus === 'loading'}>
+        {paymentStatus === 'loading' ? <Loader2 className="spin" size={19} /> : <CreditCard size={19} />}
+        Pagar seguro con tarjeta o PayPal
       </button>
+
+      {showPayment ? (
+        <div className="paypal-panel">
+          {paymentStatus === 'paid' ? (
+            <div className="payment-success">
+              <CheckCircle2 size={22} />
+              <b>Pago recibido.</b>
+              <span>Te contactaremos para confirmar recogida y hora exacta.</span>
+            </div>
+          ) : (
+            <>
+              <b>Elige tarjeta, PayPal o metodo disponible.</b>
+              <span>PayPal puede mostrar pago directo con tarjeta segun tu pais y navegador.</span>
+              <div ref={paypalContainerRef} className="paypal-buttons" />
+              {!paypalReady && !paymentError ? <p className="booking-note">Cargando pago seguro...</p> : null}
+            </>
+          )}
+          {paymentError ? <p className="payment-error">{paymentError}</p> : null}
+        </div>
+      ) : null}
+
+      <a className="booking-support-link" href={whatsappHref(bookingMessage())}>
+        <MessageCircle size={18} /> Ayuda por WhatsApp
+      </a>
       <div className="booking-assurance">
-        <span><CheckCircle2 size={15} /> Datos completos para confirmar mas rapido</span>
-        <span><LockKeyhole size={15} /> No se cobra ninguna tarjeta en este formulario</span>
+        <span><CheckCircle2 size={15} /> Pago protegido por PayPal</span>
+        <span><LockKeyhole size={15} /> Datos de tarjeta procesados fuera de nuestra web</span>
       </div>
       <p className="booking-note">
-        El equipo confirma disponibilidad, hora de recogida y precio final antes de enviarte un enlace de pago seguro.
+        Despues del pago confirmamos disponibilidad, hora de recogida y detalles operativos por WhatsApp o correo.
       </p>
     </form>
   );

@@ -973,17 +973,95 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
   min-height: 50px;
   border: 0;
   border-radius: 999px;
-  background: #25d366;
+  background: #111827;
   color: #fff;
   padding: 0 18px;
   font-weight: 1000;
 }
 
 .booking-submit:hover {
-  background: #1fb958;
+  background: #0b1220;
+}
+
+.booking-submit:disabled {
+  cursor: progress;
+  opacity: 0.78;
+}
+
+.spin {
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.paypal-panel {
+  display: grid;
+  gap: 10px;
+  border: 1px solid rgba(22, 163, 74, 0.24);
+  border-radius: 18px;
+  background: #f3fff7;
+  padding: 14px;
+}
+
+.paypal-panel b {
+  color: #13210f;
+  font-size: 15px;
+  font-weight: 1000;
+}
+
+.paypal-panel span {
+  color: #53604b;
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.45;
+}
+
+.paypal-buttons {
+  min-height: 52px;
+}
+
+.payment-success {
+  display: grid;
+  gap: 7px;
+  color: #087a35;
+}
+
+.payment-success svg {
+  color: #18a34a;
+}
+
+.payment-error {
+  margin: 0;
+  border: 1px solid rgba(229, 57, 53, 0.24);
+  border-radius: 14px;
+  background: #fff3f3;
+  padding: 11px;
+  color: #b3261e;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.booking-support-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 1px solid rgba(34, 197, 94, 0.32);
+  border-radius: 14px;
+  color: #0b7c3a;
+  background: #f2fbf5;
+  font-weight: 1000;
+  text-decoration: none;
 }
 
 .booking-submit:focus-visible,

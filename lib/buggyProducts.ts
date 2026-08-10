@@ -20,6 +20,15 @@ export const siteUrl = 'https://www.caribbeanboggie.com';
 export const whatsappBase = 'https://wa.me/18294756298';
 export const proactivitisPhone = '+1-829-475-6298';
 
+export const pickupZones = [
+  { label: 'Bavaro / Punta Cana', fee: 0 },
+  { label: 'Cabeza de Toro', fee: 0 },
+  { label: 'Cap Cana', fee: 10 },
+  { label: 'Uvero Alto', fee: 15 },
+  { label: 'Macao', fee: 0 },
+  { label: 'Otra zona - confirmar por WhatsApp', fee: 0 },
+];
+
 export const products: BuggyProduct[] = [
   {
     id: 'buggy-individual',
@@ -120,4 +129,40 @@ export function getProduct(id: string) {
 
 export function whatsappHref(message: string) {
   return `${whatsappBase}?text=${encodeURIComponent(message)}`;
+}
+
+export function calculateBookingTotal({
+  product,
+  passengers,
+  pickupZone,
+  photos,
+  privatePickup,
+}: {
+  product: BuggyProduct;
+  passengers: number;
+  pickupZone: string;
+  photos: boolean;
+  privatePickup: boolean;
+}) {
+  const selectedZone = pickupZones.find((zone) => zone.label === pickupZone) ?? pickupZones[0];
+  const safePassengers = Math.max(1, Math.min(20, Math.floor(passengers || product.capacityNumber)));
+  const vehicles = Math.max(1, Math.ceil(safePassengers / product.capacityNumber));
+  const baseTotal = vehicles * product.promo;
+  const zoneFee = selectedZone.fee;
+  const photosFee = photos ? 25 : 0;
+  const privatePickupFee = privatePickup ? 30 : 0;
+
+  return {
+    passengers: safePassengers,
+    vehicles,
+    baseTotal,
+    zoneFee,
+    photosFee,
+    privatePickupFee,
+    total: baseTotal + zoneFee + photosFee + privatePickupFee,
+  };
+}
+
+export function createBookingReference() {
+  return `CB-${Date.now().toString(36).slice(-6).toUpperCase()}`;
 }
