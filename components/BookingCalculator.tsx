@@ -9,6 +9,7 @@ type BookingCalculatorProps = {
   product: BuggyProduct;
   defaultHotel?: string;
   defaultPickupZone?: string;
+  locale?: 'es' | 'en';
 };
 
 type PayPalActions = {
@@ -36,7 +37,132 @@ declare global {
   }
 }
 
-export default function BookingCalculator({ product, defaultHotel = '', defaultPickupZone }: BookingCalculatorProps) {
+export default function BookingCalculator({ product, defaultHotel = '', defaultPickupZone, locale = 'es' }: BookingCalculatorProps) {
+  const copy = locale === 'en'
+    ? {
+        secure: 'Secure booking',
+        calculated: 'Calculated total for',
+        people: 'traveler(s)',
+        vehicles: 'vehicle(s)',
+        base: 'Base',
+        zone: 'Zone',
+        photos: 'Photos',
+        privatePickup: 'Private pickup',
+        date: 'Tour date',
+        passengers: 'Travelers',
+        hotel: 'Hotel or pickup point',
+        hotelPlaceholder: 'Ex: Lopesan, Riu, Airbnb...',
+        pickupZone: 'Pickup zone',
+        pickupWindow: 'Preferred pickup window',
+        first: 'First available departure',
+        morning: 'Morning',
+        midday: 'Midday',
+        afternoon: 'Afternoon',
+        name: 'Full name',
+        namePlaceholder: 'Customer full name',
+        phone: 'WhatsApp number',
+        email: 'Email address',
+        emailPlaceholder: 'customer@email.com',
+        language: 'Language',
+        spanish: 'Spanish',
+        french: 'French',
+        payment: 'Payment option',
+        payNow: 'Pay in full now',
+        cardFirst: 'Try card first',
+        helpFirst: 'I need help before paying',
+        photosExtra: 'Tour photos +US$25',
+        privateExtra: 'Private pickup +US$30',
+        payButton: 'Pay safely by card or PayPal',
+        paidTitle: 'Payment received.',
+        paidText: 'We will contact you to confirm pickup and exact time.',
+        choosePayment: 'Choose card, PayPal or any available method.',
+        paypalCard: 'PayPal may show direct card payment depending on your country and browser.',
+        loading: 'Loading secure payment...',
+        help: 'WhatsApp support',
+        protected: 'Payment protected by PayPal',
+        external: 'Card details are processed outside our website',
+        note: 'After payment we confirm availability, pickup time and operational details by WhatsApp or email.',
+        notConfigured: 'PayPal is not configured in this installation yet.',
+        loadError: 'We could not load PayPal. Try again or contact us on WhatsApp.',
+        createError: 'We could not create the PayPal order.',
+        captureError: 'We could not capture the payment.',
+        paymentError: 'PayPal could not complete the payment. You can try another card or contact us on WhatsApp.',
+        renderError: 'We could not show the payment form. Try again.',
+        messageIntro: `Hello Proactivitis, I need help with ${product.title} on Caribbean Buggy.`,
+        reference: 'Web reference',
+        tourDate: 'Tour date',
+        preferred: 'Preferred time',
+        customer: 'Customer name',
+        pickup: 'Hotel or pickup point',
+        qty: 'Travelers',
+        needed: 'Vehicles needed',
+        extras: 'Extras',
+        noExtras: 'No extras',
+        paymentPreference: 'Payment preference',
+        estimatedTotal: 'Estimated web total',
+      }
+    : {
+        secure: 'Reserva segura',
+        calculated: 'Total calculado para',
+        people: 'persona(s)',
+        vehicles: 'vehiculo(s)',
+        base: 'Base',
+        zone: 'Zona',
+        photos: 'Fotos',
+        privatePickup: 'Recogida privada',
+        date: 'Fecha del tour',
+        passengers: 'Personas',
+        hotel: 'Hotel o punto de recogida',
+        hotelPlaceholder: 'Ej: Lopesan, Riu, Airbnb...',
+        pickupZone: 'Zona',
+        pickupWindow: 'Turno preferido',
+        first: 'Primera salida disponible',
+        morning: 'Manana',
+        midday: 'Mediodia',
+        afternoon: 'Tarde',
+        name: 'Nombre y apellido',
+        namePlaceholder: 'Nombre completo del cliente',
+        phone: 'Numero de WhatsApp',
+        email: 'Correo electronico',
+        emailPlaceholder: 'cliente@email.com',
+        language: 'Idioma',
+        spanish: 'Espanol',
+        french: 'Frances',
+        payment: 'Forma de pago',
+        payNow: 'Pagar total ahora',
+        cardFirst: 'Intentar tarjeta primero',
+        helpFirst: 'Necesito ayuda antes de pagar',
+        photosExtra: 'Fotos del tour +US$25',
+        privateExtra: 'Recogida privada +US$30',
+        payButton: 'Pagar seguro con tarjeta o PayPal',
+        paidTitle: 'Pago recibido.',
+        paidText: 'Te contactaremos para confirmar recogida y hora exacta.',
+        choosePayment: 'Elige tarjeta, PayPal o metodo disponible.',
+        paypalCard: 'PayPal puede mostrar pago directo con tarjeta segun tu pais y navegador.',
+        loading: 'Cargando pago seguro...',
+        help: 'Ayuda por WhatsApp',
+        protected: 'Pago protegido por PayPal',
+        external: 'Datos de tarjeta procesados fuera de nuestra web',
+        note: 'Despues del pago confirmamos disponibilidad, hora de recogida y detalles operativos por WhatsApp o correo.',
+        notConfigured: 'PayPal aun no esta configurado en esta instalacion.',
+        loadError: 'No pudimos cargar PayPal. Intenta de nuevo o contacta por WhatsApp.',
+        createError: 'No se pudo crear la orden de PayPal.',
+        captureError: 'No se pudo capturar el pago.',
+        paymentError: 'PayPal no pudo completar el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.',
+        renderError: 'No pudimos mostrar el formulario de pago. Intenta de nuevo.',
+        messageIntro: `Hola Proactivitis, necesito ayuda con ${product.title} en Caribbean Buggy.`,
+        reference: 'Referencia web',
+        tourDate: 'Fecha del tour',
+        preferred: 'Turno preferido',
+        customer: 'Nombre del cliente',
+        pickup: 'Hotel o punto de recogida',
+        qty: 'Cantidad de personas',
+        needed: 'Vehiculos necesarios',
+        extras: 'Extras',
+        noExtras: 'Sin extras',
+        paymentPreference: 'Preferencia de pago',
+        estimatedTotal: 'Total estimado web',
+      };
   const [date, setDate] = useState('');
   const [passengers, setPassengers] = useState(product.capacityNumber);
   const [pickupZone, setPickupZone] = useState(defaultPickupZone || pickupZones[0].label);
@@ -44,9 +170,9 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [language, setLanguage] = useState('Espanol');
-  const [pickupWindow, setPickupWindow] = useState('Primera salida disponible');
-  const [paymentPreference, setPaymentPreference] = useState('Pagar total ahora');
+  const [language, setLanguage] = useState(locale === 'en' ? 'English' : copy.spanish);
+  const [pickupWindow, setPickupWindow] = useState(copy.first);
+  const [paymentPreference, setPaymentPreference] = useState(copy.payNow);
   const [photos, setPhotos] = useState(false);
   const [privatePickup, setPrivatePickup] = useState(false);
   const [paypalReady, setPaypalReady] = useState(false);
@@ -73,7 +199,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   useEffect(() => {
     const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
     if (!clientId) {
-      setPaymentError('PayPal aun no esta configurado en esta instalacion.');
+      setPaymentError(copy.notConfigured);
       return;
     }
 
@@ -93,7 +219,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     script.async = true;
     script.dataset.caribbeanPaypal = 'true';
     script.onload = () => setPaypalReady(true);
-    script.onerror = () => setPaymentError('No pudimos cargar PayPal. Intenta de nuevo o contacta por WhatsApp.');
+    script.onerror = () => setPaymentError(copy.loadError);
     document.body.appendChild(script);
   }, []);
 
@@ -125,7 +251,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           };
 
           if (!response.ok || !data.id) {
-            throw new Error(data.error || 'No se pudo crear la orden de PayPal.');
+            throw new Error(data.error || copy.createError);
           }
 
           if (data.reference) {
@@ -147,7 +273,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           const capture = (await response.json()) as { error?: string; status?: string };
 
           if (!response.ok) {
-            throw new Error(capture.error || 'No se pudo capturar el pago.');
+            throw new Error(capture.error || copy.captureError);
           }
 
           window.dataLayer?.push({
@@ -165,14 +291,14 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         onError: (error) => {
           console.error('paypal_checkout_error', error);
           setPaymentStatus('idle');
-          setPaymentError('PayPal no pudo completar el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.');
+          setPaymentError(copy.paymentError);
         },
       })
       .render(paypalContainerRef.current)
       .catch((error) => {
         console.error('paypal_render_error', error);
         setPaymentStatus('idle');
-        setPaymentError('No pudimos mostrar el formulario de pago. Intenta de nuevo.');
+        setPaymentError(copy.renderError);
       });
   }, [showPayment, paypalReady, renderToken, paymentStatus]);
 
@@ -196,27 +322,27 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
 
   function bookingMessage(reference = bookingReference || 'Pendiente') {
     const extras =
-      [photos ? 'Fotos del tour' : '', privatePickup ? 'Recogida privada' : '']
+      [photos ? copy.photos : '', privatePickup ? copy.privatePickup : '']
         .filter(Boolean)
-        .join(', ') || 'Sin extras';
+        .join(', ') || copy.noExtras;
 
     return [
-      `Hola Proactivitis, necesito ayuda con ${product.title} en Caribbean Buggy.`,
-      `Referencia web: ${reference}`,
+      copy.messageIntro,
+      `${copy.reference}: ${reference}`,
       '',
-      `Fecha del tour: ${date}`,
-      `Turno preferido: ${pickupWindow}`,
-      `Nombre del cliente: ${name.trim()}`,
+      `${copy.tourDate}: ${date}`,
+      `${copy.preferred}: ${pickupWindow}`,
+      `${copy.customer}: ${name.trim()}`,
       `WhatsApp: ${phone.trim()}`,
-      `Correo: ${email.trim()}`,
-      `Hotel o punto de recogida: ${hotel.trim()}`,
-      `Zona: ${pickupZone}`,
-      `Cantidad de personas: ${passengers}`,
-      `Vehiculos necesarios: ${pricing.vehicles}`,
-      `Idioma: ${language}`,
-      `Extras: ${extras}`,
-      `Preferencia de pago: ${paymentPreference}`,
-      `Total estimado web: US$${total}`,
+      `Email: ${email.trim()}`,
+      `${copy.pickup}: ${hotel.trim()}`,
+      `${copy.zone}: ${pickupZone}`,
+      `${copy.qty}: ${passengers}`,
+      `${copy.needed}: ${pricing.vehicles}`,
+      `${copy.language}: ${language}`,
+      `${copy.extras}: ${extras}`,
+      `${copy.paymentPreference}: ${paymentPreference}`,
+      `${copy.estimatedTotal}: US$${total}`,
     ].join('\n');
   }
 
@@ -239,20 +365,20 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   return (
     <form className="booking-widget" onSubmit={handleSubmit}>
       <div className="booking-widget-head">
-        <span>Reserva segura</span>
+        <span>{copy.secure}</span>
         <strong>US${total}</strong>
-        <small>Total calculado para {passengers} persona(s)</small>
+        <small>{copy.calculated} {passengers} {copy.people}</small>
       </div>
 
       <div className="booking-breakdown" aria-live="polite">
-        <p><b>{pricing.vehicles}</b> vehiculo(s) x US${product.promo}</p>
-        <p>Base: <b>US${pricing.baseTotal}</b></p>
-        {pricing.zoneFee ? <p>Zona: <b>US${pricing.zoneFee}</b></p> : null}
-        {pricing.photosFee ? <p>Fotos: <b>US${pricing.photosFee}</b></p> : null}
-        {pricing.privatePickupFee ? <p>Recogida privada: <b>US${pricing.privatePickupFee}</b></p> : null}
+        <p><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</p>
+        <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
+        {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
+        {pricing.photosFee ? <p>{copy.photos}: <b>US${pricing.photosFee}</b></p> : null}
+        {pricing.privatePickupFee ? <p>{copy.privatePickup}: <b>US${pricing.privatePickupFee}</b></p> : null}
       </div>
 
-      <label>Fecha del tour</label>
+      <label>{copy.date}</label>
       <input
         type="date"
         min={minDate}
@@ -261,7 +387,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         onChange={(event) => setDate(event.target.value)}
       />
 
-      <label>Personas</label>
+      <label>{copy.passengers}</label>
       <input
         min={1}
         max={20}
@@ -271,15 +397,15 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         onChange={(event) => setPassengers(Math.max(1, Number(event.target.value) || 1))}
       />
 
-      <label>Hotel o punto de recogida</label>
+      <label>{copy.hotel}</label>
       <input
         value={hotel}
         required
         onChange={(event) => setHotel(event.target.value)}
-        placeholder="Ej: Lopesan, Riu, Airbnb..."
+        placeholder={copy.hotelPlaceholder}
       />
 
-      <label>Zona</label>
+      <label>{copy.pickupZone}</label>
       <select value={pickupZone} onChange={(event) => setPickupZone(event.target.value)}>
         {pickupZones.map((zone) => (
           <option key={zone.label} value={zone.label}>
@@ -288,26 +414,26 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         ))}
       </select>
 
-      <label>Turno preferido</label>
+      <label>{copy.pickupWindow}</label>
       <select value={pickupWindow} onChange={(event) => setPickupWindow(event.target.value)}>
-        <option>Primera salida disponible</option>
-        <option>Manana</option>
-        <option>Mediodia</option>
-        <option>Tarde</option>
+        <option>{copy.first}</option>
+        <option>{copy.morning}</option>
+        <option>{copy.midday}</option>
+        <option>{copy.afternoon}</option>
       </select>
 
-      <label>Nombre y apellido</label>
+      <label>{copy.name}</label>
       <input
         value={name}
         required
         autoComplete="name"
         onChange={(event) => setName(event.target.value)}
-        placeholder="Nombre completo del cliente"
+        placeholder={copy.namePlaceholder}
       />
 
       <div className="booking-contact-grid">
         <div>
-          <label htmlFor={`phone-${product.id}`}>Numero de WhatsApp</label>
+          <label htmlFor={`phone-${product.id}`}>{copy.phone}</label>
           <input
             id={`phone-${product.id}`}
             value={phone}
@@ -319,7 +445,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           />
         </div>
         <div>
-          <label htmlFor={`email-${product.id}`}>Correo electronico</label>
+          <label htmlFor={`email-${product.id}`}>{copy.email}</label>
           <input
             id={`email-${product.id}`}
             value={email}
@@ -327,42 +453,42 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             type="email"
             autoComplete="email"
             onChange={(event) => setEmail(event.target.value)}
-            placeholder="cliente@email.com"
+            placeholder={copy.emailPlaceholder}
           />
         </div>
       </div>
 
-      <label>Idioma</label>
+      <label>{copy.language}</label>
       <select value={language} onChange={(event) => setLanguage(event.target.value)}>
-        <option>Espanol</option>
+        <option>{copy.spanish}</option>
         <option>English</option>
-        <option>Frances</option>
+        <option>{copy.french}</option>
       </select>
 
-      <label>Forma de pago</label>
+      <label>{copy.payment}</label>
       <select
         value={paymentPreference}
         onChange={(event) => setPaymentPreference(event.target.value)}
       >
-        <option>Pagar total ahora</option>
-        <option>Intentar tarjeta primero</option>
-        <option>Necesito ayuda antes de pagar</option>
+        <option>{copy.payNow}</option>
+        <option>{copy.cardFirst}</option>
+        <option>{copy.helpFirst}</option>
       </select>
 
       <div className="extras">
         <label>
           <input type="checkbox" checked={photos} onChange={(event) => setPhotos(event.target.checked)} />
-          Fotos del tour +US$25
+          {copy.photosExtra}
         </label>
         <label>
           <input type="checkbox" checked={privatePickup} onChange={(event) => setPrivatePickup(event.target.checked)} />
-          Recogida privada +US$30
+          {copy.privateExtra}
         </label>
       </div>
 
       <button className="booking-submit" type="submit" disabled={paymentStatus === 'loading'}>
         {paymentStatus === 'loading' ? <Loader2 className="spin" size={19} /> : <CreditCard size={19} />}
-        Pagar seguro con tarjeta o PayPal
+        {copy.payButton}
       </button>
 
       {showPayment ? (
@@ -370,15 +496,15 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           {paymentStatus === 'paid' ? (
             <div className="payment-success">
               <CheckCircle2 size={22} />
-              <b>Pago recibido.</b>
-              <span>Te contactaremos para confirmar recogida y hora exacta.</span>
+              <b>{copy.paidTitle}</b>
+              <span>{copy.paidText}</span>
             </div>
           ) : (
             <>
-              <b>Elige tarjeta, PayPal o metodo disponible.</b>
-              <span>PayPal puede mostrar pago directo con tarjeta segun tu pais y navegador.</span>
+              <b>{copy.choosePayment}</b>
+              <span>{copy.paypalCard}</span>
               <div ref={paypalContainerRef} className="paypal-buttons" />
-              {!paypalReady && !paymentError ? <p className="booking-note">Cargando pago seguro...</p> : null}
+              {!paypalReady && !paymentError ? <p className="booking-note">{copy.loading}</p> : null}
             </>
           )}
           {paymentError ? <p className="payment-error">{paymentError}</p> : null}
@@ -386,15 +512,13 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       ) : null}
 
       <a className="booking-support-link" href={whatsappHref(bookingMessage())}>
-        <MessageCircle size={18} /> Ayuda por WhatsApp
+        <MessageCircle size={18} /> {copy.help}
       </a>
       <div className="booking-assurance">
-        <span><CheckCircle2 size={15} /> Pago protegido por PayPal</span>
-        <span><LockKeyhole size={15} /> Datos de tarjeta procesados fuera de nuestra web</span>
+        <span><CheckCircle2 size={15} /> {copy.protected}</span>
+        <span><LockKeyhole size={15} /> {copy.external}</span>
       </div>
-      <p className="booking-note">
-        Despues del pago confirmamos disponibilidad, hora de recogida y detalles operativos por WhatsApp o correo.
-      </p>
+      <p className="booking-note">{copy.note}</p>
     </form>
   );
 }

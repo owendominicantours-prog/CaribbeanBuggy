@@ -85,6 +85,6 @@ export function getHotelBuggyLanding(slug: string) {
   return hotelBuggyLandings.find((hotel) => hotel.slug === slug);
 }
 
-export function hotelBuggyUrl(slug: string) {
-  return `${siteUrl}/buggy/hotel/${slug}`;
+export function hotelBuggyUrl(slug: string, locale: 'es' | 'en' = 'es') {
+  return `${siteUrl}${locale === 'en' ? '/en' : ''}/buggy/hotel/${slug}`;
 }

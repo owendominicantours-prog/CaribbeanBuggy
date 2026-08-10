@@ -1,15 +1,22 @@
 import { notFound } from 'next/navigation';
-import HotelBuggyTourPage from '../../../../components/HotelBuggyTourPage';
-import { faqs, products, siteUrl } from '../../../../lib/buggyProducts';
+import HotelBuggyTourPage from '../../../../../components/HotelBuggyTourPage';
+import { products, siteUrl } from '../../../../../lib/buggyProducts';
 import {
   getHotelBuggyLanding,
   hotelBuggyLandings,
   hotelBuggyUrl,
-} from '../../../../lib/hotelBuggyLandings';
+} from '../../../../../lib/hotelBuggyLandings';
 
 type HotelBuggyPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+const enFaqs = [
+  ['Is pickup available from this hotel?', 'Yes. We coordinate pickup from the hotel lobby or the authorized tour pickup point confirmed by the property.'],
+  ['Is the buggy tour private?', 'The route is shared unless you request a private pickup or private arrangement before booking.'],
+  ['Can I pay by card?', 'Yes. Secure card and PayPal payment are available before final confirmation.'],
+  ['What should I bring?', 'Bring old clothes, swimsuit, towel, sunscreen and optional cash for photos or drinks.'],
+];
 
 export function generateStaticParams() {
   return hotelBuggyLandings.map((hotel) => ({ slug: hotel.slug }));
@@ -20,9 +27,9 @@ export async function generateMetadata({ params }: HotelBuggyPageProps) {
   const hotel = getHotelBuggyLanding(slug);
   if (!hotel) return {};
 
-  const title = `Buggy tour desde ${hotel.name} | Caribbean Buggy`;
-  const description = `Reserva buggy desde ${hotel.name} en Punta Cana. Recogida coordinada en ${hotel.zone}, ruta Macao, cenote, playa y pago seguro.`;
-  const canonical = hotelBuggyUrl(hotel.slug, 'es');
+  const title = `Buggy tour from ${hotel.name} | Caribbean Buggy`;
+  const description = `Book a Punta Cana buggy tour from ${hotel.name}. Coordinated pickup in ${hotel.zone}, Macao off-road route, cenote, beach and secure payment.`;
+  const canonical = hotelBuggyUrl(hotel.slug, 'en');
 
   return {
     title,
@@ -30,9 +37,9 @@ export async function generateMetadata({ params }: HotelBuggyPageProps) {
     alternates: {
       canonical,
       languages: {
-        es: canonical,
-        en: hotelBuggyUrl(hotel.slug, 'en'),
-        'x-default': canonical,
+        en: canonical,
+        es: hotelBuggyUrl(hotel.slug, 'es'),
+        'x-default': hotelBuggyUrl(hotel.slug, 'es'),
       },
     },
     openGraph: {
@@ -44,28 +51,28 @@ export async function generateMetadata({ params }: HotelBuggyPageProps) {
   };
 }
 
-export default async function HotelBuggyPage({ params }: HotelBuggyPageProps) {
+export default async function EnglishHotelBuggyPage({ params }: HotelBuggyPageProps) {
   const { slug } = await params;
   const hotel = getHotelBuggyLanding(slug);
   if (!hotel) notFound();
 
-  const canonical = hotelBuggyUrl(hotel.slug, 'es');
+  const canonical = hotelBuggyUrl(hotel.slug, 'en');
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Caribbean Buggy', item: siteUrl },
-          { '@type': 'ListItem', position: 2, name: 'Buggy tours', item: `${siteUrl}/#precios` },
+          { '@type': 'ListItem', position: 1, name: 'Caribbean Buggy', item: `${siteUrl}/en` },
+          { '@type': 'ListItem', position: 2, name: 'Buggy tours', item: `${siteUrl}/en#prices` },
           { '@type': 'ListItem', position: 3, name: hotel.name, item: canonical },
         ],
       },
       {
         '@type': 'Service',
         '@id': `${canonical}#service`,
-        name: `Buggy tour desde ${hotel.name}`,
-        serviceType: 'Buggy tour con recogida en hotel',
+        name: `Buggy tour from ${hotel.name}`,
+        serviceType: 'Buggy tour with hotel pickup',
         provider: {
           '@type': 'LocalBusiness',
           name: 'Caribbean Buggy',
@@ -76,7 +83,7 @@ export default async function HotelBuggyPage({ params }: HotelBuggyPageProps) {
           '@type': 'Place',
           name: `${hotel.zone}, Punta Cana`,
         },
-        description: `Tour en buggy con recogida desde ${hotel.name}, ruta off-road en Macao, parada en cenote, rancho dominicano y visita a Playa Macao.`,
+        description: `Buggy tour with pickup from ${hotel.name}, Macao off-road route, cenote stop, Dominican ranch and Macao Beach visit.`,
         offers: {
           '@type': 'AggregateOffer',
           priceCurrency: 'USD',
@@ -89,21 +96,11 @@ export default async function HotelBuggyPage({ params }: HotelBuggyPageProps) {
       },
       {
         '@type': 'FAQPage',
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: `Puedo reservar buggy desde ${hotel.name}?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `Si. Caribbean Buggy coordina recogida desde ${hotel.name} o el punto autorizado de excursiones mas cercano.`,
-            },
-          },
-          ...faqs.map(([question, answer]) => ({
-            '@type': 'Question',
-            name: question,
-            acceptedAnswer: { '@type': 'Answer', text: answer },
-          })),
-        ],
+        mainEntity: enFaqs.map(([question, answer]) => ({
+          '@type': 'Question',
+          name: question,
+          acceptedAnswer: { '@type': 'Answer', text: answer },
+        })),
       },
     ],
   };
@@ -111,7 +108,7 @@ export default async function HotelBuggyPage({ params }: HotelBuggyPageProps) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <HotelBuggyTourPage hotel={hotel} canonical={canonical} locale="es" />
+      <HotelBuggyTourPage hotel={hotel} canonical={canonical} locale="en" />
     </>
   );
 }

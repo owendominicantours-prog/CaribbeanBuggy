@@ -18,11 +18,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     })),
-    ...hotelBuggyLandings.map((hotel) => ({
-      url: hotelBuggyUrl(hotel.slug),
-      lastModified,
-      changeFrequency: 'weekly' as const,
-      priority: 0.85,
-    })),
+    ...hotelBuggyLandings.flatMap((hotel) => [
+      {
+        url: hotelBuggyUrl(hotel.slug, 'es'),
+        lastModified,
+        changeFrequency: 'weekly' as const,
+        priority: 0.85,
+      },
+      {
+        url: hotelBuggyUrl(hotel.slug, 'en'),
+        lastModified,
+        changeFrequency: 'weekly' as const,
+        priority: 0.84,
+      },
+    ]),
   ];
 }
