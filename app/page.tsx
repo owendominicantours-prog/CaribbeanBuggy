@@ -14,6 +14,7 @@ import {
   Waves,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import LanguageSwitch from '../components/LanguageSwitch';
 import {
   bring,
   faqs,
@@ -123,9 +124,12 @@ export default function Home() {
           <a href="#incluye">Incluye</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="header-cta" href="#precios">
-          Reservar
-        </a>
+        <div className="header-actions">
+          <LanguageSwitch current="es" esHref="/" enHref="/en" />
+          <a className="header-cta" href="#precios">
+            Reservar
+          </a>
+        </div>
       </header>
 
       <section id="inicio" className="hero">

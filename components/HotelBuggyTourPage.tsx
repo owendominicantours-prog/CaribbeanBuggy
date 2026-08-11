@@ -22,6 +22,7 @@ import {
   siteUrl,
   whatsappHref,
 } from '../lib/buggyProducts';
+import LanguageSwitch from './LanguageSwitch';
 
 type HotelBuggyTourPageProps = {
   hotel: HotelBuggyLanding;
@@ -174,7 +175,14 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
           <a href="#included">{pageCopy.navIncluded}</a>
           <a href="#faq">{pageCopy.navFaq}</a>
         </nav>
-        <a className="header-cta" href="#book">{pageCopy.reserve}</a>
+        <div className="header-actions">
+          <LanguageSwitch
+            current={isEn ? 'en' : 'es'}
+            esHref={`/buggy/hotel/${hotel.slug}`}
+            enHref={`/en/buggy/hotel/${hotel.slug}`}
+          />
+          <a className="header-cta" href="#book">{pageCopy.reserve}</a>
+        </div>
       </header>
 
       <section className="tour-shell">

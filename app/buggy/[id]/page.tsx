@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../components/BookingCalculator';
+import LanguageSwitch from '../../../components/LanguageSwitch';
 import { bring, faqs, getProduct, included, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
 
 type DetailPageProps = {
@@ -93,7 +94,10 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           <a href="#incluye">Incluye</a>
           <a href="#faq">FAQ</a>
         </nav>
-        <a className="header-cta" href="#reservar">Reservar</a>
+        <div className="header-actions">
+          <LanguageSwitch current="es" esHref={`/buggy/${product.id}`} enHref={`/en/buggy/${product.id}`} />
+          <a className="header-cta" href="#reservar">Reservar</a>
+        </div>
       </header>
 
       <section className="detail-hero">
