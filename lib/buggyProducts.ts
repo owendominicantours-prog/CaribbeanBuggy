@@ -3,6 +3,9 @@ export type BuggyProduct = {
   title: string;
   seoTitle: string;
   seoDescription: string;
+  destination: string;
+  routeLabel: string;
+  durationLabel: string;
   subtitle: string;
   hook: string;
   description: string;
@@ -14,6 +17,10 @@ export type BuggyProduct = {
   note: string;
   image: string;
   popular: boolean;
+  included?: string[];
+  requirements?: string[];
+  bring?: string[];
+  faqs?: Array<[string, string]>;
 };
 
 export const siteUrl = 'https://www.caribbeanboggie.com';
@@ -26,6 +33,7 @@ export const pickupZones = [
   { label: 'Cap Cana', fee: 10 },
   { label: 'Uvero Alto', fee: 15 },
   { label: 'Macao', fee: 0 },
+  { label: 'Bayahibe / La Romana', fee: 0 },
   { label: 'Otra zona - confirmar por WhatsApp', fee: 0 },
 ];
 
@@ -36,6 +44,9 @@ export const products: BuggyProduct[] = [
     seoTitle: 'Tour en Buggy Individual Punta Cana | Mejor Precio',
     seoDescription:
       'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 40 USD con recogida incluida.',
+    destination: 'Punta Cana',
+    routeLabel: 'Punta Cana, Macao y cenote',
+    durationLabel: '4 horas con traslado',
     subtitle: '1 persona',
     hook: 'Para los amantes de la adrenalina pura.',
     description:
@@ -56,6 +67,9 @@ export const products: BuggyProduct[] = [
     seoTitle: 'Excursion en Buggy Doble en Punta Cana | Oferta Especial',
     seoDescription:
       'Disfruta con tu pareja o amigo un tour en buggy doble en Punta Cana desde 75 USD por vehiculo, con recogida en el hotel incluida.',
+    destination: 'Punta Cana',
+    routeLabel: 'Punta Cana, Macao y cenote',
+    durationLabel: '4 horas con traslado',
     subtitle: '2 personas',
     hook: 'Perfecto para parejas y amigos.',
     description:
@@ -76,6 +90,9 @@ export const products: BuggyProduct[] = [
     seoTitle: 'Buggy Familiar en Punta Cana de 4 Plazas | Economico',
     seoDescription:
       'Reserva un buggy familiar de 4 plazas en Punta Cana desde 140 USD por vehiculo. Ruta por Macao, cenote, playa y recogida incluida.',
+    destination: 'Punta Cana',
+    routeLabel: 'Punta Cana, Macao y cenote',
+    durationLabel: '4 horas con traslado',
     subtitle: 'hasta 4 personas',
     hook: 'Diversion para toda la familia.',
     description:
@@ -88,6 +105,75 @@ export const products: BuggyProduct[] = [
     capacityNumber: 4,
     note: 'Precio total por las 4 plazas',
     image: '/buggy/familiar.jpeg',
+    popular: false,
+  },
+  {
+    id: 'bayahibe-buggy-individual',
+    title: 'Bayahibe Buggy Individual',
+    seoTitle: 'ATV/Buggy 4x4 en Bayahibe La Romana | 1 Persona',
+    seoDescription:
+      'Reserva ATV o buggy 4x4 en Bayahibe y La Romana para 1 persona desde 75 USD. Ruta off-road, entorno rural, asistencia local y pickup coordinado.',
+    destination: 'Bayahibe / La Romana',
+    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    durationLabel: '4 horas con traslado',
+    subtitle: '1 persona',
+    hook: 'Aventura privada para manejar tu propio buggy.',
+    description:
+      'Ideal para viajeros solos que quieren controlar el volante durante toda la ruta. Recorre caminos rurales de Bayahibe y La Romana, cruza tramos de lodo y disfruta una salida 4x4 con asistencia local.',
+    longDescription:
+      'El Bayahibe Buggy Individual esta pensado para una persona que desea manejar su propio vehiculo durante la experiencia. La ruta combina caminos rurales, zonas de vegetacion, ambiente local de La Romana y paradas operativas cerca del area de Bayahibe segun el dia. El equipo confirma por WhatsApp el punto de recogida o encuentro, el horario disponible y cualquier ajuste de operacion antes del tour.',
+    regular: 85,
+    promo: 75,
+    capacityLabel: '1 adulto',
+    capacityNumber: 1,
+    note: 'Precio por vehiculo',
+    image: '/buggy/ruta-2.jpeg',
+    popular: false,
+  },
+  {
+    id: 'bayahibe-buggy-doble',
+    title: 'Bayahibe Buggy Doble',
+    seoTitle: 'Buggy Doble en Bayahibe La Romana | 2 Personas',
+    seoDescription:
+      'Buggy doble en Bayahibe y La Romana para 2 personas desde 145 USD por vehiculo. Tour 4x4 con recogida coordinada y confirmacion por WhatsApp.',
+    destination: 'Bayahibe / La Romana',
+    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    durationLabel: '4 horas con traslado',
+    subtitle: '2 personas',
+    hook: 'La opcion mas comoda para parejas y amigos.',
+    description:
+      'Comparte la ruta con otra persona y cambia de conductor si lo desean. Una experiencia off-road en Bayahibe/La Romana con precio cerrado por vehiculo y coordinacion humana antes de salir.',
+    longDescription:
+      'El Bayahibe Buggy Doble es la opcion recomendada para parejas y amigos que quieren vivir la ruta juntos. Incluye coordinacion de recogida o punto de encuentro, instrucciones antes de manejar, ruta rural 4x4 y soporte por WhatsApp. El recorrido puede variar por clima, trafico local y condiciones del camino, siempre manteniendo una operacion segura y organizada.',
+    regular: 160,
+    promo: 145,
+    capacityLabel: 'Piloto + copiloto',
+    capacityNumber: 2,
+    note: 'Precio total por 2 pasajeros',
+    image: '/buggy/ruta-1.jpeg',
+    popular: true,
+  },
+  {
+    id: 'bayahibe-buggy-familiar',
+    title: 'Bayahibe Buggy Familiar',
+    seoTitle: 'Buggy Familiar en Bayahibe La Romana | Hasta 4 Personas',
+    seoDescription:
+      'Reserva buggy familiar en Bayahibe y La Romana para hasta 4 personas desde 290 USD por vehiculo. Ruta off-road con pickup coordinado.',
+    destination: 'Bayahibe / La Romana',
+    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    durationLabel: '4 horas con traslado',
+    subtitle: 'hasta 4 personas',
+    hook: 'Una salida 4x4 para disfrutar juntos.',
+    description:
+      'Opcion practica para familias o grupos pequenos que quieren ir en el mismo buggy. Precio cerrado por las plazas, ruta rural, asistencia local y confirmacion antes de la recogida.',
+    longDescription:
+      'El Bayahibe Buggy Familiar permite que hasta cuatro personas compartan el mismo vehiculo durante la experiencia. Es una alternativa conveniente para familias, amigos y grupos pequenos que quieren vivir Bayahibe y La Romana sin separarse. Incluye asistencia del equipo, instrucciones de seguridad, coordinacion del pickup y seguimiento por WhatsApp antes y despues de la reserva.',
+    regular: 320,
+    promo: 290,
+    capacityLabel: 'Hasta 4 personas',
+    capacityNumber: 4,
+    note: 'Precio total por las 4 plazas',
+    image: '/buggy/ruta-3.jpeg',
     popular: false,
   },
 ];

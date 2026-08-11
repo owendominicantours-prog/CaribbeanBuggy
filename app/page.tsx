@@ -78,7 +78,7 @@ const schema = {
         position: index + 1,
         item: {
           '@type': 'Product',
-          name: `${product.title} en Punta Cana`,
+          name: `${product.title} en ${product.destination}`,
           description: product.description,
           image: `${siteUrl}${product.image}`,
           sku: product.id,
@@ -196,7 +196,7 @@ export default function Home() {
                 </div>
                 <Users />
               </div>
-              <img className="product-photo" src={product.image} alt={`${product.title} en Punta Cana`} />
+              <img className="product-photo" src={product.image} alt={`${product.title} en ${product.destination}`} />
               <p className="hook">{product.hook}</p>
               <p>{product.description}</p>
               <div className="price-row">
@@ -205,7 +205,7 @@ export default function Home() {
               </div>
               <div className="meta">
                 <span><Users size={16} /> {product.capacityLabel}</span>
-                <span><Clock3 size={16} /> 4 horas con traslado</span>
+                <span><Clock3 size={16} /> {product.durationLabel}</span>
                 <span><BadgeDollarSign size={16} /> {product.note}</span>
               </div>
               <a href={`/buggy/${product.id}`}>

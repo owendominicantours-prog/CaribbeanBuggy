@@ -39,17 +39,18 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
   if (!product) notFound();
 
   const related = products.filter((item) => item.id !== product.id);
+  const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
       {
         '@type': 'Product',
-        name: `${product.title} en Punta Cana`,
+        name: `${product.title} en ${product.destination}`,
         description: product.longDescription,
         image: `${siteUrl}${product.image}`,
         sku: product.id,
         brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
-        areaServed: 'Punta Cana, Dominican Republic',
+        areaServed: `${product.destination}, Dominican Republic`,
         offers: {
           '@type': 'Offer',
           price: product.promo,
@@ -99,16 +100,16 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         <div className="wrap detail-hero-grid">
           <div>
             <a className="back-link" href="/"><ArrowLeft size={17} /> Volver a todos los buggies</a>
-            <span className="eyebrow"><MapPin size={16} /> Punta Cana, Macao y cenote</span>
-            <h1>{product.title} en Punta Cana</h1>
+            <span className="eyebrow"><MapPin size={16} /> {product.routeLabel}</span>
+            <h1>{product.title} en {product.destination}</h1>
             <p>{product.longDescription}</p>
             <div className="detail-badges">
               <span><Users size={17} /> {product.capacityLabel}</span>
-              <span><Clock3 size={17} /> 4 horas con traslados</span>
+              <span><Clock3 size={17} /> {product.durationLabel}</span>
               <span><BadgeDollarSign size={17} /> Desde US${product.promo}</span>
             </div>
           </div>
-          <img src={product.image} alt={`${product.title} en Punta Cana`} />
+          <img src={product.image} alt={`${product.title} en ${product.destination}`} />
         </div>
       </section>
 
@@ -158,7 +159,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           <img src="/buggy/ruta-1.jpeg" alt="Ruta de buggy en Macao" />
           <div>
             <span className="kicker">Ruta del tour</span>
-            <h2>Macao, cenote y rancho dominicano.</h2>
+            <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : 'Macao, cenote y rancho dominicano.'}</h2>
             <p>
               La experiencia combina aventura off-road, cultura local y paradas naturales. El orden puede variar segun
               operacion, clima y condiciones del camino.
