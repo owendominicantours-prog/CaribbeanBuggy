@@ -181,6 +181,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const [paymentError, setPaymentError] = useState('');
   const [bookingReference, setBookingReference] = useState('');
   const [renderToken, setRenderToken] = useState(0);
+  const [bookingStep, setBookingStep] = useState<1 | 2 | 3>(1);
+  const [stepNotice, setStepNotice] = useState('');
   const paypalContainerRef = useRef<HTMLDivElement>(null);
   const bookingReferenceRef = useRef('');
 
@@ -372,8 +374,70 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     }
   }
 
+  const stepLabels = locale === 'en'
+    ? ['Tour details', 'Contact', 'Confirm']
+    : ['Tour', 'Contacto', 'Confirmar'];
+
+  const stepText = locale === 'en'
+    ? {
+        missingTrip: 'Choose the date and pickup point before continuing.',
+        missingContact: 'Add your name, WhatsApp and email before confirming.',
+        next: 'Continue',
+        back: 'Back',
+        reviewTitle: 'Review and reserve',
+        reviewText: 'Confirm the details, then open secure payment or contact us on WhatsApp.',
+        editTrip: 'Edit tour',
+        editContact: 'Edit contact',
+        summaryDate: 'Date',
+        summaryPickup: 'Pickup',
+        summaryTravelers: 'Travelers',
+        summaryTime: 'Pickup window',
+      }
+    : {
+        missingTrip: 'Elige la fecha y el punto de recogida antes de continuar.',
+        missingContact: 'Agrega nombre, WhatsApp y correo antes de confirmar.',
+        next: 'Continuar',
+        back: 'Volver',
+        reviewTitle: 'Revisa y reserva',
+        reviewText: 'Confirma los datos y luego abre el pago seguro o escribenos por WhatsApp.',
+        editTrip: 'Editar tour',
+        editContact: 'Editar contacto',
+        summaryDate: 'Fecha',
+        summaryPickup: 'Recogida',
+        summaryTravelers: 'Personas',
+        summaryTime: 'Turno',
+      };
+
+  function goToStep(step: 1 | 2 | 3) {
+    if (step > 1 && (!date || !hotel.trim())) {
+      setBookingStep(1);
+      setStepNotice(stepText.missingTrip);
+      return;
+    }
+
+    if (step > 2 && (!name.trim() || !phone.trim() || !email.trim())) {
+      setBookingStep(2);
+      setStepNotice(stepText.missingContact);
+      return;
+    }
+
+    setBookingStep(step);
+    setStepNotice('');
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!date || !hotel.trim()) {
+      goToStep(1);
+      return;
+    }
+
+    if (!name.trim() || !phone.trim() || !email.trim()) {
+      goToStep(2);
+      return;
+    }
+
     setShowPayment(true);
     setPaymentStatus('idle');
     setPaymentError('');
@@ -389,162 +453,242 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   };
 
   return (
-    <form className="booking-widget" onSubmit={handleSubmit}>
+    <form className="booking-widget booking-widget-stepped" onSubmit={handleSubmit}>
       <div className="booking-widget-head">
         <span>{copy.secure}</span>
         <strong>US${total}</strong>
         <small>{copy.calculated} {passengers} {copy.people}</small>
       </div>
 
-      <div className="booking-breakdown" aria-live="polite">
-        <p><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</p>
-        <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
-        {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
-        {pricing.photosFee ? <p>{copy.photos}: <b>US${pricing.photosFee}</b></p> : null}
-        {pricing.privatePickupFee ? <p>{copy.privatePickup}: <b>US${pricing.privatePickupFee}</b></p> : null}
+      <div className="booking-stepper" aria-label="Booking steps">
+        {stepLabels.map((label, index) => {
+          const step = (index + 1) as 1 | 2 | 3;
+
+          return (
+            <button
+              key={label}
+              type="button"
+              className={`booking-step ${bookingStep === step ? 'is-active' : ''} ${bookingStep > step ? 'is-complete' : ''}`}
+              onClick={() => goToStep(step)}
+            >
+              <span>{step}</span>
+              {label}
+            </button>
+          );
+        })}
       </div>
 
-      <label>{copy.date}</label>
-      <input
-        type="date"
-        min={minDate}
-        required
-        value={date}
-        onChange={(event) => setDate(event.target.value)}
-      />
+      {stepNotice ? <p className="booking-step-notice">{stepNotice}</p> : null}
 
-      <label>{copy.passengers}</label>
-      <input
-        min={1}
-        max={20}
-        type="number"
-        required
-        value={passengers}
-        onChange={(event) => setPassengers(Math.max(1, Number(event.target.value) || 1))}
-      />
-
-      <label>{copy.hotel}</label>
-      <input
-        value={hotel}
-        required
-        onChange={(event) => setHotel(event.target.value)}
-        placeholder={copy.hotelPlaceholder}
-      />
-
-      <label>{copy.pickupZone}</label>
-      <select value={pickupZone} onChange={(event) => setPickupZone(event.target.value)}>
-        {pickupZones.map((zone) => (
-          <option key={zone.label} value={zone.label}>
-            {zone.label}{zone.fee ? ` +US$${zone.fee}` : ''}
-          </option>
-        ))}
-      </select>
-
-      <label>{copy.pickupWindow}</label>
-      <select value={pickupWindow} onChange={(event) => setPickupWindow(event.target.value)}>
-        <option>{copy.first}</option>
-        <option>{copy.morning}</option>
-        <option>{copy.midday}</option>
-        <option>{copy.afternoon}</option>
-      </select>
-
-      <label>{copy.name}</label>
-      <input
-        value={name}
-        required
-        autoComplete="name"
-        onChange={(event) => setName(event.target.value)}
-        placeholder={copy.namePlaceholder}
-      />
-
-      <div className="booking-contact-grid">
-        <div>
-          <label htmlFor={`phone-${product.id}`}>{copy.phone}</label>
-          <input
-            id={`phone-${product.id}`}
-            value={phone}
-            required
-            type="tel"
-            autoComplete="tel"
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder="+1 809 000 0000"
-          />
-        </div>
-        <div>
-          <label htmlFor={`email-${product.id}`}>{copy.email}</label>
-          <input
-            id={`email-${product.id}`}
-            value={email}
-            required
-            type="email"
-            autoComplete="email"
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder={copy.emailPlaceholder}
-          />
-        </div>
-      </div>
-
-      <label>{copy.language}</label>
-      <select value={language} onChange={(event) => setLanguage(event.target.value)}>
-        <option>{copy.spanish}</option>
-        <option>English</option>
-        <option>{copy.french}</option>
-      </select>
-
-      <label>{copy.payment}</label>
-      <select
-        value={paymentPreference}
-        onChange={(event) => setPaymentPreference(event.target.value)}
-      >
-        <option>{copy.payNow}</option>
-        <option>{copy.cardFirst}</option>
-        <option>{copy.helpFirst}</option>
-      </select>
-
-      <div className="extras">
-        <label>
-          <input type="checkbox" checked={photos} onChange={(event) => setPhotos(event.target.checked)} />
-          {copy.photosExtra}
-        </label>
-        <label>
-          <input type="checkbox" checked={privatePickup} onChange={(event) => setPrivatePickup(event.target.checked)} />
-          {copy.privateExtra}
-        </label>
-      </div>
-
-      <button className="booking-submit" type="submit" disabled={paymentStatus === 'loading'}>
-        {paymentStatus === 'loading' ? <Loader2 className="spin" size={19} /> : <CreditCard size={19} />}
-        {copy.payButton}
-      </button>
-
-      {showPayment ? (
-        <div className="paypal-panel">
-          {paymentStatus === 'paid' ? (
-            <div className="payment-success">
-              <CheckCircle2 size={22} />
-              <b>{copy.paidTitle}</b>
-              <span>{copy.paidText}</span>
+      {bookingStep === 1 ? (
+        <div className="booking-step-panel">
+          <div className="booking-field-row">
+            <div className="booking-field">
+              <label>{copy.date}</label>
+              <input
+                type="date"
+                min={minDate}
+                required
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+              />
             </div>
-          ) : (
-            <>
-              <b>{copy.choosePayment}</b>
-              <span>{copy.paypalCard}</span>
-              <div ref={paypalContainerRef} className="paypal-buttons" />
-              {!paypalReady && !paymentError ? <p className="booking-note">{copy.loading}</p> : null}
-            </>
-          )}
-          {paymentError ? <p className="payment-error">{paymentError}</p> : null}
+            <div className="booking-field">
+              <label>{copy.passengers}</label>
+              <input
+                min={1}
+                max={20}
+                type="number"
+                required
+                value={passengers}
+                onChange={(event) => setPassengers(Math.max(1, Number(event.target.value) || 1))}
+              />
+            </div>
+          </div>
+
+          <div className="booking-field">
+            <label>{copy.hotel}</label>
+            <input
+              value={hotel}
+              required
+              onChange={(event) => setHotel(event.target.value)}
+              placeholder={copy.hotelPlaceholder}
+            />
+          </div>
+
+          <div className="booking-field-row">
+            <div className="booking-field">
+              <label>{copy.pickupZone}</label>
+              <select value={pickupZone} onChange={(event) => setPickupZone(event.target.value)}>
+                {pickupZones.map((zone) => (
+                  <option key={zone.label} value={zone.label}>
+                    {zone.label}{zone.fee ? ` +US$${zone.fee}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="booking-field">
+              <label>{copy.pickupWindow}</label>
+              <select value={pickupWindow} onChange={(event) => setPickupWindow(event.target.value)}>
+                <option>{copy.first}</option>
+                <option>{copy.morning}</option>
+                <option>{copy.midday}</option>
+                <option>{copy.afternoon}</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="extras">
+            <label>
+              <input type="checkbox" checked={photos} onChange={(event) => setPhotos(event.target.checked)} />
+              {copy.photosExtra}
+            </label>
+            <label>
+              <input type="checkbox" checked={privatePickup} onChange={(event) => setPrivatePickup(event.target.checked)} />
+              {copy.privateExtra}
+            </label>
+          </div>
+
+          <button className="booking-submit" type="button" onClick={() => goToStep(2)}>
+            {stepText.next}
+          </button>
         </div>
       ) : null}
 
-      <a className="booking-support-link" href={whatsappHref(bookingMessage())} onClick={recordWhatsAppInquiry}>
-        <MessageCircle size={18} /> {copy.help}
-      </a>
-      <div className="booking-assurance">
-        <span><CheckCircle2 size={15} /> {copy.protected}</span>
-        <span><LockKeyhole size={15} /> {copy.external}</span>
-      </div>
-      <p className="booking-note">{copy.note}</p>
+      {bookingStep === 2 ? (
+        <div className="booking-step-panel">
+          <div className="booking-field">
+            <label>{copy.name}</label>
+            <input
+              value={name}
+              required
+              autoComplete="name"
+              onChange={(event) => setName(event.target.value)}
+              placeholder={copy.namePlaceholder}
+            />
+          </div>
+
+          <div className="booking-contact-grid">
+            <div>
+              <label htmlFor={`phone-${product.id}`}>{copy.phone}</label>
+              <input
+                id={`phone-${product.id}`}
+                value={phone}
+                required
+                type="tel"
+                autoComplete="tel"
+                onChange={(event) => setPhone(event.target.value)}
+                placeholder="+1 809 000 0000"
+              />
+            </div>
+            <div>
+              <label htmlFor={`email-${product.id}`}>{copy.email}</label>
+              <input
+                id={`email-${product.id}`}
+                value={email}
+                required
+                type="email"
+                autoComplete="email"
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder={copy.emailPlaceholder}
+              />
+            </div>
+          </div>
+
+          <div className="booking-field-row">
+            <div className="booking-field">
+              <label>{copy.language}</label>
+              <select value={language} onChange={(event) => setLanguage(event.target.value)}>
+                <option>{copy.spanish}</option>
+                <option>English</option>
+                <option>{copy.french}</option>
+              </select>
+            </div>
+            <div className="booking-field">
+              <label>{copy.payment}</label>
+              <select
+                value={paymentPreference}
+                onChange={(event) => setPaymentPreference(event.target.value)}
+              >
+                <option>{copy.payNow}</option>
+                <option>{copy.cardFirst}</option>
+                <option>{copy.helpFirst}</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="booking-step-actions">
+            <button className="booking-step-back" type="button" onClick={() => goToStep(1)}>
+              {stepText.back}
+            </button>
+            <button className="booking-submit" type="button" onClick={() => goToStep(3)}>
+              {stepText.next}
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {bookingStep === 3 ? (
+        <>
+          <div className="booking-breakdown" aria-live="polite">
+            <p><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</p>
+            <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
+            {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
+            {pricing.photosFee ? <p>{copy.photos}: <b>US${pricing.photosFee}</b></p> : null}
+            {pricing.privatePickupFee ? <p>{copy.privatePickup}: <b>US${pricing.privatePickupFee}</b></p> : null}
+          </div>
+
+          <div className="booking-review-card">
+            <h3>{stepText.reviewTitle}</h3>
+            <p>{stepText.reviewText}</p>
+            <div className="booking-review-grid">
+              <p><b>{stepText.summaryDate}</b>{date}</p>
+              <p><b>{stepText.summaryTravelers}</b>{passengers}</p>
+              <p><b>{stepText.summaryPickup}</b>{hotel} - {pickupZone}</p>
+              <p><b>{stepText.summaryTime}</b>{pickupWindow}</p>
+            </div>
+          </div>
+
+          <div className="booking-step-actions">
+            <button className="booking-step-back" type="button" onClick={() => goToStep(2)}>
+              {stepText.back}
+            </button>
+            <button className="booking-submit" type="submit" disabled={paymentStatus === 'loading'}>
+              {paymentStatus === 'loading' ? <Loader2 className="spin" size={19} /> : <CreditCard size={19} />}
+              {copy.payButton}
+            </button>
+          </div>
+
+          {showPayment ? (
+            <div className="paypal-panel">
+              {paymentStatus === 'paid' ? (
+                <div className="payment-success">
+                  <CheckCircle2 size={22} />
+                  <b>{copy.paidTitle}</b>
+                  <span>{copy.paidText}</span>
+                </div>
+              ) : (
+                <>
+                  <b>{copy.choosePayment}</b>
+                  <span>{copy.paypalCard}</span>
+                  <div ref={paypalContainerRef} className="paypal-buttons" />
+                  {!paypalReady && !paymentError ? <p className="booking-note">{copy.loading}</p> : null}
+                </>
+              )}
+              {paymentError ? <p className="payment-error">{paymentError}</p> : null}
+            </div>
+          ) : null}
+
+          <a className="booking-support-link" href={whatsappHref(bookingMessage())} onClick={recordWhatsAppInquiry}>
+            <MessageCircle size={18} /> {copy.help}
+          </a>
+          <div className="booking-assurance">
+            <span><CheckCircle2 size={15} /> {copy.protected}</span>
+            <span><LockKeyhole size={15} /> {copy.external}</span>
+          </div>
+          <p className="booking-note">{copy.note}</p>
+        </>
+      ) : null}
     </form>
   );
 }
