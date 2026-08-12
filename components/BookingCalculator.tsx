@@ -346,6 +346,32 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     ].join('\n');
   }
 
+  async function recordWhatsAppInquiry() {
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: 'booking_whatsapp_button',
+          productId: product.id,
+          productName: product.title,
+          booking: buildPayload(),
+          pricing: {
+            total,
+            vehicles: pricing.vehicles,
+            passengers: pricing.passengers,
+            baseTotal: pricing.baseTotal,
+            zoneFee: pricing.zoneFee,
+            photosFee: pricing.photosFee,
+            privatePickupFee: pricing.privatePickupFee,
+          },
+        }),
+      });
+    } catch (error) {
+      console.error('booking_whatsapp_inquiry_error', error);
+    }
+  }
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setShowPayment(true);
@@ -511,7 +537,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         </div>
       ) : null}
 
-      <a className="booking-support-link" href={whatsappHref(bookingMessage())}>
+      <a className="booking-support-link" href={whatsappHref(bookingMessage())} onClick={recordWhatsAppInquiry}>
         <MessageCircle size={18} /> {copy.help}
       </a>
       <div className="booking-assurance">

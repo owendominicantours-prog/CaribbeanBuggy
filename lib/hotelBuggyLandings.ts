@@ -72,8 +72,27 @@ const hotelNames: Array<Omit<HotelBuggyLanding, 'slug'>> = [
   { name: 'Ocean El Faro', zone: 'Uvero Alto', driveTime: '35-45 min', pickupNote: 'Uvero Alto puede requerir suplemento de zona.' },
   { name: 'The Westin Puntacana Resort & Club', zone: 'Punta Cana', driveTime: '30-40 min', pickupNote: 'Recogida en zona Puntacana con confirmacion previa.' },
   { name: 'Club Med Punta Cana', zone: 'Punta Cana', driveTime: '30-40 min', pickupNote: 'Confirmamos acceso y punto de tours antes de salir.' },
-  { name: 'Hilton La Romana All-Inclusive Resort', zone: 'Bayahibe / La Romana', driveTime: '70-85 min', pickupNote: 'Salida desde La Romana requiere confirmacion especial.' },
-  { name: 'Dreams Dominicus La Romana', zone: 'Bayahibe', driveTime: '70-85 min', pickupNote: 'Bayahibe requiere operacion especial y confirmacion.' },
+  { name: 'Hilton La Romana All-Inclusive Resort', zone: 'Bayahibe / La Romana', driveTime: '20-30 min', pickupNote: 'Recogida coordinada en lobby o punto de excursiones del resort.' },
+  { name: 'Dreams Dominicus La Romana', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Pickup rapido desde Dominicus con horario confirmado por WhatsApp.' },
+  { name: 'Viva Dominicus Beach by Wyndham', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida en el punto autorizado de tours del complejo Viva.' },
+  { name: 'Viva Dominicus Palace by Wyndham', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Coordinamos lobby y hora exacta segun la tanda disponible.' },
+  { name: 'Catalonia Bayahibe', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida en acceso principal o punto de excursiones confirmado.' },
+  { name: 'Catalonia Royal La Romana', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Pickup para adultos con instrucciones claras antes de salir.' },
+  { name: 'Iberostar Selection Hacienda Dominicus', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida en lobby de tours con asistencia por WhatsApp.' },
+  { name: 'Tracadero Beach Club & Holidays Rentals', zone: 'Bayahibe', driveTime: '8-15 min', pickupNote: 'Recogida cercana en Bayahibe con punto exacto confirmado.' },
+  { name: 'Cadaques Caribe Resort & Villas', zone: 'Dominicus / Bayahibe', driveTime: '12-20 min', pickupNote: 'Coordinamos acceso del complejo y hora de salida.' },
+  { name: 'HM Alma de Bayahibe', zone: 'Bayahibe', driveTime: '8-15 min', pickupNote: 'Pickup en recepcion o punto cercano autorizado.' },
+  { name: 'whala!bayahibe', zone: 'Bayahibe', driveTime: '8-15 min', pickupNote: 'Recogida sencilla desde Bayahibe con confirmacion previa.' },
+  { name: 'Hotel Bayahibe', zone: 'Bayahibe town', driveTime: '8-15 min', pickupNote: 'Punto de encuentro facil en el centro de Bayahibe.' },
+  { name: 'Villa Iguana Bayahibe', zone: 'Bayahibe town', driveTime: '8-15 min', pickupNote: 'Coordinamos recogida cercana para evitar esperas.' },
+  { name: 'Alkquimia Hotel Lounge and Bar', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida en recepcion o punto de tours indicado.' },
+  { name: 'Los Flamencos Aparthotel', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Pickup en Dominicus con soporte antes de la actividad.' },
+  { name: 'Hotel El Eden Bayahibe', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida coordinada con nombre de reserva y horario.' },
+  { name: 'Sunscape Dominicus La Romana', zone: 'Dominicus / Bayahibe', driveTime: '10-18 min', pickupNote: 'Recogida en lobby o punto autorizado del resort.' },
+  { name: 'Hilton Garden Inn La Romana', zone: 'La Romana', driveTime: '25-35 min', pickupNote: 'Salida desde La Romana con confirmacion de ruta y horario.' },
+  { name: 'Casa de Campo Resort & Villas', zone: 'La Romana', driveTime: '30-40 min', pickupNote: 'Coordinamos acceso de Casa de Campo y punto autorizado.' },
+  { name: 'Bahia Principe Luxury Bouganville', zone: 'La Romana', driveTime: '35-45 min', pickupNote: 'Recogida en lobby de excursiones con asistencia previa.' },
+  { name: 'Bahia Principe Grand La Romana', zone: 'La Romana', driveTime: '35-45 min', pickupNote: 'Confirmamos punto de salida segun acceso del complejo.' },
 ];
 
 export const hotelBuggyLandings: HotelBuggyLanding[] = hotelNames.map((hotel) => ({
@@ -85,6 +104,10 @@ export function getHotelBuggyLanding(slug: string) {
   return hotelBuggyLandings.find((hotel) => hotel.slug === slug);
 }
 
+export function hotelBuggyPath(slug: string, locale: 'es' | 'en' = 'es') {
+  return `/${locale}/buggy-tour/${slug}`;
+}
+
 export function hotelBuggyUrl(slug: string, locale: 'es' | 'en' = 'es') {
-  return `${siteUrl}${locale === 'en' ? '/en' : ''}/buggy/hotel/${slug}`;
+  return `${siteUrl}${hotelBuggyPath(slug, locale)}`;
 }

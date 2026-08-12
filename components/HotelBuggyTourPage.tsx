@@ -11,17 +11,15 @@ import {
   Users,
 } from 'lucide-react';
 import BookingCalculator from './BookingCalculator';
-import type { HotelBuggyLanding } from '../lib/hotelBuggyLandings';
+import { hotelBuggyPath, type HotelBuggyLanding } from '../lib/hotelBuggyLandings';
 import type { BuggyProduct } from '../lib/buggyProducts';
 import {
   bring,
   faqs,
   included,
-  products,
   requirements,
-  siteUrl,
-  whatsappHref,
 } from '../lib/buggyProducts';
+import { getHotelBuggyProducts } from '../lib/hotelBuggySeo';
 import LanguageSwitch from './LanguageSwitch';
 
 type HotelBuggyTourPageProps = {
@@ -31,6 +29,7 @@ type HotelBuggyTourPageProps = {
 };
 
 const gallery = ['/buggy/doble.jpeg', '/buggy/ruta-1.jpeg', '/buggy/ruta-2.jpeg', '/buggy/ruta-3.jpeg'];
+const BUGGY_VIDEO_URL = 'https://cfplxlfjp1i96vih.public.blob.vercel-storage.com/Videos/Buggy%20Punta%20cana.mp4';
 
 const enIncluded = [
   'Round-trip hotel pickup',
@@ -56,6 +55,20 @@ const enBring = [
   'Optional cash for photos, drinks or souvenirs.',
 ];
 
+const notIncluded = [
+  'Fotos, bebidas extra o souvenirs comprados durante la ruta.',
+  'Propinas opcionales para guia, chofer o equipo local.',
+  'Gastos por danos causados al buggy por manejo irresponsable.',
+  'Recogidas fuera de la zona confirmada sin coordinacion previa.',
+];
+
+const enNotIncluded = [
+  'Photos, extra drinks or souvenirs purchased during the route.',
+  'Optional tips for the guide, driver or local team.',
+  'Damage charges caused by irresponsible buggy driving.',
+  'Pickup outside the confirmed zone without previous coordination.',
+];
+
 const enFaqs = [
   ['Is the price per person or per vehicle?', 'The listed price is per vehicle depending on the option: single, double or family buggy.'],
   ['Is hotel pickup included?', 'Yes, pickup and return are included from main Bavaro and Punta Cana hotel zones.'],
@@ -78,7 +91,8 @@ function titleFor(product: BuggyProduct, locale: 'es' | 'en') {
 
 export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: HotelBuggyTourPageProps) {
   const isEn = locale === 'en';
-  const featuredProduct = products.find((product) => product.popular) ?? products[0];
+  const scopedProducts = getHotelBuggyProducts(hotel);
+  const featuredProduct = scopedProducts.find((product) => product.popular) ?? scopedProducts[0];
   const pageCopy = isEn
     ? {
         navPrices: 'Prices',
@@ -100,6 +114,13 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         priceNote: 'Secure payment by card or PayPal',
         facts: ['Zone', 'Estimated drive to ranch', 'Options', 'Pickup'],
         options: 'Single, double or family buggy',
+        videoKicker: 'Real preview',
+        videoTitle: 'See the buggy route before booking',
+        videoBody: 'Mud trails, rural roads, ranch stop and Macao scenery. The video helps travelers understand the activity before they pay.',
+        includedTitle: 'What is included',
+        notIncludedTitle: 'Not included',
+        includedIntro: 'Everything needed for a clear buggy experience from hotel pickup to return.',
+        bookingSteps: ['Choose date and hotel', 'Add traveler details', 'Pay or reserve securely'],
         how: 'How pickup works',
         h2: `Buggy pickup organized from ${hotel.name}`,
         body: `After booking, our team confirms your exact pickup time by WhatsApp according to the selected departure. You receive clear instructions for the authorized pickup point at ${hotel.name}. At the ranch, the team gives a safety briefing, assigns the reserved buggy option and guides the Macao route.`,
@@ -138,6 +159,13 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         priceNote: 'Pago seguro con tarjeta o PayPal',
         facts: ['Zona', 'Tiempo estimado al rancho', 'Modalidades', 'Pickup'],
         options: 'Individual, doble o familiar',
+        videoKicker: 'Vista real',
+        videoTitle: 'Mira la ruta en buggy antes de reservar',
+        videoBody: 'Lodo, caminos rurales, parada en rancho y ambiente de Macao. El video ayuda al cliente a entender la excursion antes de pagar.',
+        includedTitle: 'Que incluye',
+        notIncludedTitle: 'No incluye',
+        includedIntro: 'Todo lo necesario para una experiencia clara desde la recogida en hotel hasta el regreso.',
+        bookingSteps: ['Elige fecha y hotel', 'Agrega tus datos', 'Paga o reserva seguro'],
         how: 'Como funciona',
         h2: `Ruta organizada para huespedes de ${hotel.name}`,
         body: `Despues de reservar, nuestro equipo confirma la hora exacta por WhatsApp segun la tanda seleccionada. Recibes instrucciones claras para el punto autorizado de ${hotel.name}. En el rancho recibes instrucciones de seguridad, el buggy reservado y sales con guia por la ruta de Macao.`,
@@ -158,6 +186,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
       };
 
   const listIncluded = isEn ? enIncluded : included;
+  const listNotIncluded = isEn ? enNotIncluded : notIncluded;
   const listRequirements = isEn ? enRequirements : requirements;
   const listBring = isEn ? enBring : bring;
   const listFaqs = isEn ? enFaqs : faqs;
@@ -178,8 +207,8 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         <div className="header-actions">
           <LanguageSwitch
             current={isEn ? 'en' : 'es'}
-            esHref={`/buggy/hotel/${hotel.slug}`}
-            enHref={`/en/buggy/hotel/${hotel.slug}`}
+            esHref={hotelBuggyPath(hotel.slug, 'es')}
+            enHref={hotelBuggyPath(hotel.slug, 'en')}
           />
           <a className="header-cta" href="#book">{pageCopy.reserve}</a>
         </div>
@@ -201,6 +230,20 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
             </div>
             <h1>{pageCopy.h1}</h1>
             <p className="tour-lead">{pageCopy.intro}</p>
+            <div className="tour-proof-strip" aria-label={isEn ? 'Booking confidence' : 'Confianza para reservar'}>
+              <span>
+                <ShieldCheck size={16} />
+                {isEn ? 'Verified local operator' : 'Operador local verificado'}
+              </span>
+              <span>
+                <CalendarCheck2 size={16} />
+                {isEn ? 'Pickup time confirmed by WhatsApp' : 'Hora confirmada por WhatsApp'}
+              </span>
+              <span>
+                <BadgeDollarSign size={16} />
+                {isEn ? 'Clear price before checkout' : 'Precio claro antes de pagar'}
+              </span>
+            </div>
 
             <div className="tour-gallery" aria-label={isEn ? 'Buggy tour photos' : 'Fotos del tour en buggy'}>
               <img className="tour-gallery-main" src="/buggy/doble.jpeg" alt={pageCopy.h1} />
@@ -221,14 +264,39 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <span><ShieldCheck size={18} /> WhatsApp support</span>
             </div>
 
-            <section id="included" className="tour-section">
+            <section className="tour-video-section" id="video">
+              <div>
+                <span className="tour-kicker">{pageCopy.videoKicker}</span>
+                <h2>{pageCopy.videoTitle}</h2>
+                <p>{pageCopy.videoBody}</p>
+              </div>
+              <div className="tour-video-frame">
+                <video controls playsInline preload="metadata" poster="/buggy/doble.jpeg">
+                  <source src={BUGGY_VIDEO_URL} type="video/mp4" />
+                </video>
+              </div>
+            </section>
+
+            <section id="included" className="tour-section tour-service-grid">
               <span className="tour-kicker">{pageCopy.how}</span>
               <h2>{pageCopy.h2}</h2>
               <p>{pageCopy.body}</p>
-              <div className="tour-checklist">
-                {listIncluded.map((item) => (
-                  <span key={item}><CheckCircle2 size={17} /> {item}</span>
-                ))}
+              <div className="tour-service-lists">
+                <article className="tour-list-card tour-list-card-positive">
+                  <h3>{pageCopy.includedTitle}</h3>
+                  <p>{pageCopy.includedIntro}</p>
+                  <div className="tour-checklist">
+                    {listIncluded.map((item) => (
+                      <span key={item}><CheckCircle2 size={17} /> {item}</span>
+                    ))}
+                  </div>
+                </article>
+                <article className="tour-list-card">
+                  <h3>{pageCopy.notIncludedTitle}</h3>
+                  <ul>
+                    {listNotIncluded.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                </article>
               </div>
             </section>
 
@@ -269,7 +337,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <span className="tour-kicker">{pageCopy.more}</span>
               <h2>{pageCopy.related}</h2>
               <div className="tour-related">
-                {products.map((product) => (
+                {scopedProducts.map((product) => (
                   <a href={`${isEn ? '/en' : ''}/buggy/${product.id}`} key={product.id}>
                     <img src={product.image} alt={titleFor(product, locale)} />
                     <div>
@@ -309,7 +377,15 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <article><Users size={18} /><b>{pageCopy.facts[2]}</b><span>{pageCopy.options}</span></article>
               <article><ShieldCheck size={18} /><b>{pageCopy.facts[3]}</b><span>{hotel.pickupNote}</span></article>
             </div>
-            <div id="booking-form">
+            <div className="tour-booking-steps" aria-label={isEn ? 'Booking steps' : 'Pasos de reserva'}>
+              {pageCopy.bookingSteps.map((step, index) => (
+                <span key={step}>
+                  <b>{index + 1}</b>
+                  {step}
+                </span>
+              ))}
+            </div>
+            <div id="booking-form" className="tour-booking-form-shell">
               <BookingCalculator
                 product={featuredProduct}
                 defaultHotel={hotel.name}

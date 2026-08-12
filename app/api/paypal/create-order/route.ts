@@ -4,6 +4,7 @@ import {
   createBookingReference,
   getProduct,
 } from '../../../../lib/buggyProducts';
+import { upsertAdminRecord } from '../../../../lib/adminStore';
 import { createPaypalOrder } from '../../../../lib/paypal';
 
 export const runtime = 'nodejs';
@@ -19,6 +20,7 @@ type PayPalBookingPayload = {
   email?: string;
   language?: string;
   pickupWindow?: string;
+  paymentPreference?: string;
   photos?: boolean;
   privatePickup?: boolean;
 };
@@ -58,6 +60,38 @@ export async function POST(request: Request) {
       reference,
       description,
       amount: pricing.total,
+    });
+
+    await upsertAdminRecord({
+      id: reference,
+      reference,
+      orderId: order.id,
+      type: 'booking',
+      source: 'paypal_checkout',
+      status: 'pending_payment',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      productId: product.id,
+      productName: product.title,
+      customer: {
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone,
+      },
+      booking: {
+        date: payload.date,
+        pickupWindow: payload.pickupWindow,
+        hotel: payload.hotel,
+        pickupZone: payload.pickupZone,
+        passengers: pricing.passengers,
+        language: payload.language,
+        paymentPreference: payload.paymentPreference,
+        photos: payload.photos,
+        privatePickup: payload.privatePickup,
+        total: pricing.total,
+        vehicles: pricing.vehicles,
+      },
+      raw: { payload, pricing, paypalOrderId: order.id },
     });
 
     return NextResponse.json({

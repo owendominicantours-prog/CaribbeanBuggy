@@ -26,6 +26,328 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.admin-login-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background: #fff7ed;
+  color: #111827;
+}
+
+.admin-login-card {
+  width: min(440px, 100%);
+  display: grid;
+  gap: 16px;
+  padding: 32px;
+  border: 1px solid #f3d7a8;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(88, 52, 16, 0.12);
+}
+
+.admin-login-card span,
+.admin-topbar span {
+  color: #f97316;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.admin-login-card h1,
+.admin-topbar h1 {
+  margin: 0;
+  color: #020617;
+  line-height: 1;
+}
+
+.admin-login-card h1 {
+  font-size: clamp(32px, 5vw, 48px);
+}
+
+.admin-login-card p,
+.admin-topbar p {
+  margin: 0;
+  color: #475569;
+}
+
+.admin-login-card label {
+  display: grid;
+  gap: 8px;
+  color: #111827;
+  font-weight: 800;
+}
+
+.admin-login-card input,
+.admin-toolbar input,
+.admin-toolbar select,
+.admin-record-actions select {
+  width: 100%;
+  border: 1px solid #d6dae0;
+  border-radius: 14px;
+  padding: 13px 14px;
+  background: #ffffff;
+  color: #111827;
+  font: inherit;
+}
+
+.admin-login-card button,
+.admin-topbar button,
+.admin-record-actions a {
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.admin-login-card button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.admin-login-error {
+  color: #dc2626;
+}
+
+.admin-shell {
+  min-height: 100vh;
+  padding: 28px;
+  background: #f8fafc;
+  color: #020617;
+}
+
+.admin-topbar,
+.admin-stat-grid,
+.admin-toolbar,
+.admin-record-grid {
+  max-width: 1280px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.admin-topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.admin-topbar h1 {
+  margin: 6px 0;
+  font-size: clamp(34px, 5vw, 60px);
+}
+
+.admin-topbar p {
+  max-width: 720px;
+}
+
+.admin-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.admin-stat-grid article {
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.admin-stat-grid span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.admin-stat-grid strong {
+  display: block;
+  margin-top: 8px;
+  color: #020617;
+  font-size: 34px;
+}
+
+.admin-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 22px;
+  background: #ffffff;
+}
+
+.admin-record-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-record-card {
+  padding: 20px;
+  border: 1px solid #d6dae0;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.admin-record-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-record-head span,
+.admin-record-columns span {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.admin-record-head h2 {
+  margin: 6px 0 0;
+  color: #020617;
+  font-size: 24px;
+}
+
+.admin-status {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.admin-status-paid,
+.admin-status-completed {
+  background: #dcfce7;
+  color: #047857;
+}
+
+.admin-status-pending_payment,
+.admin-status-inquiry {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.admin-status-cancelled,
+.admin-status-capture_failed {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.admin-record-code {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 16px 0;
+  color: #475569;
+}
+
+.admin-record-code b {
+  color: #020617;
+}
+
+.admin-record-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-record-columns div {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #f8fafc;
+}
+
+.admin-record-columns b {
+  color: #020617;
+  font-size: 16px;
+}
+
+.admin-record-columns small {
+  color: #475569;
+}
+
+.admin-record-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.admin-record-actions select {
+  max-width: 240px;
+  font-weight: 800;
+}
+
+.admin-record-actions a {
+  background: #f97316;
+  color: #111827;
+}
+
+.admin-record-actions a:last-child {
+  background: #111827;
+  color: #ffffff;
+}
+
+.admin-notes {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px dashed #cbd5e1;
+  color: #475569;
+}
+
+.admin-notes summary {
+  color: #020617;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .admin-shell {
+    padding: 16px;
+  }
+
+  .admin-topbar {
+    display: grid;
+  }
+
+  .admin-stat-grid,
+  .admin-toolbar,
+  .admin-record-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-record-head,
+  .admin-record-code {
+    display: grid;
+  }
+}
+
 button,
 input,
 select {
@@ -1405,6 +1727,31 @@ a {
   line-height: 1.65;
 }
 
+.tour-proof-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0 22px;
+}
+
+.tour-proof-strip span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d6dae0;
+  border-radius: 14px;
+  background: #fff;
+  padding: 12px 14px;
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.tour-proof-strip svg {
+  color: #f97316;
+  flex: none;
+}
+
 .tour-gallery {
   display: grid;
   grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.75fr);
@@ -1509,6 +1856,177 @@ a {
   font-size: 16px;
   font-weight: 650;
   line-height: 1.75;
+}
+
+.hotel-tour-page .tour-section p,
+.hotel-tour-page .tour-section li {
+  font-weight: 560;
+}
+
+.tour-video-section {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.75fr) minmax(320px, 1fr);
+  gap: 18px;
+  align-items: center;
+  border: 1px solid #d6dae0;
+  border-radius: 18px;
+  background: #fff;
+  padding: 24px;
+}
+
+.tour-video-section h2 {
+  margin: 8px 0 12px;
+  color: #020617;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 0.98;
+}
+
+.tour-video-section p {
+  margin: 0;
+  color: #475569;
+  font-size: 16px;
+  font-weight: 560;
+  line-height: 1.65;
+}
+
+.tour-video-frame {
+  overflow: hidden;
+  border-radius: 16px;
+  background: #020617;
+  box-shadow: 0 10px 28px rgba(2, 6, 23, 0.12);
+}
+
+.tour-video-frame video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #020617;
+}
+
+.tour-service-grid > p {
+  max-width: 900px;
+}
+
+.tour-service-lists {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: 16px;
+}
+
+.tour-list-card {
+  border: 1px solid #d6dae0;
+  border-radius: 16px;
+  background: #f7f8fa;
+  padding: 20px;
+}
+
+.tour-list-card-positive {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+}
+
+.tour-list-card h3 {
+  margin: 0 0 8px;
+  color: #020617;
+  font-size: 20px;
+  font-weight: 1000;
+  line-height: 1.15;
+}
+
+.tour-list-card p {
+  margin: 0 0 14px;
+  color: #475569;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tour-list-card ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+.tour-list-card li {
+  margin: 8px 0;
+}
+
+.tour-booking-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  border: 1px solid #d6dae0;
+  border-radius: 18px;
+  background: #fff;
+  padding: 12px;
+}
+
+.tour-booking-steps span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0f172a;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.tour-booking-steps b {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--yellow);
+  color: #0f172a;
+  font-size: 12px;
+}
+
+.tour-booking-form-shell {
+  scroll-margin-top: 92px;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-widget {
+  position: static;
+  top: auto;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-widget-head {
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-breakdown {
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-widget label {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-widget input,
+.hotel-tour-page .tour-booking-form-shell .booking-widget select {
+  min-height: 42px;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-contact-grid,
+.hotel-tour-page .tour-booking-form-shell .extras {
+  gap: 10px;
+}
+
+.hotel-tour-page .tour-booking-form-shell .booking-submit {
+  min-height: 48px;
+  border-radius: 999px;
 }
 
 .tour-checklist {
@@ -1728,7 +2246,9 @@ a {
   .hotel-buggy-grid,
   .hotel-facts,
   .tour-detail-grid,
-  .tour-two-columns {
+  .tour-two-columns,
+  .tour-video-section,
+  .tour-service-lists {
     grid-template-columns: 1fr;
   }
 
@@ -1751,6 +2271,10 @@ a {
 
   .booking-widget {
     position: static;
+  }
+
+  .tour-video-frame video {
+    min-height: 260px;
   }
 
   .product-card.popular {
@@ -1816,7 +2340,8 @@ a {
     .hotel-link-grid,
     .tour-quick-facts,
     .tour-checklist,
-    .tour-related {
+    .tour-related,
+    .tour-service-lists {
     grid-template-columns: 1fr;
   }
 
@@ -1830,6 +2355,10 @@ a {
 
   .tour-lead {
     font-size: 17px;
+  }
+
+  .tour-proof-strip {
+    grid-template-columns: 1fr;
   }
 
   .tour-gallery {
@@ -1858,6 +2387,18 @@ a {
 
   .tour-section {
     padding: 22px;
+  }
+
+  .tour-video-section {
+    padding: 18px;
+  }
+
+  .tour-video-frame video {
+    min-height: 220px;
+  }
+
+  .hotel-tour-page .tour-booking-form-shell .booking-contact-grid {
+    grid-template-columns: 1fr;
   }
 
   .trust-grid article {

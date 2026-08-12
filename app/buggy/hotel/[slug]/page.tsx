@@ -1,117 +1,22 @@
-import { notFound } from 'next/navigation';
-import HotelBuggyTourPage from '../../../../components/HotelBuggyTourPage';
-import { faqs, products, siteUrl } from '../../../../lib/buggyProducts';
+import { notFound, permanentRedirect } from 'next/navigation';
 import {
   getHotelBuggyLanding,
   hotelBuggyLandings,
-  hotelBuggyUrl,
+  hotelBuggyPath,
 } from '../../../../lib/hotelBuggyLandings';
 
-type HotelBuggyPageProps = {
-  params: Promise<{ slug: string }>;
-};
+type PageProps = { params: Promise<{ slug: string }> };
+
+export const dynamicParams = false;
 
 export function generateStaticParams() {
   return hotelBuggyLandings.map((hotel) => ({ slug: hotel.slug }));
 }
 
-export async function generateMetadata({ params }: HotelBuggyPageProps) {
-  const { slug } = await params;
-  const hotel = getHotelBuggyLanding(slug);
-  if (!hotel) return {};
-
-  const title = `Buggy tour desde ${hotel.name} | Caribbean Buggy`;
-  const description = `Reserva buggy desde ${hotel.name} en Punta Cana. Recogida coordinada en ${hotel.zone}, ruta Macao, cenote, playa y pago seguro.`;
-  const canonical = hotelBuggyUrl(hotel.slug, 'es');
-
-  return {
-    title,
-    description,
-    alternates: {
-      canonical,
-      languages: {
-        es: canonical,
-        en: hotelBuggyUrl(hotel.slug, 'en'),
-        'x-default': canonical,
-      },
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonical,
-      images: [`${siteUrl}/buggy/doble.jpeg`],
-    },
-  };
-}
-
-export default async function HotelBuggyPage({ params }: HotelBuggyPageProps) {
+export default async function LegacyHotelBuggyPage({ params }: PageProps) {
   const { slug } = await params;
   const hotel = getHotelBuggyLanding(slug);
   if (!hotel) notFound();
 
-  const canonical = hotelBuggyUrl(hotel.slug, 'es');
-  const schema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Caribbean Buggy', item: siteUrl },
-          { '@type': 'ListItem', position: 2, name: 'Buggy tours', item: `${siteUrl}/#precios` },
-          { '@type': 'ListItem', position: 3, name: hotel.name, item: canonical },
-        ],
-      },
-      {
-        '@type': 'Service',
-        '@id': `${canonical}#service`,
-        name: `Buggy tour desde ${hotel.name}`,
-        serviceType: 'Buggy tour con recogida en hotel',
-        provider: {
-          '@type': 'LocalBusiness',
-          name: 'Caribbean Buggy',
-          url: siteUrl,
-          telephone: '+1-829-475-6298',
-        },
-        areaServed: {
-          '@type': 'Place',
-          name: `${hotel.zone}, Punta Cana`,
-        },
-        description: `Tour en buggy con recogida desde ${hotel.name}, ruta off-road en Macao, parada en cenote, rancho dominicano y visita a Playa Macao.`,
-        offers: {
-          '@type': 'AggregateOffer',
-          priceCurrency: 'USD',
-          lowPrice: Math.min(...products.map((product) => product.promo)),
-          highPrice: Math.max(...products.map((product) => product.promo)),
-          offerCount: products.length,
-          availability: 'https://schema.org/InStock',
-          url: canonical,
-        },
-      },
-      {
-        '@type': 'FAQPage',
-        mainEntity: [
-          {
-            '@type': 'Question',
-            name: `Puedo reservar buggy desde ${hotel.name}?`,
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: `Si. Caribbean Buggy coordina recogida desde ${hotel.name} o el punto autorizado de excursiones mas cercano.`,
-            },
-          },
-          ...faqs.map(([question, answer]) => ({
-            '@type': 'Question',
-            name: question,
-            acceptedAnswer: { '@type': 'Answer', text: answer },
-          })),
-        ],
-      },
-    ],
-  };
-
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-      <HotelBuggyTourPage hotel={hotel} canonical={canonical} locale="es" />
-    </>
-  );
+  permanentRedirect(hotelBuggyPath(hotel.slug, 'es'));
 }
