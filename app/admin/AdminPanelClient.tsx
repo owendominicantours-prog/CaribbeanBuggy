@@ -304,7 +304,11 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         <section className="admin-seo-grid">
           {seoPages.slice(0, seoLimit).map((page) => { const metric = visits.metrics[page.path] ?? { views: 0, visits: 0, today: 0 }; return <article className="admin-seo-card" key={page.path}>
             <div className="admin-seo-card-head"><span>{seoTypeLabels[page.type]} · {page.locale.toUpperCase()}</span><b>{page.destination === 'punta-cana' ? 'Punta Cana' : page.destination === 'bayahibe' ? 'Bayahibe' : 'General'}</b></div>
-            <h2>{page.title}</h2><a href={page.url} target="_blank" rel="noreferrer">{page.path}</a>
+            <h2>{page.title}</h2>
+            <div className="admin-seo-page-link">
+              <code>{page.path}</code>
+              <a href={page.url} target="_blank" rel="noreferrer">Ver landing ↗</a>
+            </div>
             <div className="admin-seo-metrics"><span><small>Visitas</small><strong>{metric.visits.toLocaleString()}</strong></span><span><small>Vistas</small><strong>{metric.views.toLocaleString()}</strong></span><span><small>Hoy</small><strong>{metric.today.toLocaleString()}</strong></span></div>
             <div className="admin-seo-health"><span>Canonical ✓</span><span>Hreflang ✓</span>{page.schema.map((schema) => <span key={schema}>{schema}</span>)}</div>
             <small className="admin-seo-last">{metric.lastVisit ? `Última vista: ${formatDate(metric.lastVisit)}` : 'Todavía sin visitas registradas'}</small>
