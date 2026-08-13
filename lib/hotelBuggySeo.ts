@@ -1,5 +1,6 @@
 import { faqs, products, siteUrl, type BuggyProduct } from './buggyProducts';
-import { hotelBuggyUrl, type HotelBuggyLanding } from './hotelBuggyLandings';
+import { hotelBuggyUrl, isBayahibeHotel, type HotelBuggyLanding } from './hotelBuggyLandings';
+import { tripadvisorSchemaReference } from './tripadvisor';
 
 export type HotelBuggyLocale = 'es' | 'en';
 
@@ -54,11 +55,16 @@ function productName(product: BuggyProduct, locale: HotelBuggyLocale) {
 }
 
 function productDescription(product: BuggyProduct, hotel: HotelBuggyLanding, locale: HotelBuggyLocale) {
+  const bayahibe = isBayahibeHotel(hotel);
   if (locale === 'en') {
-    return `${productName(product, locale)} with coordinated pickup from ${hotel.name}, local guide, off-road route, cenote stop and Macao Beach when operated.`;
+    return bayahibe
+      ? `${productName(product, locale)} with coordinated pickup from ${hotel.name}, local guide, sugar-cane roads, rural mud trails and a Chavón River stop.`
+      : `${productName(product, locale)} with coordinated pickup from ${hotel.name}, local guide, off-road route, cenote stop and Macao Beach when operated.`;
   }
 
-  return `${product.title} con recogida coordinada desde ${hotel.name}, guia local, ruta off-road, parada en cenote y Playa Macao segun operacion.`;
+  return bayahibe
+    ? `${product.title} con recogida coordinada desde ${hotel.name}, guía local, cañaverales, caminos rurales de lodo y parada en el río Chavón.`
+    : `${product.title} con recogida coordinada desde ${hotel.name}, guía local, ruta off-road, parada en cenote y Playa Macao según operación.`;
 }
 
 function productUrl(product: BuggyProduct, locale: HotelBuggyLocale) {
@@ -68,21 +74,39 @@ function productUrl(product: BuggyProduct, locale: HotelBuggyLocale) {
 export function getHotelBuggySeoCopy(hotel: HotelBuggyLanding, locale: HotelBuggyLocale) {
   const scopedProducts = getHotelBuggyProducts(hotel);
   const lowPrice = Math.min(...scopedProducts.map((product) => product.promo));
+  const bayahibe = isBayahibeHotel(hotel);
 
   if (locale === 'en') {
     return {
       title: `Buggy tour from ${hotel.name} | From US$${lowPrice}`,
-      description: `Book a buggy tour from ${hotel.name}. Hotel pickup in ${hotel.zone}, Macao off-road route, cenote stop, beach time and secure online payment.`,
+      description: bayahibe
+        ? `Book a real Bayahibe buggy tour from ${hotel.name}. Pickup in ${hotel.zone}, sugar-cane roads, mud trails, Chavón River and secure payment.`
+        : `Book a buggy tour from ${hotel.name}. Hotel pickup in ${hotel.zone}, Macao off-road route, cenote stop, beach time and secure online payment.`,
     };
   }
 
   return {
     title: `Buggy tour desde ${hotel.name} | Desde US$${lowPrice}`,
-    description: `Reserva buggy tour desde ${hotel.name}. Recogida en ${hotel.zone}, ruta off-road en Macao, cenote, playa y pago seguro online.`,
+    description: bayahibe
+      ? `Reserva un tour real en buggy desde ${hotel.name}. Recogida en ${hotel.zone}, cañaverales, lodo, río Chavón y pago seguro.`
+      : `Reserva buggy tour desde ${hotel.name}. Recogida en ${hotel.zone}, ruta off-road en Macao, cenote, playa y pago seguro online.`,
   };
 }
 
-export function getHotelBuggyFaqs(locale: HotelBuggyLocale) {
+export function getHotelBuggyFaqs(locale: HotelBuggyLocale, bayahibe = false) {
+  if (bayahibe) {
+    return locale === 'en'
+      ? [
+          { question: 'Is pickup from Bayahibe hotels available?', answer: 'Yes. Pickup or a confirmed meeting point is coordinated according to the hotel and operating route.' },
+          { question: 'What does the Bayahibe route visit?', answer: 'The route uses sugar-cane roads, rural communities, mud trails and a Chavón River stop according to daily operations.' },
+          { question: 'Are these real Bayahibe photos and video?', answer: 'Yes. The media shown on the page comes from the actual Bayahibe buggy operation.' },
+        ]
+      : [
+          { question: '¿Hay recogida desde hoteles de Bayahibe?', answer: 'Sí. La recogida o punto de encuentro se coordina según el hotel y la ruta operativa.' },
+          { question: '¿Qué visita la ruta de Bayahibe?', answer: 'La ruta recorre cañaverales, comunidades rurales, caminos de lodo y una parada en el río Chavón según la operación.' },
+          { question: '¿Las fotos y el video son reales?', answer: 'Sí. El material mostrado pertenece a la operación real de buggy en Bayahibe.' },
+        ];
+  }
   if (locale === 'en') return enFaqs;
 
   return faqs.map(([question, answer]) => ({ question, answer }));
@@ -93,10 +117,14 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
   const scopedProducts = getHotelBuggyProducts(hotel);
   const lowPrice = Math.min(...scopedProducts.map((product) => product.promo));
   const highPrice = Math.max(...scopedProducts.map((product) => product.promo));
-  const localizedFaqs = getHotelBuggyFaqs(locale);
+  const bayahibe = isBayahibeHotel(hotel);
+  const localizedFaqs = getHotelBuggyFaqs(locale, bayahibe);
   const routeName = locale === 'en' ? `Buggy tour from ${hotel.name}` : `Buggy tour desde ${hotel.name}`;
-  const routeDescription =
-    locale === 'en'
+  const routeDescription = bayahibe
+    ? locale === 'en'
+      ? `Real Bayahibe buggy tour with pickup from ${hotel.name}, sugar-cane roads, rural mud trails and a Chavón River stop.`
+      : `Tour real en buggy por Bayahibe con recogida desde ${hotel.name}, cañaverales, caminos rurales de lodo y parada en el río Chavón.`
+    : locale === 'en'
       ? `Buggy tour with coordinated pickup from ${hotel.name}, Macao off-road route, Dominican ranch, cenote stop and Macao Beach.`
       : `Buggy tour con recogida coordinada desde ${hotel.name}, ruta off-road en Macao, rancho dominicano, cenote y Playa Macao.`;
 
@@ -135,6 +163,7 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
         name: routeName,
         url: canonical,
         description: routeDescription,
+        ...tripadvisorSchemaReference(isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana', locale),
         provider: { '@id': `${siteUrl}/#business` },
         serviceType: 'Buggy tour with hotel pickup',
         areaServed: { '@type': 'Place', name: hotel.zone },
@@ -153,6 +182,20 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
           seller: { '@id': `${siteUrl}/#business` },
         },
       },
+      ...(bayahibe ? [{
+        '@type': 'VideoObject',
+        '@id': `${canonical}#video`,
+        name: locale === 'en'
+          ? `Real Bayahibe buggy tour from ${hotel.name}`
+          : `Video real del tour en buggy desde ${hotel.name}`,
+        description: locale === 'en'
+          ? 'Original Bayahibe buggy footage with sugar-cane roads, rural trails and mud.'
+          : 'Video original de la ruta de buggy por Bayahibe con cañaverales, caminos rurales y lodo.',
+        thumbnailUrl: [`${siteUrl}/buggy/bayahibe/buggy-lodo-bayahibe.jpg`],
+        contentUrl: `${siteUrl}/buggy/bayahibe/tour-buggy-bayahibe.mp4`,
+        uploadDate: '2026-08-13T12:00:00-04:00',
+        duration: 'PT47S',
+      }] : []),
       {
         '@type': 'ItemList',
         '@id': `${canonical}#buggy-options`,
@@ -167,6 +210,7 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
             image: `${siteUrl}${product.image}`,
             description: productDescription(product, hotel, locale),
             brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
+            ...tripadvisorSchemaReference(isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana', locale),
             offers: {
               '@type': 'Offer',
               priceCurrency: 'USD',

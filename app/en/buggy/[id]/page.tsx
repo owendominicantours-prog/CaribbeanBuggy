@@ -6,6 +6,9 @@ import BookingCalculator from '../../../../components/BookingCalculator';
 import LanguageSwitch from '../../../../components/LanguageSwitch';
 import { getProduct, products, proactivitisPhone, siteUrl } from '../../../../lib/buggyProducts';
 import { guidePath, seoGuides } from '../../../../lib/seoGuides';
+import TripAdvisorReviews from '../../../../components/TripAdvisorReviews';
+import { tripadvisorSchemaReference } from '../../../../lib/tripadvisor';
+import BayahibeRealMedia from '../../../../components/BayahibeRealMedia';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -20,6 +23,16 @@ const included = [
   'Cenote stop',
   'Macao Beach visit',
   'Route support during the tour',
+];
+
+const bayahibeIncluded = [
+  'Round-trip transport from the hotel or confirmed meeting point',
+  'Buggy according to the selected option',
+  'Helmet and safety briefing',
+  'Local guide throughout the route',
+  'Sugar-cane roads, rural communities and mud trails',
+  'Chavón River stop according to operations',
+  'Tour support throughout the experience',
 ];
 
 const requirements = [
@@ -40,6 +53,13 @@ const faqs = [
   ['Is hotel pickup included?', 'Yes, pickup and return are included from main Bavaro and Punta Cana hotel zones.'],
   ['Do we visit Macao Beach?', 'Yes, the route normally includes Macao Beach and a cenote stop, subject to daily operations.'],
   ['Will I get muddy?', 'Yes. This is an off-road buggy experience with mud, rural roads and water stops. Old clothes are recommended.'],
+];
+
+const bayahibeFaqs = [
+  ['Is the price per person or per vehicle?', 'The published price is per vehicle according to the selected option.'],
+  ['Is pickup available from Bayahibe and La Romana hotels?', 'Yes. The authorized pickup or meeting point is confirmed by WhatsApp according to the hotel and daily operations.'],
+  ['What does the Bayahibe route visit?', 'The route covers sugar-cane roads, rural communities, puddles and mud trails, with a Chavón River stop according to operations.'],
+  ['Are the photos and video real?', 'Yes. The media shown comes from the actual Bayahibe and La Romana buggy operation.'],
 ];
 
 function englishTitle(title: string) {
@@ -107,6 +127,8 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
   const title = englishTitle(product.title);
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
+  const localizedIncluded = isBayahibe ? bayahibeIncluded : included;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : faqs;
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -118,6 +140,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
         image: `${siteUrl}${product.image}`,
         sku: product.id,
         brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
+        ...tripadvisorSchemaReference(isBayahibe ? 'bayahibe' : 'punta-cana', 'en'),
         areaServed: `${product.destination}, Dominican Republic`,
         offers: {
           '@type': 'Offer',
@@ -127,6 +150,15 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
           url: `${siteUrl}/en/buggy/${product.id}`,
         },
       },
+      ...(isBayahibe ? [{
+        '@type': 'VideoObject',
+        name: 'Real Bayahibe and La Romana buggy tour video',
+        description: 'Original footage of the Bayahibe buggy route with red buggies, sugar-cane roads, rural trails and mud.',
+        thumbnailUrl: [`${siteUrl}/buggy/bayahibe/buggy-lodo-bayahibe.jpg`],
+        contentUrl: `${siteUrl}/buggy/bayahibe/tour-buggy-bayahibe.mp4`,
+        uploadDate: '2026-08-13T12:00:00-04:00',
+        duration: 'PT47S',
+      }] : []),
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -137,7 +169,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
       },
       {
         '@type': 'FAQPage',
-        mainEntity: faqs.map(([question, answer]) => ({
+        mainEntity: localizedFaqs.map(([question, answer]) => ({
           '@type': 'Question',
           name: question,
           acceptedAnswer: { '@type': 'Answer', text: answer },
@@ -209,7 +241,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
             <span className="kicker">Included</span>
             <h2>What you get with {title}.</h2>
             <div className="check-grid">
-              {included.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
+              {localizedIncluded.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
             </div>
           </article>
           <article className="info-card dark">
@@ -227,7 +259,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
-          <Image src="/buggy/ruta-1.jpeg" alt="Buggy route in Macao" width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
+          <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Real buggy route through Bayahibe sugar cane fields' : 'Buggy route in Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Tour route</span>
             <h2>{isBayahibe ? 'Bayahibe, La Romana and rural roads.' : 'Macao, cenote and Dominican ranch.'}</h2>
@@ -243,13 +275,15 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
         </div>
       </section>
 
+      {isBayahibe ? <BayahibeRealMedia locale="en" /> : null}
+
       <section id="faq" className="section faq-section">
         <div className="wrap section-head">
           <span className="kicker">FAQ</span>
           <h2>Common questions about {title}.</h2>
         </div>
         <div className="wrap faq-grid">
-          {faqs.map(([question, answer]) => (
+          {localizedFaqs.map(([question, answer]) => (
             <article key={question}>
               <h3>{question}</h3>
               <p>{answer}</p>
@@ -257,6 +291,8 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
           ))}
         </div>
       </section>
+
+      <section id="tripadvisor" className="section tripadvisor-section"><div className="wrap"><TripAdvisorReviews locale="en" destination={isBayahibe ? 'bayahibe' : 'punta-cana'} location={`product_landing_${product.id}`} /></div></section>
 
       <section className="section related-section">
         <div className="wrap section-head"><span className="kicker">Booking guides</span><h2>Understand the route before paying.</h2></div>

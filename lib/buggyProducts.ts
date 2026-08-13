@@ -127,7 +127,7 @@ export const products: BuggyProduct[] = [
     capacityLabel: '1 adulto',
     capacityNumber: 1,
     note: 'Precio por vehiculo',
-    image: '/buggy/ruta-2.jpeg',
+    image: '/buggy/bayahibe/buggy-canaveral-bayahibe.jpg',
     popular: false,
   },
   {
@@ -150,7 +150,7 @@ export const products: BuggyProduct[] = [
     capacityLabel: 'Piloto + copiloto',
     capacityNumber: 2,
     note: 'Precio total por 2 pasajeros',
-    image: '/buggy/ruta-1.jpeg',
+    image: '/buggy/bayahibe/buggy-lodo-bayahibe.jpg',
     popular: true,
   },
   {
@@ -173,7 +173,7 @@ export const products: BuggyProduct[] = [
     capacityLabel: 'Hasta 4 personas',
     capacityNumber: 4,
     note: 'Precio total por las 4 plazas',
-    image: '/buggy/ruta-3.jpeg',
+    image: '/buggy/bayahibe/grupo-buggies-bayahibe.jpg',
     popular: false,
   },
 ];

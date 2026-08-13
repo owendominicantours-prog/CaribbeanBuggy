@@ -11,6 +11,7 @@ import {
 } from '../lib/buggyQuestions';
 import { getProduct, whatsappHref } from '../lib/buggyProducts';
 import { getGuideForContext, guidePath, guidesPath, type SeoGuideCategory } from '../lib/seoGuides';
+import { TripAdvisorReviewLink } from './TripAdvisorReviews';
 
 function guidance(question: BuggyQuestion, locale: QuestionLocale) {
   const isEn = locale === 'en';
@@ -101,6 +102,7 @@ export default function QuestionLandingPage({ question, locale }: { question: Bu
               <span><ShieldCheck size={18} /><b>{isEn ? 'Confirm operational details' : 'Confirma los detalles operativos'}</b><small>{isEn ? 'Pickup time arrives by WhatsApp or email.' : 'La hora de recogida llega por WhatsApp o correo.'}</small></span>
             </div>
             <a className="question-guide-bridge" href={guidePath(completeGuide, locale)}><span>{isEn ? 'Complete guide' : 'Guía completa'}</span><b>{completeGuide[locale].title}</b><ArrowRight size={19} /></a>
+            {question.destination !== 'general' ? <TripAdvisorReviewLink locale={locale} destination={question.destination} location={`question_${question.id}`} /> : null}
           </article>
 
           <aside className="question-booking-card">

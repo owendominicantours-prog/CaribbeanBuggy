@@ -24,6 +24,7 @@ import {
 import { getHotelBuggyProducts } from '../lib/hotelBuggySeo';
 import LanguageSwitch from './LanguageSwitch';
 import { guidePath, seoGuides } from '../lib/seoGuides';
+import TripAdvisorReviews from './TripAdvisorReviews';
 
 type HotelBuggyTourPageProps = {
   hotel: HotelBuggyLanding;
@@ -31,8 +32,15 @@ type HotelBuggyTourPageProps = {
   locale?: 'es' | 'en';
 };
 
-const gallery = ['/buggy/doble.jpeg', '/buggy/ruta-1.jpeg', '/buggy/ruta-2.jpeg', '/buggy/ruta-3.jpeg'];
+const puntaCanaGallery = ['/buggy/doble.jpeg', '/buggy/ruta-1.jpeg', '/buggy/ruta-2.jpeg', '/buggy/ruta-3.jpeg'];
+const bayahibeGallery = [
+  '/buggy/bayahibe/buggy-lodo-bayahibe.jpg',
+  '/buggy/bayahibe/convoy-lodo-bayahibe.jpg',
+  '/buggy/bayahibe/parada-cana-azucar-bayahibe.jpg',
+  '/buggy/bayahibe/rio-chavon-bayahibe.jpg',
+];
 const BUGGY_VIDEO_URL = 'https://cfplxlfjp1i96vih.public.blob.vercel-storage.com/Videos/Buggy%20Punta%20cana.mp4';
+const BAYAHIBE_VIDEO_URL = '/buggy/bayahibe/tour-buggy-bayahibe.mp4';
 
 const enIncluded = [
   'Round-trip hotel pickup',
@@ -43,6 +51,26 @@ const enIncluded = [
   'Cenote stop',
   'Macao Beach visit',
   'Route support during the tour',
+];
+
+const bayahibeIncluded = [
+  'Transporte ida y vuelta desde el hotel o punto confirmado',
+  'Buggy según la modalidad elegida',
+  'Casco e instrucciones de seguridad',
+  'Guía local durante la ruta',
+  'Ruta por cañaverales, comunidades rurales y caminos de lodo',
+  'Parada en el río Chavón según la operación',
+  'Asistencia durante toda la excursión',
+];
+
+const enBayahibeIncluded = [
+  'Round-trip transport from the hotel or confirmed meeting point',
+  'Buggy according to the selected option',
+  'Helmet and safety briefing',
+  'Local guide throughout the route',
+  'Sugar-cane roads, rural communities and mud trails',
+  'Chavón River stop according to operations',
+  'Tour support throughout the experience',
 ];
 
 const enRequirements = [
@@ -79,7 +107,22 @@ const enFaqs = [
   ['Will I get muddy?', 'Yes. This is an off-road buggy experience with mud, rural roads and water stops. Old clothes are recommended.'],
 ];
 
+const bayahibeFaqs = [
+  ['¿El precio es por persona o por vehículo?', 'El precio publicado es por vehículo según la modalidad: individual, doble o familiar.'],
+  ['¿Hay recogida desde hoteles de Bayahibe y La Romana?', 'Sí. Confirmamos por WhatsApp la recogida o el punto de encuentro autorizado según el hotel y la operación del día.'],
+  ['¿Qué visita la ruta de Bayahibe?', 'La ruta recorre cañaverales, comunidades rurales, charcos y caminos de lodo, con parada en el río Chavón según la operación.'],
+  ['¿Las fotos y el video son reales?', 'Sí. El material mostrado pertenece a la operación real de buggy en Bayahibe y La Romana.'],
+];
+
+const enBayahibeFaqs = [
+  ['Is the price per person or per vehicle?', 'The published price is per vehicle according to the selected single, double or family option.'],
+  ['Is pickup available from Bayahibe and La Romana hotels?', 'Yes. We confirm the authorized pickup or meeting point by WhatsApp according to the hotel and daily operations.'],
+  ['What does the Bayahibe route visit?', 'The route covers sugar-cane roads, rural communities, puddles and mud trails, with a Chavón River stop according to operations.'],
+  ['Are the photos and video real?', 'Yes. The media shown comes from the actual Bayahibe and La Romana buggy operation.'],
+];
+
 function zoneForCalculator(zone: string) {
+  if (/Bayahibe|Romana|Dominicus/i.test(zone)) return 'Bayahibe / La Romana';
   if (zone.includes('Uvero')) return 'Uvero Alto';
   if (zone.includes('Cap Cana')) return 'Cap Cana';
   if (zone.includes('Cabeza')) return 'Cabeza de Toro';
@@ -97,9 +140,11 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
   const scopedProducts = getHotelBuggyProducts(hotel);
   const relatedHotels = getRelatedHotelBuggyLandings(hotel, 10);
   const hotelDestination = isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana';
+  const gallery = hotelDestination === 'bayahibe' ? bayahibeGallery : puntaCanaGallery;
+  const videoUrl = hotelDestination === 'bayahibe' ? BAYAHIBE_VIDEO_URL : BUGGY_VIDEO_URL;
   const hotelGuides = seoGuides.filter((guide) => guide.destination === hotelDestination || guide.destination === 'general').slice(0, 4);
   const featuredProduct = scopedProducts.find((product) => product.popular) ?? scopedProducts[0];
-  const pageCopy = isEn
+  const basePageCopy = isEn
     ? {
         navPrices: 'Prices',
         navRoute: 'Route',
@@ -198,12 +243,44 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         nearbyHotelsBody: `Compara páginas de reserva para hoteles cercanos en ${hotel.zone} y el mismo destino.`,
         nearbyHotelLink: 'Buggy tour desde',
       };
+  const pageCopy = hotelDestination === 'bayahibe'
+    ? {
+        ...basePageCopy,
+        intro: isEn
+          ? `Book a real Bayahibe and La Romana buggy tour from ${hotel.name} with coordinated pickup, sugar-cane roads, rural villages, mud trails and a Chavón River stop.`
+          : `Reserva un tour real en buggy por Bayahibe y La Romana desde ${hotel.name}, con recogida coordinada, cañaverales, comunidades rurales, caminos de lodo y parada en el río Chavón.`,
+        videoBody: isEn
+          ? 'Original footage from the Bayahibe operation: red buggies, sugar-cane roads, mud and rural scenery.'
+          : 'Video original de la operación de Bayahibe: buggies rojos, caminos entre cañaverales, lodo y paisaje rural.',
+        body: isEn
+          ? `After booking, the team confirms pickup from ${hotel.name}. At the Bayahibe base you receive safety instructions, the reserved buggy and a local guide for the rural 4x4 route.`
+          : `Después de reservar, el equipo confirma la recogida desde ${hotel.name}. En la base de Bayahibe recibes instrucciones de seguridad, el buggy reservado y un guía local para la ruta rural 4x4.`,
+        itineraryTitle: isEn ? 'From hotel pickup to the real Bayahibe route' : 'De la recogida en hotel a la ruta real de Bayahibe',
+        steps: isEn
+          ? [
+              ['Pickup coordination', `We confirm the authorized pickup point for ${hotel.name}.`],
+              ['Bayahibe base', 'Safety briefing, helmet and buggy assignment.'],
+              ['Sugar-cane route', 'Rural communities, plantations, puddles and mud trails.'],
+              ['Chavón River', 'Swimming stop and local refreshments according to operations.'],
+            ]
+          : [
+              ['Coordinación de recogida', `Confirmamos el punto autorizado para ${hotel.name}.`],
+              ['Base de Bayahibe', 'Instrucciones de seguridad, casco y asignación del buggy.'],
+              ['Ruta entre cañaverales', 'Comunidades rurales, plantaciones, charcos y caminos de lodo.'],
+              ['Río Chavón', 'Parada para nadar y refrigerio local según la operación.'],
+            ],
+      }
+    : basePageCopy;
 
-  const listIncluded = isEn ? enIncluded : included;
+  const listIncluded = hotelDestination === 'bayahibe'
+    ? (isEn ? enBayahibeIncluded : bayahibeIncluded)
+    : (isEn ? enIncluded : included);
   const listNotIncluded = isEn ? enNotIncluded : notIncluded;
   const listRequirements = isEn ? enRequirements : requirements;
   const listBring = isEn ? enBring : bring;
-  const listFaqs = isEn ? enFaqs : faqs;
+  const listFaqs = hotelDestination === 'bayahibe'
+    ? (isEn ? enBayahibeFaqs : bayahibeFaqs)
+    : (isEn ? enFaqs : faqs);
 
   return (
     <main className="hotel-tour-page">
@@ -260,7 +337,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
             </div>
 
             <div className="tour-gallery" aria-label={isEn ? 'Buggy tour photos' : 'Fotos del tour en buggy'}>
-              <Image className="tour-gallery-main" src="/buggy/doble.jpeg" alt={pageCopy.h1} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 55vw" />
+              <Image className="tour-gallery-main" src={gallery[0]} alt={pageCopy.h1} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 55vw" />
               <div className="tour-gallery-side">
                 {gallery.slice(1).map((image, index) => (
                   <Image key={image} src={image} alt={`${pageCopy.h1} ${index + 2}`} width={600} height={398} sizes="(max-width: 680px) 33vw, 24vw" />
@@ -285,8 +362,8 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
                 <p>{pageCopy.videoBody}</p>
               </div>
               <div className="tour-video-frame">
-                <video controls playsInline preload="metadata" poster="/buggy/doble.jpeg">
-                  <source src={BUGGY_VIDEO_URL} type="video/mp4" />
+                <video controls playsInline preload="metadata" poster={gallery[0]}>
+                  <source src={videoUrl} type="video/mp4" />
                 </video>
               </div>
             </section>
@@ -376,6 +453,8 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
                 ))}
               </div>
             </section>
+
+            <section id="tripadvisor" className="tour-section hotel-tripadvisor-section"><TripAdvisorReviews locale={locale} destination={hotelDestination} location={`hotel_landing_${hotel.slug}`} /></section>
 
             <section className="tour-section hotel-related-section" aria-labelledby="related-hotels-title">
               <span className="tour-kicker">{pageCopy.nearbyHotelsKicker}</span>

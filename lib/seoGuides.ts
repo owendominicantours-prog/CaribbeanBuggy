@@ -52,7 +52,7 @@ export const seoGuides: SeoGuide[] = [
     },
   },
   {
-    id: 'bayahibe-complete', category: 'destination', destination: 'bayahibe', productId: 'bayahibe-buggy-doble', image: '/buggy/ruta-1.jpeg',
+    id: 'bayahibe-complete', category: 'destination', destination: 'bayahibe', productId: 'bayahibe-buggy-doble', image: '/buggy/bayahibe/buggy-lodo-bayahibe.jpg',
     es: {
       slug: 'buggy-bayahibe-la-romana-guia', title: 'Buggy en Bayahibe y La Romana: ruta, precios y recogida', metaTitle: 'Buggy Bayahibe y La Romana: Ruta, Precio y Pickup', description: 'Guía para reservar buggy en Bayahibe y La Romana con precios, modalidades, ruta rural, hoteles y recogida coordinada.', eyebrow: 'Guía local de Bayahibe',
       intro: 'Bayahibe y La Romana usan una operación distinta a Punta Cana. Esta guía ayuda a evitar la confusión más común: reservar una ruta de Macao esperando recogida en Bayahibe o asumir que todas las paradas son iguales.',

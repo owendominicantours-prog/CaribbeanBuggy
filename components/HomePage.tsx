@@ -32,6 +32,8 @@ import {
 import { getFeaturedHotelBuggyLandings, hotelBuggyUrl } from '../lib/hotelBuggyLandings';
 import { questionsPath } from '../lib/buggyQuestions';
 import { guidePath, guidesPath, seoGuides } from '../lib/seoGuides';
+import { TripAdvisorReviewLink } from './TripAdvisorReviews';
+import { tripadvisorSchemaReference } from '../lib/tripadvisor';
 
 type Locale = 'es' | 'en';
 
@@ -168,6 +170,7 @@ export function buildHomeSchema(locale: Locale) {
             image: `${siteUrl}${product.image}`,
             sku: product.id,
             brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
+            ...tripadvisorSchemaReference(product.destination.includes('Bayahibe') ? 'bayahibe' : 'punta-cana', locale),
             offers: {
               '@type': 'Offer',
               price: product.promo,
@@ -345,6 +348,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
               <span><Clock3 size={16} /> {isEn ? 'Approx. 4 hours with transfer' : product.durationLabel}</span>
               <span><BadgeDollarSign size={16} /> {productNote(product, locale)}</span>
             </div>
+            <TripAdvisorReviewLink locale={locale} destination={destination === 'Bayahibe' ? 'bayahibe' : 'punta-cana'} location={`product_card_${product.id}`} />
             <a href={`${base}/buggy/${product.id}`} data-product-id={product.id}>{copy.details} <ArrowRight size={17} /></a>
           </article>
         ))}

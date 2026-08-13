@@ -4,6 +4,8 @@ import LanguageSwitch from './LanguageSwitch';
 import { getProduct, whatsappHref } from '../lib/buggyProducts';
 import { buggyQuestions, questionPath, type QuestionCategory as BuggyQuestionCategory } from '../lib/buggyQuestions';
 import { getRelatedSeoGuides, guideCategoryLabels, guidePath, guidesPath, type SeoGuide, type SeoGuideLocale } from '../lib/seoGuides';
+import { TripAdvisorReviewLink } from './TripAdvisorReviews';
+import BayahibeRealMedia from './BayahibeRealMedia';
 
 export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide; locale: SeoGuideLocale }) {
   const isEn = locale === 'en';
@@ -38,6 +40,7 @@ export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide
           <p>{copy.intro}</p>
           <div className="seo-guide-trust"><span><ShieldCheck size={17} /> {isEn ? 'Clear operating conditions' : 'Condiciones operativas claras'}</span><span><CheckCircle2 size={17} /> {isEn ? 'Direct published prices' : 'Precios directos publicados'}</span></div>
           <p className="seo-guide-byline">{isEn ? 'Published by Caribbean Buggy · Booking guidance based on the options and operating conditions shown on this website.' : 'Publicado por Caribbean Buggy · Orientación basada en las opciones y condiciones operativas mostradas en esta web.'}</p>
+          {guide.destination !== 'general' ? <TripAdvisorReviewLink locale={locale} destination={guide.destination} location={`guide_${guide.id}`} /> : null}
         </div>
       </section>
 
@@ -55,6 +58,8 @@ export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide
           </aside>
         </div>
       </section>
+
+      {guide.destination === 'bayahibe' ? <BayahibeRealMedia locale={locale} /> : null}
 
       <section id="related" className="section related-question-section">
         <div className="wrap section-head"><span className="kicker">{isEn ? 'Topic cluster' : 'Clúster relacionado'}</span><h2>{isEn ? 'Continue with related guides.' : 'Continúa con guías relacionadas.'}</h2></div>

@@ -1,5 +1,6 @@
 import { siteUrl } from './buggyProducts';
 import { buggyQuestions, questionPath, questionsPath, type BuggyQuestion, type QuestionLocale } from './buggyQuestions';
+import { tripadvisorSchemaReference } from './tripadvisor';
 
 export function questionsCanonical(locale: QuestionLocale) {
   return `${siteUrl}${questionsPath(locale)}`;
@@ -60,6 +61,14 @@ export function buildQuestionJsonLd(question: BuggyQuestion, locale: QuestionLoc
           acceptedAnswer: { '@type': 'Answer', text: question[locale].answer },
         }],
       },
+      ...(question.destination !== 'general' ? [{
+        '@type': 'Service',
+        '@id': `${canonical}#${question.destination}-buggy-tour`,
+        name: question.destination === 'bayahibe' ? (isEn ? 'Bayahibe buggy tour' : 'Tour en buggy en Bayahibe') : (isEn ? 'Punta Cana buggy tour' : 'Tour en buggy en Punta Cana'),
+        provider: { '@type': 'Organization', name: 'Caribbean Buggy', url: siteUrl },
+        areaServed: question.destination === 'bayahibe' ? 'Bayahibe, Dominican Republic' : 'Punta Cana, Dominican Republic',
+        ...tripadvisorSchemaReference(question.destination, locale),
+      }] : []),
     ],
   };
 }

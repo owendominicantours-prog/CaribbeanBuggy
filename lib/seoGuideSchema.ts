@@ -1,5 +1,6 @@
 import { getProduct, siteUrl } from './buggyProducts';
 import { guideCanonical, guidePath, guidesPath, seoGuides, type SeoGuide, type SeoGuideLocale } from './seoGuides';
+import { tripadvisorSchemaReference } from './tripadvisor';
 
 export function buildSeoGuideJsonLd(guide: SeoGuide, locale: SeoGuideLocale) {
   const copy = guide[locale];
@@ -44,10 +45,23 @@ export function buildSeoGuideJsonLd(guide: SeoGuide, locale: SeoGuideLocale) {
         '@id': `${canonical}#tour`,
         name: locale === 'en' ? product.title.replace('Doble', 'Double').replace('Familiar', 'Family').replace('Individual', 'Single') : product.title,
         description: product.description,
+        ...(guide.destination !== 'general' ? tripadvisorSchemaReference(guide.destination, locale) : {}),
         provider: { '@type': 'Organization', name: 'Caribbean Buggy', url: siteUrl },
         areaServed: product.destination,
         offers: { '@type': 'Offer', price: product.promo, priceCurrency: 'USD', url: `${siteUrl}${locale === 'en' ? '/en' : ''}/buggy/${product.id}`, availability: 'https://schema.org/InStock' },
       },
+      ...(guide.destination === 'bayahibe' ? [{
+        '@type': 'VideoObject',
+        '@id': `${canonical}#video`,
+        name: locale === 'en' ? 'Real Bayahibe buggy tour video' : 'Video real del tour en buggy de Bayahibe',
+        description: locale === 'en'
+          ? 'Original footage from the Bayahibe and La Romana buggy route.'
+          : 'Material original de la ruta de buggy por Bayahibe y La Romana.',
+        thumbnailUrl: [`${siteUrl}/buggy/bayahibe/buggy-lodo-bayahibe.jpg`],
+        contentUrl: `${siteUrl}/buggy/bayahibe/tour-buggy-bayahibe.mp4`,
+        uploadDate: '2026-08-13T12:00:00-04:00',
+        duration: 'PT47S',
+      }] : []),
     ],
   };
 }

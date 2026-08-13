@@ -6,10 +6,30 @@ import BookingCalculator from '../../../components/BookingCalculator';
 import LanguageSwitch from '../../../components/LanguageSwitch';
 import { bring, faqs, getProduct, included, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
 import { guidePath, seoGuides } from '../../../lib/seoGuides';
+import TripAdvisorReviews from '../../../components/TripAdvisorReviews';
+import { tripadvisorSchemaReference } from '../../../lib/tripadvisor';
+import BayahibeRealMedia from '../../../components/BayahibeRealMedia';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
 };
+
+const bayahibeIncluded = [
+  'Transporte ida y vuelta desde el hotel o punto confirmado',
+  'Buggy según la modalidad elegida',
+  'Casco e instrucciones de seguridad',
+  'Guía local durante la ruta',
+  'Ruta por cañaverales, comunidades rurales y caminos de lodo',
+  'Parada en el río Chavón según la operación',
+  'Asistencia durante toda la excursión',
+];
+
+const bayahibeFaqs = [
+  ['¿El precio es por persona o por vehículo?', 'El precio publicado es por vehículo según la modalidad elegida.'],
+  ['¿Hay recogida desde hoteles de Bayahibe y La Romana?', 'Sí. La recogida o punto de encuentro autorizado se confirma por WhatsApp según el hotel y la operación.'],
+  ['¿Qué visita la ruta de Bayahibe?', 'La ruta recorre cañaverales, comunidades rurales, charcos y caminos de lodo, con parada en el río Chavón según la operación.'],
+  ['¿Las fotos y el video son reales?', 'Sí. El material mostrado pertenece a la operación real de buggy en Bayahibe y La Romana.'],
+];
 
 export function generateStaticParams() {
   return products.map((product) => ({ id: product.id }));
@@ -56,6 +76,8 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
+  const localizedIncluded = isBayahibe ? bayahibeIncluded : included;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : faqs;
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -67,6 +89,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         image: `${siteUrl}${product.image}`,
         sku: product.id,
         brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
+        ...tripadvisorSchemaReference(isBayahibe ? 'bayahibe' : 'punta-cana', 'es'),
         areaServed: `${product.destination}, Dominican Republic`,
         offers: {
           '@type': 'Offer',
@@ -76,6 +99,15 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           url: `${siteUrl}/buggy/${product.id}`,
         },
       },
+      ...(isBayahibe ? [{
+        '@type': 'VideoObject',
+        name: 'Video real del tour en buggy de Bayahibe y La Romana',
+        description: 'Video original de la ruta con buggies, cañaverales, caminos rurales y lodo en Bayahibe.',
+        thumbnailUrl: [`${siteUrl}/buggy/bayahibe/buggy-lodo-bayahibe.jpg`],
+        contentUrl: `${siteUrl}/buggy/bayahibe/tour-buggy-bayahibe.mp4`,
+        uploadDate: '2026-08-13T12:00:00-04:00',
+        duration: 'PT47S',
+      }] : []),
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
@@ -86,7 +118,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
       },
       {
         '@type': 'FAQPage',
-        mainEntity: faqs.map(([question, answer]) => ({
+        mainEntity: localizedFaqs.map(([question, answer]) => ({
           '@type': 'Question',
           name: question,
           acceptedAnswer: { '@type': 'Answer', text: answer },
@@ -158,7 +190,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <span className="kicker">Incluido</span>
             <h2>Lo que recibes con {product.title}.</h2>
             <div className="check-grid">
-              {included.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
+              {localizedIncluded.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
             </div>
           </article>
           <article className="info-card dark">
@@ -176,7 +208,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
-          <Image src="/buggy/ruta-1.jpeg" alt="Ruta de buggy en Macao" width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
+          <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Ruta real de buggy entre cañaverales de Bayahibe' : 'Ruta de buggy en Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Ruta del tour</span>
             <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : 'Macao, cenote y rancho dominicano.'}</h2>
@@ -192,13 +224,15 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
+      {isBayahibe ? <BayahibeRealMedia locale="es" /> : null}
+
       <section id="faq" className="section faq-section">
         <div className="wrap section-head">
           <span className="kicker">FAQ</span>
           <h2>Preguntas comunes sobre {product.title}.</h2>
         </div>
         <div className="wrap faq-grid">
-          {faqs.map(([question, answer]) => (
+          {localizedFaqs.map(([question, answer]) => (
             <article key={question}>
               <h3>{question}</h3>
               <p>{answer}</p>
@@ -206,6 +240,8 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           ))}
         </div>
       </section>
+
+      <section id="tripadvisor" className="section tripadvisor-section"><div className="wrap"><TripAdvisorReviews locale="es" destination={isBayahibe ? 'bayahibe' : 'punta-cana'} location={`product_landing_${product.id}`} /></div></section>
 
       <section className="section related-section">
         <div className="wrap section-head"><span className="kicker">Guías para decidir</span><h2>Conoce la ruta antes de pagar.</h2></div>
