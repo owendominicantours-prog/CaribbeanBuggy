@@ -39,6 +39,15 @@ export async function generateMetadata({ params }: PageProps) {
       title: copy.title,
       description: copy.description,
       url: canonical,
+      siteName: 'Caribbean Buggy',
+      images: [`${siteUrl}/buggy/doble.jpeg`],
+      locale: 'es_DO',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: copy.title,
+      description: copy.description,
       images: [`${siteUrl}/buggy/doble.jpeg`],
     },
   };

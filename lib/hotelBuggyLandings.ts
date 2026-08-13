@@ -100,6 +100,40 @@ export const hotelBuggyLandings: HotelBuggyLanding[] = hotelNames.map((hotel) =>
   slug: slugify(hotel.name),
 }));
 
+export function isBayahibeHotel(hotel: HotelBuggyLanding) {
+  return /bayahibe|dominicus|la romana/i.test(`${hotel.name} ${hotel.zone}`);
+}
+
+export function getFeaturedHotelBuggyLandings() {
+  const puntaCana = hotelBuggyLandings.filter((hotel) => !isBayahibeHotel(hotel)).slice(0, 18);
+  const bayahibe = hotelBuggyLandings.filter(isBayahibeHotel).slice(0, 6);
+  return [...puntaCana, ...bayahibe];
+}
+
+export function getRelatedHotelBuggyLandings(current: HotelBuggyLanding, limit = 10) {
+  const sameDestination = hotelBuggyLandings.filter(
+    (hotel) => hotel.slug !== current.slug && isBayahibeHotel(hotel) === isBayahibeHotel(current),
+  );
+  const destinationWithCurrent = hotelBuggyLandings.filter(
+    (hotel) => isBayahibeHotel(hotel) === isBayahibeHotel(current),
+  );
+  const currentIndex = destinationWithCurrent.findIndex((hotel) => hotel.slug === current.slug);
+  const ordered: HotelBuggyLanding[] = [];
+  const add = (hotel: HotelBuggyLanding | undefined) => {
+    if (hotel && hotel.slug !== current.slug && !ordered.some((item) => item.slug === hotel.slug)) ordered.push(hotel);
+  };
+
+  // Keep every landing connected to its neighbors, then prioritize hotels in the same pickup zone.
+  for (let distance = 1; distance <= 3; distance += 1) {
+    add(destinationWithCurrent[(currentIndex + distance) % destinationWithCurrent.length]);
+    add(destinationWithCurrent[(currentIndex - distance + destinationWithCurrent.length) % destinationWithCurrent.length]);
+  }
+  sameDestination.filter((hotel) => hotel.zone === current.zone).forEach(add);
+  sameDestination.forEach(add);
+
+  return ordered.slice(0, limit);
+}
+
 export function getHotelBuggyLanding(slug: string) {
   return hotelBuggyLandings.find((hotel) => hotel.slug === slug);
 }

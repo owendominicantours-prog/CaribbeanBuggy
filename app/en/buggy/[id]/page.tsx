@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../../components/BookingCalculator';
 import LanguageSwitch from '../../../../components/LanguageSwitch';
 import { getProduct, products, proactivitisPhone, siteUrl } from '../../../../lib/buggyProducts';
+import { guidePath, seoGuides } from '../../../../lib/seoGuides';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -82,9 +84,17 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
     openGraph: {
       title,
       description,
+      url: `${siteUrl}/en/buggy/${product.id}`,
+      siteName: 'Caribbean Buggy',
       images: [product.image],
       type: 'website',
       locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [product.image],
     },
   };
 }
@@ -97,6 +107,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
   const title = englishTitle(product.title);
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
+  const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -169,7 +180,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
               <span><BadgeDollarSign size={17} /> From US${product.promo}</span>
             </div>
           </div>
-          <img src={product.image} alt={`${title} in ${product.destination}`} />
+          <Image src={product.image} alt={`${title} in ${product.destination}`} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 46vw" />
         </div>
       </section>
 
@@ -216,7 +227,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
-          <img src="/buggy/ruta-1.jpeg" alt="Buggy route in Macao" />
+          <Image src="/buggy/ruta-1.jpeg" alt="Buggy route in Macao" width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Tour route</span>
             <h2>{isBayahibe ? 'Bayahibe, La Romana and rural roads.' : 'Macao, cenote and Dominican ranch.'}</h2>
@@ -248,6 +259,11 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
       </section>
 
       <section className="section related-section">
+        <div className="wrap section-head"><span className="kicker">Booking guides</span><h2>Understand the route before paying.</h2></div>
+        <div className="wrap seo-guide-related-grid">{productGuides.map((guide) => <a href={guidePath(guide, 'en')} key={guide.id}><span>{guide.en.eyebrow}</span><b>{guide.en.title}</b><ArrowRight size={17} /></a>)}</div>
+      </section>
+
+      <section className="section related-section">
         <div className="wrap section-head">
           <span className="kicker">More options</span>
           <h2>You can also book.</h2>
@@ -255,7 +271,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
         <div className="wrap related-grid">
           {related.map((item) => (
             <a href={`/en/buggy/${item.id}`} key={item.id}>
-              <img src={item.image} alt={englishTitle(item.title)} />
+              <Image src={item.image} alt={englishTitle(item.title)} width={600} height={398} sizes="(max-width: 680px) 100vw, 33vw" />
               <span>{item.subtitle}</span>
               <b>{englishTitle(item.title)}</b>
               <strong>US${item.promo}</strong>
@@ -278,6 +294,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
             <h3>Booking</h3>
             <a href="#book">Calculator</a>
             <a href="/en#prices">See prices</a>
+            <a href="/en/guides">Buggy guides</a>
           </div>
         </div>
       </footer>

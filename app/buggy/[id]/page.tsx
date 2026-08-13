@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../components/BookingCalculator';
 import LanguageSwitch from '../../../components/LanguageSwitch';
 import { bring, faqs, getProduct, included, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
+import { guidePath, seoGuides } from '../../../lib/seoGuides';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -23,13 +25,26 @@ export async function generateMetadata({ params }: DetailPageProps): Promise<Met
     description: product.seoDescription,
     alternates: {
       canonical: `${siteUrl}/buggy/${product.id}`,
+      languages: {
+        es: `${siteUrl}/buggy/${product.id}`,
+        en: `${siteUrl}/en/buggy/${product.id}`,
+        'x-default': `${siteUrl}/buggy/${product.id}`,
+      },
     },
     openGraph: {
       title: product.seoTitle,
       description: product.seoDescription,
+      url: `${siteUrl}/buggy/${product.id}`,
+      siteName: 'Caribbean Buggy',
       images: [product.image],
       type: 'website',
       locale: 'es_DO',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.seoTitle,
+      description: product.seoDescription,
+      images: [product.image],
     },
   };
 }
@@ -41,6 +56,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
+  const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -113,7 +129,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
               <span><BadgeDollarSign size={17} /> Desde US${product.promo}</span>
             </div>
           </div>
-          <img src={product.image} alt={`${product.title} en ${product.destination}`} />
+          <Image src={product.image} alt={`${product.title} en ${product.destination}`} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 46vw" />
         </div>
       </section>
 
@@ -160,7 +176,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
-          <img src="/buggy/ruta-1.jpeg" alt="Ruta de buggy en Macao" />
+          <Image src="/buggy/ruta-1.jpeg" alt="Ruta de buggy en Macao" width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Ruta del tour</span>
             <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : 'Macao, cenote y rancho dominicano.'}</h2>
@@ -192,6 +208,11 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
       </section>
 
       <section className="section related-section">
+        <div className="wrap section-head"><span className="kicker">Guías para decidir</span><h2>Conoce la ruta antes de pagar.</h2></div>
+        <div className="wrap seo-guide-related-grid">{productGuides.map((guide) => <a href={guidePath(guide, 'es')} key={guide.id}><span>{guide.es.eyebrow}</span><b>{guide.es.title}</b><ArrowRight size={17} /></a>)}</div>
+      </section>
+
+      <section className="section related-section">
         <div className="wrap section-head">
           <span className="kicker">Mas opciones</span>
           <h2>Tambien puedes reservar.</h2>
@@ -199,7 +220,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         <div className="wrap related-grid">
           {related.map((item) => (
             <a href={`/buggy/${item.id}`} key={item.id}>
-              <img src={item.image} alt={item.title} />
+              <Image src={item.image} alt={item.title} width={600} height={398} sizes="(max-width: 680px) 100vw, 33vw" />
               <span>{item.subtitle}</span>
               <b>{item.title}</b>
               <strong>US${item.promo}</strong>
@@ -222,6 +243,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <h3>Reservar</h3>
             <a href="#reservar">Calculadora</a>
             <a href="/#precios">Ver precios</a>
+            <a href="/guias">Guías de buggy</a>
           </div>
         </div>
         <div className="wrap footer-credit">

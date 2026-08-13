@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  ArrowRight,
   BadgeDollarSign,
   CalendarCheck2,
   CheckCircle2,
@@ -10,8 +11,9 @@ import {
   ShieldCheck,
   Users,
 } from 'lucide-react';
+import Image from 'next/image';
 import BookingCalculator from './BookingCalculator';
-import { hotelBuggyPath, type HotelBuggyLanding } from '../lib/hotelBuggyLandings';
+import { getRelatedHotelBuggyLandings, hotelBuggyPath, isBayahibeHotel, type HotelBuggyLanding } from '../lib/hotelBuggyLandings';
 import type { BuggyProduct } from '../lib/buggyProducts';
 import {
   bring,
@@ -21,6 +23,7 @@ import {
 } from '../lib/buggyProducts';
 import { getHotelBuggyProducts } from '../lib/hotelBuggySeo';
 import LanguageSwitch from './LanguageSwitch';
+import { guidePath, seoGuides } from '../lib/seoGuides';
 
 type HotelBuggyTourPageProps = {
   hotel: HotelBuggyLanding;
@@ -92,6 +95,9 @@ function titleFor(product: BuggyProduct, locale: 'es' | 'en') {
 export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: HotelBuggyTourPageProps) {
   const isEn = locale === 'en';
   const scopedProducts = getHotelBuggyProducts(hotel);
+  const relatedHotels = getRelatedHotelBuggyLandings(hotel, 10);
+  const hotelDestination = isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana';
+  const hotelGuides = seoGuides.filter((guide) => guide.destination === hotelDestination || guide.destination === 'general').slice(0, 4);
   const featuredProduct = scopedProducts.find((product) => product.popular) ?? scopedProducts[0];
   const pageCopy = isEn
     ? {
@@ -138,6 +144,10 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         more: 'More buggy options',
         related: 'Compare options before booking',
         faq: `Questions about buggy tours from ${hotel.name}`,
+        nearbyHotelsKicker: 'More hotel pickup pages',
+        nearbyHotelsTitle: `Buggy pickup near ${hotel.name}`,
+        nearbyHotelsBody: `Compare dedicated booking pages for nearby hotels in ${hotel.zone} and the same destination.`,
+        nearbyHotelLink: 'Buggy tour from',
       }
     : {
         navPrices: 'Precios',
@@ -183,6 +193,10 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         more: 'Mas opciones de buggy',
         related: 'Compara opciones antes de reservar',
         faq: `Preguntas sobre buggy desde ${hotel.name}`,
+        nearbyHotelsKicker: 'Más páginas de recogida',
+        nearbyHotelsTitle: `Recogida de buggy cerca de ${hotel.name}`,
+        nearbyHotelsBody: `Compara páginas de reserva para hoteles cercanos en ${hotel.zone} y el mismo destino.`,
+        nearbyHotelLink: 'Buggy tour desde',
       };
 
   const listIncluded = isEn ? enIncluded : included;
@@ -246,10 +260,10 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
             </div>
 
             <div className="tour-gallery" aria-label={isEn ? 'Buggy tour photos' : 'Fotos del tour en buggy'}>
-              <img className="tour-gallery-main" src="/buggy/doble.jpeg" alt={pageCopy.h1} />
+              <Image className="tour-gallery-main" src="/buggy/doble.jpeg" alt={pageCopy.h1} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 55vw" />
               <div className="tour-gallery-side">
                 {gallery.slice(1).map((image, index) => (
-                  <img key={image} src={image} alt={`${pageCopy.h1} ${index + 2}`} />
+                  <Image key={image} src={image} alt={`${pageCopy.h1} ${index + 2}`} width={600} height={398} sizes="(max-width: 680px) 33vw, 24vw" />
                 ))}
                 <a href="#book" className="tour-photo-count">
                   <ImageIcon size={16} /> {isEn ? 'Book this route' : 'Reservar esta ruta'}
@@ -339,7 +353,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <div className="tour-related">
                 {scopedProducts.map((product) => (
                   <a href={`${isEn ? '/en' : ''}/buggy/${product.id}`} key={product.id}>
-                    <img src={product.image} alt={titleFor(product, locale)} />
+                    <Image src={product.image} alt={titleFor(product, locale)} width={500} height={331} sizes="(max-width: 680px) 100vw, 240px" />
                     <div>
                       <span>{product.subtitle}</span>
                       <b>{titleFor(product, locale)}</b>
@@ -362,9 +376,39 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
                 ))}
               </div>
             </section>
+
+            <section className="tour-section hotel-related-section" aria-labelledby="related-hotels-title">
+              <span className="tour-kicker">{pageCopy.nearbyHotelsKicker}</span>
+              <h2 id="related-hotels-title">{pageCopy.nearbyHotelsTitle}</h2>
+              <p>{pageCopy.nearbyHotelsBody}</p>
+              <div className="hotel-link-grid hotel-link-grid-compact">
+                {relatedHotels.map((relatedHotel) => (
+                  <a href={hotelBuggyPath(relatedHotel.slug, locale)} key={relatedHotel.slug}>
+                    <span>{relatedHotel.zone}</span>
+                    <b>{pageCopy.nearbyHotelLink} {relatedHotel.name}</b>
+                    <small>{relatedHotel.driveTime} {isEn ? 'approx. to the ranch' : 'aprox. al rancho'}</small>
+                    <ArrowRight size={17} />
+                  </a>
+                ))}
+              </div>
+            </section>
+
+            <section className="tour-section hotel-related-section" aria-labelledby="hotel-guides-title">
+              <span className="tour-kicker">{isEn ? 'Plan before booking' : 'Planifica antes de reservar'}</span>
+              <h2 id="hotel-guides-title">{isEn ? `Buggy guides for guests at ${hotel.name}` : `Guías de buggy para huéspedes de ${hotel.name}`}</h2>
+              <p>{isEn ? 'Understand the route, price, pickup and vehicle before choosing.' : 'Entiende la ruta, el precio, la recogida y el vehículo antes de elegir.'}</p>
+              <div className="seo-guide-related-grid">
+                {hotelGuides.map((guide) => <a href={guidePath(guide, locale)} key={guide.id}><span>{guide[locale].eyebrow}</span><b>{guide[locale].title}</b><ArrowRight size={17} /></a>)}
+              </div>
+            </section>
           </article>
 
           <aside id="book" className="tour-sidebar">
+            <div className="tour-mobile-booking-intro">
+              <span>{pageCopy.eyebrow}</span>
+              <strong>{hotel.name}</strong>
+              <small>{isEn ? 'Choose your date and reserve below.' : 'Elige tu fecha y reserva a continuación.'}</small>
+            </div>
             <div id="booking-form" className="tour-booking-form-shell">
               <BookingCalculator
                 product={featuredProduct}

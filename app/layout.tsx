@@ -1,17 +1,37 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import AnalyticsEvents from '../components/AnalyticsEvents';
 import { siteUrl } from '../lib/buggyProducts';
 
 const analyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  applicationName: 'Caribbean Buggy',
+  category: 'travel',
+  referrer: 'origin-when-cross-origin',
   title: 'Buggies en Punta Cana al Mejor Precio | Caribbean Buggy Tours',
   description:
     'Reserva tours de buggies en Punta Cana. Explora Playa Macao, banate en un cenote y descubre el campo dominicano desde 40 USD. Sin intermediarios.',
   alternates: {
     canonical: '/',
+  },
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    shortcut: '/icon.svg',
+  },
+  manifest: '/manifest.webmanifest',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
   verification: {
     google: 'JLsVcMBEgvZM3eun203eBUPvswVTLFbuGzEj-4l4Puk',
@@ -54,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body>
         {children}
+        <AnalyticsEvents />
         {analyticsId ? (
           <>
             <Script

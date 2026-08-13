@@ -392,17 +392,34 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     if (step > 1 && (!date || !hotel.trim())) {
       setBookingStep(1);
       setStepNotice(stepText.missingTrip);
+      window.dataLayer?.push({
+        event: 'booking_validation_error',
+        product_id: product.id,
+        field_group: 'tour_details',
+      });
       return;
     }
 
     if (step > 2 && (!name.trim() || !phone.trim() || !email.trim())) {
       setBookingStep(2);
       setStepNotice(stepText.missingContact);
+      window.dataLayer?.push({
+        event: 'booking_validation_error',
+        product_id: product.id,
+        field_group: 'contact_details',
+      });
       return;
     }
 
     setBookingStep(step);
     setStepNotice('');
+    window.dataLayer?.push({
+      event: 'booking_step_view',
+      product_id: product.id,
+      booking_step: step,
+      value: total,
+      currency: 'USD',
+    });
   }
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
