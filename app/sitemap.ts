@@ -3,6 +3,7 @@ import { products, siteUrl } from '../lib/buggyProducts';
 import { hotelBuggyLandings, hotelBuggyUrl } from '../lib/hotelBuggyLandings';
 import { buggyQuestions, questionPath, questionsPath } from '../lib/buggyQuestions';
 import { guideCanonical, guidesPath, seoGuides } from '../lib/seoGuides';
+import { searchLandingCanonical, searchLandings, searchLandingsPath } from '../lib/searchLandings';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -44,6 +45,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.84,
     },
+    {
+      url: `${siteUrl}${searchLandingsPath('es')}`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.88,
+    },
+    {
+      url: `${siteUrl}${searchLandingsPath('en')}`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.86,
+    },
     ...products.map((product) => ({
       url: `${siteUrl}/buggy/${product.id}`,
       lastModified,
@@ -82,6 +95,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified,
         changeFrequency: 'monthly' as const,
         priority: 0.78,
+      },
+    ]),
+    ...searchLandings.flatMap((landing) => [
+      {
+        url: searchLandingCanonical(landing, 'es'),
+        lastModified,
+        changeFrequency: 'monthly' as const,
+        priority: 0.76,
+      },
+      {
+        url: searchLandingCanonical(landing, 'en'),
+        lastModified,
+        changeFrequency: 'monthly' as const,
+        priority: 0.74,
       },
     ]),
     ...hotelBuggyLandings.flatMap((hotel) => [

@@ -1,0 +1,18 @@
+import { ArrowLeft, ArrowRight, Search, Sparkles } from 'lucide-react';
+import LanguageSwitch from './LanguageSwitch';
+import { searchCategoryLabels, searchLandingPath, searchLandings, type SearchLandingLocale } from '../lib/searchLandings';
+
+export default function SearchLandingsDirectoryPage({ locale }: { locale: SearchLandingLocale }) {
+  const isEn = locale === 'en';
+  const home = isEn ? '/en' : '/';
+  const categories = Object.keys(searchCategoryLabels[locale]) as Array<keyof typeof searchCategoryLabels.es>;
+  return (
+    <main className="search-directory-page">
+      <header className="site-header"><a className="brand" href={home}><span>Caribbean</span><b>Buggy</b></a><nav><a href="#searches">{isEn ? 'Searches' : 'Búsquedas'}</a><a href={isEn ? '/en/questions' : '/preguntas'}>FAQ</a><a href={isEn ? '/en#prices' : '/#precios'}>{isEn ? 'Prices' : 'Precios'}</a></nav><div className="header-actions"><LanguageSwitch current={locale} esHref="/excursiones" enHref="/en/excursions" /><a className="header-cta" href={isEn ? '/en#prices' : '/#precios'}>{isEn ? 'Book' : 'Reservar'}</a></div></header>
+      <section className="questions-hero search-directory-hero"><div className="wrap questions-hero-grid"><div><a className="questions-back" href={home}><ArrowLeft size={17} /> {isEn ? 'Back home' : 'Volver al inicio'}</a><span className="questions-kicker"><Search size={17} /> {isEn ? 'Buggy search directory' : 'Directorio de búsquedas buggy'}</span><h1>{isEn ? '304 ways travelers search for a buggy tour.' : '304 formas de buscar una excursión en buggy.'}</h1><p>{isEn ? 'Every page answers a distinct booking intent for Punta Cana or Bayahibe with route, vehicle, price, pickup and direct reservation context.' : 'Cada página responde una intención distinta de compra en Punta Cana o Bayahibe con contexto de ruta, vehículo, precio, recogida y reserva directa.'}</p></div><aside><span>{isEn ? 'MARKET COVERAGE' : 'COBERTURA DEL MERCADO'}</span><strong>304</strong><ul><li><Sparkles size={17} /> {isEn ? '8 commercial search clusters' : '8 clústeres comerciales'}</li><li><Sparkles size={17} /> {isEn ? 'Punta Cana and Bayahibe' : 'Punta Cana y Bayahibe'}</li><li><Sparkles size={17} /> {isEn ? 'Every page links to a real tour' : 'Cada página lleva a un tour real'}</li></ul></aside></div></section>
+      <section id="searches" className="section search-directory-content"><div className="wrap">{categories.map((category) => { const items = searchLandings.filter((landing) => landing.category === category); return <section className="search-directory-cluster" id={category} key={category}><div><span>{String(items.length).padStart(2, '0')}</span><h2>{searchCategoryLabels[locale][category]}</h2></div><div className="search-directory-grid">{items.map((landing) => <a href={searchLandingPath(landing, locale)} key={landing.id}><small>{landing.destination === 'bayahibe' ? 'BAYAHIBE / LA ROMANA' : 'PUNTA CANA'}</small><b>{landing[locale].title}</b><ArrowRight size={17} /></a>)}</div></section>; })}</div></section>
+      <footer className="footer"><div className="wrap footer-grid"><div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Clear information and direct booking.' : 'Información clara y reserva directa.'}</p></div><div><h3>{isEn ? 'Directories' : 'Directorios'}</h3><a href={isEn ? '/en/questions' : '/preguntas'}>FAQ</a><a href={isEn ? '/en/guides' : '/guias'}>{isEn ? 'Guides' : 'Guías'}</a></div><div><h3>{isEn ? 'Tours' : 'Tours'}</h3><a href={isEn ? '/en#prices' : '/#precios'}>{isEn ? 'Prices' : 'Precios'}</a></div></div></footer>
+    </main>
+  );
+}
+

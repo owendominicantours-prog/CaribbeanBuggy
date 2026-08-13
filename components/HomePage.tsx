@@ -34,6 +34,7 @@ import { questionsPath } from '../lib/buggyQuestions';
 import { guidePath, guidesPath, seoGuides } from '../lib/seoGuides';
 import { TripAdvisorReviewLink } from './TripAdvisorReviews';
 import { tripadvisorSchemaReference } from '../lib/tripadvisor';
+import { searchLandingsPath } from '../lib/searchLandings';
 
 type Locale = 'es' | 'en';
 
@@ -470,7 +471,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
       <footer className="footer">
         <div className="wrap footer-grid">
           <div><a className="brand footer-brand" href={base || '/'}><span>Caribbean</span><b>Buggy</b></a><p>{copy.footerBody}</p></div>
-          <div><h3>{copy.footerBooking}</h3><a href={whatsappHref(bookingMessage(locale))}>{copy.whatsapp}</a><a href={`#${sectionIds.prices}`}>{copy.footerPrices}</a><a href={questionsPath(locale)}>{copy.footerFaq}</a><a href={guidesPath(locale)}>{isEn ? 'Buggy guides' : 'Guías de buggy'}</a></div>
+          <div><h3>{copy.footerBooking}</h3><a href={whatsappHref(bookingMessage(locale))}>{copy.whatsapp}</a><a href={`#${sectionIds.prices}`}>{copy.footerPrices}</a><a href={questionsPath(locale)}>{copy.footerFaq}</a><a href={guidesPath(locale)}>{isEn ? 'Buggy guides' : 'Guías de buggy'}</a><a href={searchLandingsPath(locale)}>{isEn ? '304 excursion searches' : '304 búsquedas de excursiones'}</a></div>
           <div><h3>{copy.footerRoute}</h3><a href={`#${sectionIds.route}`}>Playa Macao</a><a href={`#${sectionIds.route}`}>Cenote</a><a href={`#${sectionIds.route}`}>{isEn ? 'Dominican ranch' : 'Rancho dominicano'}</a></div>
         </div>
         <div className="wrap footer-credit"><a href="https://cynador.com" target="_blank" rel="noreferrer">{isEn ? 'Designed and developed by Cynador' : 'Diseño y desarrollo web por Cynador'}</a></div>
