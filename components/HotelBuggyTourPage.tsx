@@ -365,6 +365,14 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
           </article>
 
           <aside id="book" className="tour-sidebar">
+            <div id="booking-form" className="tour-booking-form-shell">
+              <BookingCalculator
+                product={featuredProduct}
+                defaultHotel={hotel.name}
+                defaultPickupZone={zoneForCalculator(hotel.zone)}
+                locale={locale}
+              />
+            </div>
             <div id="prices" className="tour-price-card">
               <span>{pageCopy.price}</span>
               <strong>US${featuredProduct.promo}</strong>
@@ -384,14 +392,6 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
                   {step}
                 </span>
               ))}
-            </div>
-            <div id="booking-form" className="tour-booking-form-shell">
-              <BookingCalculator
-                product={featuredProduct}
-                defaultHotel={hotel.name}
-                defaultPickupZone={zoneForCalculator(hotel.zone)}
-                locale={locale}
-              />
             </div>
           </aside>
         </div>

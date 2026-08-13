@@ -175,11 +175,12 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
 
       <section id="book" className="section detail-booking-section">
         <div className="wrap detail-booking-grid">
+          <BookingCalculator product={product} locale="en" />
           <div className="detail-copy">
             <span className="kicker">Complete booking details</span>
             <h2>Calculate your total and request your spot.</h2>
             <p>
-              The booking tool calculates the vehicles needed for your group, pickup zone and extras, then prepares a
+              The booking tool calculates the vehicles needed for your group and pickup zone, then prepares a
               complete reservation request so the team can confirm availability quickly.
             </p>
             <div className="logic-grid">
@@ -188,7 +189,6 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
               <article><b>3</b><span>Receive confirmation and secure payment instructions.</span></article>
             </div>
           </div>
-          <BookingCalculator product={product} locale="en" />
         </div>
       </section>
 

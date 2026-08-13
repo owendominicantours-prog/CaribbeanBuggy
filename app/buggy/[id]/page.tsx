@@ -119,11 +119,12 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
       <section id="reservar" className="section detail-booking-section">
         <div className="wrap detail-booking-grid">
+          <BookingCalculator product={product} />
           <div className="detail-copy">
             <span className="kicker">Reserva con datos completos</span>
             <h2>Calcula el total y solicita tu plaza.</h2>
             <p>
-              El sistema calcula los vehiculos necesarios segun el grupo, suma la zona y los extras, y prepara una
+              El sistema calcula los vehiculos necesarios segun el grupo y la zona, y prepara una
               solicitud completa para que el equipo confirme disponibilidad sin volver a pedirte todos los datos.
             </p>
             <div className="logic-grid">
@@ -132,7 +133,6 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
               <article><b>3</b><span>Recibe confirmacion y un enlace de pago seguro por WhatsApp.</span></article>
             </div>
           </div>
-          <BookingCalculator product={product} />
         </div>
       </section>
 

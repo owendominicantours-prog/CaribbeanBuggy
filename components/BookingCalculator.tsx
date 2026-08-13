@@ -46,8 +46,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         vehicles: 'vehicle(s)',
         base: 'Base',
         zone: 'Zone',
-        photos: 'Photos',
-        privatePickup: 'Private pickup',
         date: 'Tour date',
         passengers: 'Travelers',
         hotel: 'Hotel or pickup point',
@@ -70,8 +68,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         payNow: 'Pay in full now',
         cardFirst: 'Try card first',
         helpFirst: 'I need help before paying',
-        photosExtra: 'Tour photos +US$25',
-        privateExtra: 'Private pickup +US$30',
         payButton: 'Pay safely by card or PayPal',
         paidTitle: 'Payment received.',
         paidText: 'We will contact you to confirm pickup and exact time.',
@@ -96,8 +92,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         pickup: 'Hotel or pickup point',
         qty: 'Travelers',
         needed: 'Vehicles needed',
-        extras: 'Extras',
-        noExtras: 'No extras',
         paymentPreference: 'Payment preference',
         estimatedTotal: 'Estimated web total',
       }
@@ -108,8 +102,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         vehicles: 'vehiculo(s)',
         base: 'Base',
         zone: 'Zona',
-        photos: 'Fotos',
-        privatePickup: 'Recogida privada',
         date: 'Fecha del tour',
         passengers: 'Personas',
         hotel: 'Hotel o punto de recogida',
@@ -132,8 +124,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         payNow: 'Pagar total ahora',
         cardFirst: 'Intentar tarjeta primero',
         helpFirst: 'Necesito ayuda antes de pagar',
-        photosExtra: 'Fotos del tour +US$25',
-        privateExtra: 'Recogida privada +US$30',
         payButton: 'Pagar seguro con tarjeta o PayPal',
         paidTitle: 'Pago recibido.',
         paidText: 'Te contactaremos para confirmar recogida y hora exacta.',
@@ -158,8 +148,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         pickup: 'Hotel o punto de recogida',
         qty: 'Cantidad de personas',
         needed: 'Vehiculos necesarios',
-        extras: 'Extras',
-        noExtras: 'Sin extras',
         paymentPreference: 'Preferencia de pago',
         estimatedTotal: 'Total estimado web',
       };
@@ -173,8 +161,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const [language, setLanguage] = useState(locale === 'en' ? 'English' : copy.spanish);
   const [pickupWindow, setPickupWindow] = useState(copy.first);
   const [paymentPreference, setPaymentPreference] = useState(copy.payNow);
-  const [photos, setPhotos] = useState(false);
-  const [privatePickup, setPrivatePickup] = useState(false);
   const [paypalReady, setPaypalReady] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'loading' | 'paid'>('idle');
@@ -193,8 +179,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     product,
     passengers,
     pickupZone,
-    photos,
-    privatePickup,
+    photos: false,
+    privatePickup: false,
   });
   const total = pricing.total;
 
@@ -317,17 +303,12 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       language,
       pickupWindow,
       paymentPreference,
-      photos,
-      privatePickup,
+      photos: false,
+      privatePickup: false,
     };
   }
 
   function bookingMessage(reference = bookingReference || 'Pendiente') {
-    const extras =
-      [photos ? copy.photos : '', privatePickup ? copy.privatePickup : '']
-        .filter(Boolean)
-        .join(', ') || copy.noExtras;
-
     return [
       copy.messageIntro,
       `${copy.reference}: ${reference}`,
@@ -342,7 +323,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       `${copy.qty}: ${passengers}`,
       `${copy.needed}: ${pricing.vehicles}`,
       `${copy.language}: ${language}`,
-      `${copy.extras}: ${extras}`,
       `${copy.paymentPreference}: ${paymentPreference}`,
       `${copy.estimatedTotal}: US$${total}`,
     ].join('\n');
@@ -538,17 +518,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             </div>
           </div>
 
-          <div className="extras">
-            <label>
-              <input type="checkbox" checked={photos} onChange={(event) => setPhotos(event.target.checked)} />
-              {copy.photosExtra}
-            </label>
-            <label>
-              <input type="checkbox" checked={privatePickup} onChange={(event) => setPrivatePickup(event.target.checked)} />
-              {copy.privateExtra}
-            </label>
-          </div>
-
           <button className="booking-submit" type="button" onClick={() => goToStep(2)}>
             {stepText.next}
           </button>
@@ -634,8 +603,6 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             <p><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</p>
             <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
             {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
-            {pricing.photosFee ? <p>{copy.photos}: <b>US${pricing.photosFee}</b></p> : null}
-            {pricing.privatePickupFee ? <p>{copy.privatePickup}: <b>US${pricing.privatePickupFee}</b></p> : null}
           </div>
 
           <div className="booking-review-card">
