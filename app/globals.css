@@ -146,11 +146,40 @@ summary:focus-visible {
 .admin-topbar,
 .admin-stat-grid,
 .admin-toolbar,
-.admin-record-grid {
+.admin-record-grid,
+.admin-panel-tabs,
+.admin-storage-banner,
+.admin-seo-toolbar,
+.admin-seo-list-head,
+.admin-seo-grid,
+.admin-load-more {
   max-width: 1280px;
   margin-right: auto;
   margin-left: auto;
 }
+
+.admin-panel-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #d9dee8;
+}
+
+.admin-panel-tabs button {
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #667085;
+  padding: 0 16px;
+  font-weight: 900;
+}
+
+.admin-panel-tabs button.active { border-bottom-color: #f0a400; color: #111827; }
+.admin-panel-tabs b { border-radius: 999px; background: #fff1bd; color: #7a5000; padding: 3px 8px; font-size: 11px; }
 
 .admin-topbar {
   display: flex;
@@ -199,6 +228,54 @@ summary:focus-visible {
   color: #020617;
   font-size: 34px;
 }
+
+.admin-seo-stat-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+.admin-storage-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  margin-top: 18px;
+  border: 1px solid;
+  border-radius: 18px;
+  padding: 17px 20px;
+}
+
+.admin-storage-banner > div { display: grid; gap: 3px; }
+.admin-storage-banner b { font-size: 14px; }
+.admin-storage-banner span { color: #566071; font-size: 12px; font-weight: 650; }
+.admin-storage-banner.persistent { border-color: #a4dfbd; background: #effcf4; }
+.admin-storage-banner.temporary { border-color: #f2ce83; background: #fff9e9; }
+.admin-storage-banner button,
+.admin-load-more { min-height: 42px; border: 0; border-radius: 12px; background: #111827; color: #fff; padding: 0 17px; font-weight: 900; }
+
+.admin-seo-toolbar {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) repeat(4, minmax(130px, auto));
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.admin-seo-toolbar input,
+.admin-seo-toolbar select { min-height: 46px; border: 1px solid #d8dee8; border-radius: 12px; background: #fff; color: #19202d; padding: 0 13px; font-size: 13px; font-weight: 700; }
+.admin-seo-list-head { display: flex; justify-content: space-between; margin-top: 22px; color: #667085; font-size: 12px; font-weight: 800; }
+.admin-seo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 12px; }
+
+.admin-seo-card { display: grid; gap: 11px; border: 1px solid #dfe4ec; border-radius: 18px; background: #fff; padding: 20px; box-shadow: 0 10px 28px rgba(19, 30, 51, 0.05); }
+.admin-seo-card-head { display: flex; justify-content: space-between; gap: 10px; color: #d96700; font-size: 10px; font-weight: 1000; letter-spacing: 0.07em; text-transform: uppercase; }
+.admin-seo-card-head b { color: #64748b; }
+.admin-seo-card h2 { margin: 0; color: #111827; font-size: 18px; line-height: 1.2; }
+.admin-seo-card > a { overflow: hidden; color: #526075; font-size: 11px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.admin-seo-metrics { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid #e3e7ee; border-radius: 13px; }
+.admin-seo-metrics span { display: grid; gap: 2px; padding: 10px 12px; }
+.admin-seo-metrics span + span { border-left: 1px solid #e3e7ee; }
+.admin-seo-metrics small,
+.admin-seo-last { color: #778195; font-size: 10px; font-weight: 800; }
+.admin-seo-metrics strong { color: #111827; font-size: 21px; }
+.admin-seo-health { display: flex; flex-wrap: wrap; gap: 5px; }
+.admin-seo-health span { border-radius: 999px; background: #edf9f2; color: #087443; padding: 5px 8px; font-size: 9px; font-weight: 900; }
+.admin-load-more { display: block; width: fit-content; margin-top: 22px; margin-bottom: 44px; }
 
 .admin-toolbar {
   display: grid;
@@ -360,9 +437,14 @@ summary:focus-visible {
 
   .admin-stat-grid,
   .admin-toolbar,
-  .admin-record-columns {
+  .admin-record-columns,
+  .admin-seo-stat-grid,
+  .admin-seo-toolbar,
+  .admin-seo-grid {
     grid-template-columns: 1fr;
   }
+
+  .admin-storage-banner { align-items: stretch; flex-direction: column; }
 
   .admin-record-head,
   .admin-record-code {

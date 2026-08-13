@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import AnalyticsEvents from '../components/AnalyticsEvents';
+import VisitTracker from '../components/VisitTracker';
 import { siteUrl } from '../lib/buggyProducts';
 
 const analyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID;
@@ -75,6 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <AnalyticsEvents />
+        <VisitTracker />
         {analyticsId ? (
           <>
             <Script

@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 
 import { ADMIN_COOKIE_NAME, verifyAdminToken } from '../../lib/adminAuth';
 import { listAdminRecords } from '../../lib/adminStore';
+import { seoInventory } from '../../lib/seoInventory';
+import { getVisitSnapshot } from '../../lib/visitStore';
 import AdminPanelClient from './AdminPanelClient';
 
 export const dynamic = 'force-dynamic';
@@ -15,6 +17,7 @@ export default async function AdminPage() {
   }
 
   const records = await listAdminRecords();
+  const visits = await getVisitSnapshot();
 
-  return <AdminPanelClient initialRecords={records} />;
+  return <AdminPanelClient initialRecords={records} initialSeoPages={seoInventory} initialVisits={visits} />;
 }
