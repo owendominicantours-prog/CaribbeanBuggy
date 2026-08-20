@@ -75,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body>
         {children}
+        <Script src="https://proactivitis.com/support-widget.js?v=1" data-site="caribbean-buggy" data-brand="Caribbean Buggy" data-color="#f97316" strategy="afterInteractive" />
         <AnalyticsEvents />
         <VisitTracker />
         {analyticsId ? (
