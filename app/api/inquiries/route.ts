@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { createAdminRecordId, upsertAdminRecord } from '../../../lib/adminStore';
+import { notifyCommandCenter } from '../../../lib/commandCenter';
 
 export const runtime = 'nodejs';
 
@@ -42,6 +43,20 @@ export async function POST(request: Request) {
         vehicles: Number(pricing.vehicles) || undefined,
       },
       raw: payload,
+    });
+
+    await notifyCommandCenter({
+      kind: 'MESSAGE',
+      sourceSite: 'caribbean-buggy',
+      sourceBrand: 'Caribbean Buggy',
+      externalId: record.id,
+      customer: record.customer,
+      title: record.productName || 'Reserva de buggy',
+      body: `Fecha: ${record.booking?.date || 'Pendiente'}. Hotel: ${record.booking?.hotel || 'Pendiente'}. Pasajeros: ${record.booking?.passengers || 'Pendiente'}. Preferencia de pago: ${record.booking?.paymentPreference || 'Pendiente'}.`,
+      amount: record.booking?.total,
+      currency: 'USD',
+      eventAt: record.booking?.date || record.createdAt,
+      message: { id: record.id, channel: 'website', pageUrl: 'https://www.caribbeanboggie.com/' },
     });
 
     return NextResponse.json({ ok: true, id: record.id });
