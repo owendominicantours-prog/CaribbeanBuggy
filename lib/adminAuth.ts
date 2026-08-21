@@ -3,19 +3,20 @@ import crypto from 'crypto';
 export const ADMIN_COOKIE_NAME = 'caribbean_buggy_admin';
 export const ADMIN_SESSION_MAX_AGE = 60 * 60 * 24 * 7;
 
+const isProduction = process.env.NODE_ENV === 'production';
 const adminUser = process.env.CARIBBEAN_ADMIN_USER ?? 'admin';
-const adminPassword = process.env.CARIBBEAN_ADMIN_PASSWORD ?? 'Exito2024@@';
+const adminPassword = process.env.CARIBBEAN_ADMIN_PASSWORD ?? (isProduction ? '' : 'Exito2024@@');
 const secret =
   process.env.CARIBBEAN_ADMIN_SECRET ??
   process.env.NEXTAUTH_SECRET ??
-  'caribbean-buggy-local-admin-secret';
+  (isProduction ? '' : 'caribbean-buggy-local-admin-secret');
 
 function sign(payload: string) {
   return crypto.createHmac('sha256', secret).update(payload).digest('base64url');
 }
 
 export function isValidAdminLogin(username: string, password: string) {
-  return username === adminUser && password === adminPassword;
+  return Boolean(adminPassword && secret) && username === adminUser && password === adminPassword;
 }
 
 export function createAdminToken() {
