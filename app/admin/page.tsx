@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import { ADMIN_COOKIE_NAME, verifyAdminToken } from '../../lib/adminAuth';
-import { listAdminRecords } from '../../lib/adminStore';
+import { hasPersistentAdminStore, listAdminRecords } from '../../lib/adminStore';
 import { seoInventory } from '../../lib/seoInventory';
 import { getVisitSnapshot } from '../../lib/visitStore';
 import AdminPanelClient from './AdminPanelClient';
@@ -19,5 +19,5 @@ export default async function AdminPage() {
   const records = await listAdminRecords();
   const visits = await getVisitSnapshot();
 
-  return <AdminPanelClient initialRecords={records} initialSeoPages={seoInventory} initialVisits={visits} />;
+  return <AdminPanelClient initialRecords={records} initialSeoPages={seoInventory} initialVisits={visits} recordsPersistent={hasPersistentAdminStore()} />;
 }

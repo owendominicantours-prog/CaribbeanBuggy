@@ -9,6 +9,7 @@ type AdminPanelClientProps = {
   initialRecords: AdminRecord[];
   initialSeoPages: SeoInventoryItem[];
   initialVisits: VisitSnapshot;
+  recordsPersistent: boolean;
 };
 
 const seoTypeLabels: Record<SeoInventoryType, string> = { principal: 'Principal', producto: 'Producto', pregunta: 'Pregunta', guia: 'Guía', hotel: 'Hotel', busqueda: 'Búsqueda SEO' };
@@ -52,7 +53,7 @@ function whatsappLink(phone?: string) {
   return digits ? `https://wa.me/${digits}` : '';
 }
 
-export default function AdminPanelClient({ initialRecords, initialSeoPages, initialVisits }: AdminPanelClientProps) {
+export default function AdminPanelClient({ initialRecords, initialSeoPages, initialVisits, recordsPersistent }: AdminPanelClientProps) {
   const [records, setRecords] = useState(initialRecords);
   const [activePanel, setActivePanel] = useState<'operations' | 'seo'>('operations');
   const [query, setQuery] = useState('');
@@ -172,6 +173,9 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
       </nav>
 
       {activePanel === 'operations' ? <>
+      <section className={`admin-storage-banner ${recordsPersistent ? 'persistent' : 'temporary'}`}>
+        <div><b>{recordsPersistent ? 'Base de reservas permanente activa' : 'Almacenamiento temporal'}</b><span>{recordsPersistent ? 'Las reservas y consultas se conservan entre despliegues y reinicios de Vercel.' : 'Configura DATABASE_URL para conservar reservas entre despliegues.'}</span></div>
+      </section>
       <section className="admin-stat-grid">
         <article>
           <span>Total</span>

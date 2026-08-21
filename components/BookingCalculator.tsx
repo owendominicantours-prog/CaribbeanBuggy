@@ -84,6 +84,10 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         captureError: 'We could not capture the payment.',
         paymentError: 'PayPal could not complete the payment. You can try another card or contact us on WhatsApp.',
         renderError: 'We could not show the payment form. Try again.',
+        saving: 'Saving your reservation securely...',
+        saveError: 'We could not save your reservation. Please try again or contact us on WhatsApp.',
+        savedTitle: 'Your details are saved.',
+        savedText: 'Complete payment below. If you stop here, our team can still help you finish the booking.',
         messageIntro: `Hello Proactivitis, I need help with ${product.title} on Caribbean Buggy.`,
         reference: 'Web reference',
         tourDate: 'Tour date',
@@ -140,6 +144,10 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         captureError: 'No se pudo capturar el pago.',
         paymentError: 'PayPal no pudo completar el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.',
         renderError: 'No pudimos mostrar el formulario de pago. Intenta de nuevo.',
+        saving: 'Guardando tu reserva de forma segura...',
+        saveError: 'No pudimos guardar tu reserva. Intenta nuevamente o escribenos por WhatsApp.',
+        savedTitle: 'Tus datos ya están guardados.',
+        savedText: 'Completa el pago abajo. Si te detienes aquí, nuestro equipo aún podrá ayudarte a terminar la reserva.',
         messageIntro: `Hola Proactivitis, necesito ayuda con ${product.title} en Caribbean Buggy.`,
         reference: 'Referencia web',
         tourDate: 'Fecha del tour',
@@ -171,6 +179,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const [stepNotice, setStepNotice] = useState('');
   const paypalContainerRef = useRef<HTMLDivElement>(null);
   const bookingReferenceRef = useRef('');
+  const leadIdRef = useRef('');
 
   const minDate = new Date().toLocaleDateString('en-CA', {
     timeZone: 'America/Santo_Domingo',
@@ -305,6 +314,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       paymentPreference,
       photos: false,
       privatePickup: false,
+      leadId: leadIdRef.current || undefined,
     };
   }
 
@@ -329,10 +339,13 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   }
 
   async function recordWhatsAppInquiry() {
+    if (leadIdRef.current) return;
+
     try {
-      await fetch('/api/inquiries', {
+      const response = await fetch('/api/inquiries', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
         body: JSON.stringify({
           source: 'booking_whatsapp_button',
           productId: product.id,
@@ -349,6 +362,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           },
         }),
       });
+      const data = (await response.json().catch(() => ({}))) as { id?: string };
+      if (response.ok && data.id) leadIdRef.current = data.id;
     } catch (error) {
       console.error('booking_whatsapp_inquiry_error', error);
     }
@@ -422,7 +437,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     });
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!date || !hotel.trim()) {
@@ -435,18 +450,53 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       return;
     }
 
-    setShowPayment(true);
-    setPaymentStatus('idle');
+    setPaymentStatus('loading');
     setPaymentError('');
-    setRenderToken(Date.now());
-    window.dataLayer?.push({
-      event: 'begin_checkout',
-      product_id: product.id,
-      product_name: product.title,
-      value: total,
-      currency: 'USD',
-      passengers,
-    });
+    setStepNotice(copy.saving);
+
+    try {
+      if (!leadIdRef.current) {
+        const response = await fetch('/api/inquiries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'booking_checkout_started',
+            productId: product.id,
+            productName: product.title,
+            booking: buildPayload(),
+            pricing: {
+              total,
+              vehicles: pricing.vehicles,
+              passengers: pricing.passengers,
+              baseTotal: pricing.baseTotal,
+              zoneFee: pricing.zoneFee,
+              photosFee: pricing.photosFee,
+              privatePickupFee: pricing.privatePickupFee,
+            },
+          }),
+        });
+        const data = (await response.json().catch(() => ({}))) as { id?: string; error?: string };
+        if (!response.ok || !data.id) throw new Error(data.error || copy.saveError);
+        leadIdRef.current = data.id;
+      }
+
+      setShowPayment(true);
+      setPaymentStatus('idle');
+      setStepNotice('');
+      setRenderToken(Date.now());
+      window.dataLayer?.push({
+        event: 'begin_checkout',
+        product_id: product.id,
+        product_name: product.title,
+        value: total,
+        currency: 'USD',
+        passengers,
+      });
+    } catch (error) {
+      console.error('booking_lead_store_error', error);
+      setPaymentStatus('idle');
+      setStepNotice(copy.saveError);
+    }
   };
 
   return (
@@ -645,6 +695,10 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
 
           {showPayment ? (
             <div className="paypal-panel">
+              <div className="booking-lead-saved">
+                <CheckCircle2 size={19} />
+                <span><b>{copy.savedTitle}</b><small>{copy.savedText}</small></span>
+              </div>
               {paymentStatus === 'paid' ? (
                 <div className="payment-success">
                   <CheckCircle2 size={22} />

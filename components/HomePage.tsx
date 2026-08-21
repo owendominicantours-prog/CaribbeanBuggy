@@ -220,6 +220,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         seeOptions: 'See buggy options', ask: 'Ask on WhatsApp',
         heroProof: ['Secure card or PayPal payment', 'Pickup coordinated by WhatsApp', 'Clear price per vehicle'],
         from: 'From', dealBody: 'Single buggy with round-trip transportation included.',
+        dealStatus: 'Direct booking with local confirmation', dealStatusNote: 'We coordinate pickup after booking.',
         dealItems: ['Hotel pickup', 'Cenote + Macao Beach', 'Local guide and safety equipment'], dealCta: 'Choose your buggy',
         highlights: [
           ['Pickup included', 'Round-trip transport from main Punta Cana and Bavaro hotel zones.', Car],
@@ -267,6 +268,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         seeOptions: 'Ver opciones', ask: 'Preguntar por WhatsApp',
         heroProof: ['Pago seguro con tarjeta o PayPal', 'Recogida coordinada por WhatsApp', 'Precio claro por vehículo'],
         from: 'Desde', dealBody: 'Buggy individual con transporte ida y vuelta incluido.',
+        dealStatus: 'Reserva directa con confirmación local', dealStatusNote: 'Coordinamos tu recogida después de reservar.',
         dealItems: ['Recogida en hotel', 'Cenote + Playa Macao', 'Guía local y equipo de seguridad'], dealCta: 'Elegir mi buggy',
         highlights: [
           ['Recogida incluida', 'Transporte ida y vuelta desde hoteles principales de Punta Cana y Bávaro.', Car],
@@ -387,6 +389,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
             </div>
           </div>
           <aside className="deal-card">
+            <div className="deal-card-status"><i /><div><b>{copy.dealStatus}</b><small>{copy.dealStatusNote}</small></div></div>
             <span>{copy.from}</span><strong>US$40</strong><p>{copy.dealBody}</p>
             <ul>{copy.dealItems.map((item) => <li key={item}><CheckCircle2 size={17} /> {item}</li>)}</ul>
             <a href={`#${sectionIds.prices}`} data-track-event="booking_cta_click" data-track-location="hero_deal">{copy.dealCta} <ArrowRight size={17} /></a>

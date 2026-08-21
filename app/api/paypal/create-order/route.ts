@@ -10,6 +10,7 @@ import { createPaypalOrder } from '../../../../lib/paypal';
 export const runtime = 'nodejs';
 
 type PayPalBookingPayload = {
+  leadId?: string;
   productId?: string;
   date?: string;
   passengers?: number;
@@ -62,8 +63,12 @@ export async function POST(request: Request) {
       amount: pricing.total,
     });
 
+    const leadId = typeof payload.leadId === 'string' && /^INQ-[A-Za-z0-9-]+$/.test(payload.leadId)
+      ? payload.leadId
+      : reference;
+
     await upsertAdminRecord({
-      id: reference,
+      id: leadId,
       reference,
       orderId: order.id,
       type: 'booking',
