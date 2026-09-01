@@ -1,6 +1,7 @@
 import { faqs, products, siteUrl, type BuggyProduct } from './buggyProducts';
 import { hotelBuggyUrl, isBayahibeHotel, type HotelBuggyLanding } from './hotelBuggyLandings';
 import { tripadvisorSchemaReference } from './tripadvisor';
+import { getPuntaCanaBuggyContent } from './puntaCanaBuggyContent';
 
 export type HotelBuggyLocale = 'es' | 'en';
 
@@ -107,9 +108,11 @@ export function getHotelBuggyFaqs(locale: HotelBuggyLocale, bayahibe = false) {
           { question: '¿Las fotos y el video son reales?', answer: 'Sí. El material mostrado pertenece a la operación real de buggy en Bayahibe.' },
         ];
   }
-  if (locale === 'en') return enFaqs;
-
-  return faqs.map(([question, answer]) => ({ question, answer }));
+  const representative = products.find((product) => product.id === 'buggy-doble') ?? products[0];
+  return getPuntaCanaBuggyContent(representative, locale).faqs.map(([question, answer]) => ({
+    question,
+    answer,
+  }));
 }
 
 export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBuggyLocale) {

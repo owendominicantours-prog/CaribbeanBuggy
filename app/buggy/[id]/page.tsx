@@ -4,11 +4,12 @@ import Image from 'next/image';
 import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../components/BookingCalculator';
 import LanguageSwitch from '../../../components/LanguageSwitch';
-import { bring, faqs, getProduct, included, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
+import { bring, getProduct, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
 import { guidePath, seoGuides } from '../../../lib/seoGuides';
 import TripAdvisorReviews from '../../../components/TripAdvisorReviews';
 import { tripadvisorSchemaReference } from '../../../lib/tripadvisor';
 import BayahibeRealMedia from '../../../components/BayahibeRealMedia';
+import { getPuntaCanaBuggyContent } from '../../../lib/puntaCanaBuggyContent';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -76,8 +77,11 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
 
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
-  const localizedIncluded = isBayahibe ? bayahibeIncluded : included;
-  const localizedFaqs = isBayahibe ? bayahibeFaqs : faqs;
+  const completeContent = getPuntaCanaBuggyContent(product, 'es');
+  const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
+  const localizedRequirements = isBayahibe ? requirements : completeContent.requirements;
+  const localizedBring = isBayahibe ? bring : completeContent.bring;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs;
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -85,7 +89,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
       {
         '@type': 'Product',
         name: `${product.title} en ${product.destination}`,
-        description: product.longDescription,
+        description: isBayahibe ? product.longDescription : completeContent.summary,
         image: `${siteUrl}${product.image}`,
         sku: product.id,
         brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
@@ -154,7 +158,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <a className="back-link" href="/"><ArrowLeft size={17} /> Volver a todos los buggies</a>
             <span className="eyebrow"><MapPin size={16} /> {product.routeLabel}</span>
             <h1>{product.title} en {product.destination}</h1>
-            <p>{product.longDescription}</p>
+            <p>{isBayahibe ? product.longDescription : completeContent.summary}</p>
             <div className="detail-badges">
               <span><Users size={17} /> {product.capacityLabel}</span>
               <span><Clock3 size={17} /> {product.durationLabel}</span>
@@ -196,29 +200,61 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           <article className="info-card dark">
             <span className="kicker">Seguridad</span>
             <h2>Antes de manejar.</h2>
-            <ul>{requirements.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{localizedRequirements.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
           <article className="info-card bring">
             <span className="kicker">Que llevar</span>
             <h2>Preparate para el lodo.</h2>
-            <ul>{bring.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{localizedBring.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
+          {!isBayahibe ? (
+            <article className="info-card">
+              <span className="kicker">No incluido</span>
+              <h2>Extras y compras opcionales.</h2>
+              <ul>{completeContent.notIncluded.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+          ) : null}
         </div>
       </section>
+
+      {!isBayahibe ? (
+        <section className="section">
+          <div className="wrap">
+            <div className="section-head">
+              <span className="kicker">Itinerario completo</span>
+              <h2>De la recogida al regreso.</h2>
+              <p><strong>{completeContent.activityDuration}.</strong> {completeContent.totalDuration}. Los tiempos son orientativos.</p>
+            </div>
+            <div className="tour-steps">
+              {completeContent.itinerary.map((step, index) => (
+                <article key={step.title}>
+                  <b>{index + 1}</b>
+                  <div>
+                    <span className="kicker">{step.time}</span>
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
           <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Ruta real de buggy entre cañaverales de Bayahibe' : 'Ruta de buggy en Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Ruta del tour</span>
-            <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : 'Macao, cenote y rancho dominicano.'}</h2>
+            <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : completeContent.routeHeading}</h2>
             <p>
-              La experiencia combina aventura off-road, cultura local y paradas naturales. El orden puede variar segun
-              operacion, clima y condiciones del camino.
+              {isBayahibe
+                ? 'La experiencia combina aventura off-road, cultura local y paradas naturales. El orden puede variar según operación, clima y condiciones del camino.'
+                : completeContent.pickup}
             </p>
             <div className="route-note">
               <ShieldCheck />
-              <span>El equipo confirma la hora exacta de recogida por WhatsApp antes del servicio.</span>
+              <span>{isBayahibe ? 'El equipo confirma la hora exacta de recogida por WhatsApp antes del servicio.' : completeContent.routeNote}</span>
             </div>
           </div>
         </div>
@@ -283,8 +319,8 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
           </div>
         </div>
         <div className="wrap footer-credit">
-          <a href="https://cynador.com" target="_blank" rel="noreferrer">
-            Desarrollada por Cynador - Advertising, Marketing Online & Design - Diseño y Desarrollo Web
+          <a href="https://proactivitis.com" target="_blank" rel="noreferrer">
+            Operada por Proactivitis
           </a>
         </div>
       </footer>

@@ -9,6 +9,7 @@ import { guidePath, seoGuides } from '../../../../lib/seoGuides';
 import TripAdvisorReviews from '../../../../components/TripAdvisorReviews';
 import { tripadvisorSchemaReference } from '../../../../lib/tripadvisor';
 import BayahibeRealMedia from '../../../../components/BayahibeRealMedia';
+import { getPuntaCanaBuggyContent } from '../../../../lib/puntaCanaBuggyContent';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
@@ -127,8 +128,11 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
   const title = englishTitle(product.title);
   const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
-  const localizedIncluded = isBayahibe ? bayahibeIncluded : included;
-  const localizedFaqs = isBayahibe ? bayahibeFaqs : faqs;
+  const completeContent = getPuntaCanaBuggyContent(product, 'en');
+  const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
+  const localizedRequirements = isBayahibe ? requirements : completeContent.requirements;
+  const localizedBring = isBayahibe ? bring : completeContent.bring;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs;
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -136,7 +140,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
       {
         '@type': 'Product',
         name: `${title} in ${product.destination}`,
-        description: englishDescription(product.destination),
+        description: isBayahibe ? englishDescription(product.destination) : completeContent.summary,
         image: `${siteUrl}${product.image}`,
         sku: product.id,
         brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
@@ -205,7 +209,7 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
             <a className="back-link" href="/en"><ArrowLeft size={17} /> Back to all buggies</a>
             <span className="eyebrow"><MapPin size={16} /> {product.destination}</span>
             <h1>{title} in {product.destination}</h1>
-            <p>{englishDescription(product.destination)}</p>
+            <p>{isBayahibe ? englishDescription(product.destination) : completeContent.summary}</p>
             <div className="detail-badges">
               <span><Users size={17} /> {product.capacityLabel}</span>
               <span><Clock3 size={17} /> {product.durationLabel}</span>
@@ -247,29 +251,61 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
           <article className="info-card dark">
             <span className="kicker">Safety</span>
             <h2>Before driving.</h2>
-            <ul>{requirements.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{localizedRequirements.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
           <article className="info-card bring">
             <span className="kicker">What to bring</span>
             <h2>Get ready for mud.</h2>
-            <ul>{bring.map((item) => <li key={item}>{item}</li>)}</ul>
+            <ul>{localizedBring.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
+          {!isBayahibe ? (
+            <article className="info-card">
+              <span className="kicker">Not included</span>
+              <h2>Extras and optional purchases.</h2>
+              <ul>{completeContent.notIncluded.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+          ) : null}
         </div>
       </section>
+
+      {!isBayahibe ? (
+        <section className="section">
+          <div className="wrap">
+            <div className="section-head">
+              <span className="kicker">Complete itinerary</span>
+              <h2>From pickup to return.</h2>
+              <p><strong>{completeContent.activityDuration}.</strong> {completeContent.totalDuration}. Times are approximate.</p>
+            </div>
+            <div className="tour-steps">
+              {completeContent.itinerary.map((step, index) => (
+                <article key={step.title}>
+                  <b>{index + 1}</b>
+                  <div>
+                    <span className="kicker">{step.time}</span>
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="detail-route">
         <div className="wrap detail-route-grid">
           <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Real buggy route through Bayahibe sugar cane fields' : 'Buggy route in Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
           <div>
             <span className="kicker">Tour route</span>
-            <h2>{isBayahibe ? 'Bayahibe, La Romana and rural roads.' : 'Macao, cenote and Dominican ranch.'}</h2>
+            <h2>{isBayahibe ? 'Bayahibe, La Romana and rural roads.' : completeContent.routeHeading}</h2>
             <p>
-              The experience combines off-road driving, local culture and natural stops. The exact order may change
-              depending on operation, weather and road conditions.
+              {isBayahibe
+                ? 'The experience combines off-road driving, local culture and natural stops. The exact order may change depending on operation, weather and road conditions.'
+                : completeContent.pickup}
             </p>
             <div className="route-note">
               <ShieldCheck />
-              <span>The team confirms the exact pickup time by WhatsApp before the service.</span>
+              <span>{isBayahibe ? 'The team confirms the exact pickup time by WhatsApp before the service.' : completeContent.routeNote}</span>
             </div>
           </div>
         </div>

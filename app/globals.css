@@ -4,7 +4,7 @@
   --line: #e6dfd1;
   --sand: #fff9ed;
   --yellow: #ffd000;
-  --orange: #e86f16;
+  --orange: #b45309;
   --green: #15803d;
   --dark: #070806;
   --shadow: 0 24px 70px rgba(37, 24, 5, 0.14);
@@ -1271,6 +1271,10 @@ a {
   color: #fff;
 }
 
+.info-card.dark .kicker {
+  color: #f59e0b;
+}
+
 .info-card.dark li {
   color: rgba(255, 255, 255, 0.74);
 }
@@ -1444,6 +1448,10 @@ a {
 
 .footer-brand {
   color: #fff;
+}
+
+.footer-brand > span {
+  color: #f59e0b;
 }
 
 .footer-credit {
@@ -3875,7 +3883,7 @@ a {
 
 .tripadvisor-review-link:hover,
 .product-card .tripadvisor-review-link:hover {
-  border-color: #00aa6c;
+  border-color: #007a4d;
   background: #e7fff5;
   box-shadow: 0 10px 24px rgba(0, 170, 108, 0.13);
   transform: translateY(-1px);
@@ -3887,7 +3895,7 @@ a {
   height: 34px;
   place-items: center;
   border-radius: 50%;
-  background: #00aa6c;
+  background: #007a4d;
   color: #fff;
   font-size: 10px;
   letter-spacing: -2px;
@@ -3899,7 +3907,7 @@ a {
 }
 
 .tripadvisor-review-link small {
-  color: #00aa6c;
+  color: #007a4d;
   font-size: 10px;
   font-weight: 1000;
   letter-spacing: 0.07em;
@@ -3913,7 +3921,7 @@ a {
 }
 
 .tripadvisor-review-link > svg {
-  color: #00aa6c;
+  color: #007a4d;
 }
 
 .seo-guide-hero .tripadvisor-review-link {
@@ -4000,7 +4008,7 @@ a {
 
 .tripadvisor-highlight-list svg {
   margin-top: 1px;
-  color: #00aa6c;
+  color: #007a4d;
   flex: none;
 }
 
@@ -4011,7 +4019,7 @@ a {
   justify-content: center;
   gap: 8px;
   border-radius: 999px;
-  background: #00aa6c;
+  background: #007a4d;
   color: #fff;
   padding: 0 19px;
   font-weight: 950;

@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { CheckCircle2, CreditCard, Loader2, LockKeyhole, MessageCircle } from 'lucide-react';
 import type { BuggyProduct } from '../lib/buggyProducts';
 import { calculateBookingTotal, pickupZones, whatsappHref } from '../lib/buggyProducts';
@@ -36,6 +36,12 @@ declare global {
     dataLayer?: Array<Record<string, unknown>>;
   }
 }
+
+const subscribeToDominicanDate = () => () => undefined;
+const getDominicanDate = () => new Date().toLocaleDateString('en-CA', {
+  timeZone: 'America/Santo_Domingo',
+});
+const getServerDate = () => '';
 
 export default function BookingCalculator({ product, defaultHotel = '', defaultPickupZone, locale = 'es' }: BookingCalculatorProps) {
   const copy = locale === 'en'
@@ -181,9 +187,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const bookingReferenceRef = useRef('');
   const leadIdRef = useRef('');
 
-  const minDate = new Date().toLocaleDateString('en-CA', {
-    timeZone: 'America/Santo_Domingo',
-  });
+  const minDate = useSyncExternalStore(subscribeToDominicanDate, getDominicanDate, getServerDate);
   const pricing = calculateBookingTotal({
     product,
     passengers,
@@ -507,7 +511,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         <small>{copy.calculated} {passengers} {copy.people}</small>
       </div>
 
-      <div className="booking-stepper" aria-label="Booking steps">
+      <div className="booking-stepper" role="group" aria-label="Booking steps">
         {stepLabels.map((label, index) => {
           const step = (index + 1) as 1 | 2 | 3;
 
@@ -531,18 +535,21 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         <div className="booking-step-panel">
           <div className="booking-field-row">
             <div className="booking-field">
-              <label>{copy.date}</label>
+              <label htmlFor={`date-${product.id}`}>{copy.date}</label>
               <input
+                id={`date-${product.id}`}
                 type="date"
-                min={minDate}
+                min={minDate || undefined}
+                disabled={!minDate}
                 required
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
               />
             </div>
             <div className="booking-field">
-              <label>{copy.passengers}</label>
+              <label htmlFor={`passengers-${product.id}`}>{copy.passengers}</label>
               <input
+                id={`passengers-${product.id}`}
                 min={1}
                 max={20}
                 type="number"
@@ -554,8 +561,9 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
           </div>
 
           <div className="booking-field">
-            <label>{copy.hotel}</label>
+            <label htmlFor={`hotel-${product.id}`}>{copy.hotel}</label>
             <input
+              id={`hotel-${product.id}`}
               value={hotel}
               required
               onChange={(event) => setHotel(event.target.value)}
@@ -565,8 +573,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
 
           <div className="booking-field-row">
             <div className="booking-field">
-              <label>{copy.pickupZone}</label>
-              <select value={pickupZone} onChange={(event) => setPickupZone(event.target.value)}>
+              <label htmlFor={`pickup-zone-${product.id}`}>{copy.pickupZone}</label>
+              <select id={`pickup-zone-${product.id}`} value={pickupZone} onChange={(event) => setPickupZone(event.target.value)}>
                 {pickupZones.map((zone) => (
                   <option key={zone.label} value={zone.label}>
                     {zone.label}{zone.fee ? ` +US$${zone.fee}` : ''}
@@ -575,8 +583,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
               </select>
             </div>
             <div className="booking-field">
-              <label>{copy.pickupWindow}</label>
-              <select value={pickupWindow} onChange={(event) => setPickupWindow(event.target.value)}>
+              <label htmlFor={`pickup-window-${product.id}`}>{copy.pickupWindow}</label>
+              <select id={`pickup-window-${product.id}`} value={pickupWindow} onChange={(event) => setPickupWindow(event.target.value)}>
                 <option>{copy.first}</option>
                 <option>{copy.morning}</option>
                 <option>{copy.midday}</option>
@@ -585,7 +593,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             </div>
           </div>
 
-          <button className="booking-submit" type="button" onClick={() => goToStep(2)}>
+          <button className="booking-submit" type="button" disabled={!minDate} onClick={() => goToStep(2)}>
             {stepText.next}
           </button>
         </div>
@@ -594,8 +602,9 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       {bookingStep === 2 ? (
         <div className="booking-step-panel">
           <div className="booking-field">
-            <label>{copy.name}</label>
+            <label htmlFor={`name-${product.id}`}>{copy.name}</label>
             <input
+              id={`name-${product.id}`}
               value={name}
               required
               autoComplete="name"
@@ -633,16 +642,17 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
 
           <div className="booking-field-row">
             <div className="booking-field">
-              <label>{copy.language}</label>
-              <select value={language} onChange={(event) => setLanguage(event.target.value)}>
+              <label htmlFor={`language-${product.id}`}>{copy.language}</label>
+              <select id={`language-${product.id}`} value={language} onChange={(event) => setLanguage(event.target.value)}>
                 <option>{copy.spanish}</option>
                 <option>English</option>
                 <option>{copy.french}</option>
               </select>
             </div>
             <div className="booking-field">
-              <label>{copy.payment}</label>
+              <label htmlFor={`payment-${product.id}`}>{copy.payment}</label>
               <select
+                id={`payment-${product.id}`}
                 value={paymentPreference}
                 onChange={(event) => setPaymentPreference(event.target.value)}
               >

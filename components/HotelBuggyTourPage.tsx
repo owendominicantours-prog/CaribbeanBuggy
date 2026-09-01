@@ -22,6 +22,7 @@ import {
   requirements,
 } from '../lib/buggyProducts';
 import { getHotelBuggyProducts } from '../lib/hotelBuggySeo';
+import { getPuntaCanaBuggyContent } from '../lib/puntaCanaBuggyContent';
 import LanguageSwitch from './LanguageSwitch';
 import { guidePath, seoGuides } from '../lib/seoGuides';
 import TripAdvisorReviews from './TripAdvisorReviews';
@@ -144,6 +145,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
   const videoUrl = hotelDestination === 'bayahibe' ? BAYAHIBE_VIDEO_URL : BUGGY_VIDEO_URL;
   const hotelGuides = seoGuides.filter((guide) => guide.destination === hotelDestination || guide.destination === 'general').slice(0, 4);
   const featuredProduct = scopedProducts.find((product) => product.popular) ?? scopedProducts[0];
+  const completePuntaCanaContent = getPuntaCanaBuggyContent(featuredProduct, locale);
   const basePageCopy = isEn
     ? {
         navPrices: 'Prices',
@@ -274,13 +276,25 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
 
   const listIncluded = hotelDestination === 'bayahibe'
     ? (isEn ? enBayahibeIncluded : bayahibeIncluded)
-    : (isEn ? enIncluded : included);
-  const listNotIncluded = isEn ? enNotIncluded : notIncluded;
-  const listRequirements = isEn ? enRequirements : requirements;
-  const listBring = isEn ? enBring : bring;
+    : completePuntaCanaContent.included;
+  const listNotIncluded = hotelDestination === 'bayahibe'
+    ? (isEn ? enNotIncluded : notIncluded)
+    : completePuntaCanaContent.notIncluded;
+  const listRequirements = hotelDestination === 'bayahibe'
+    ? (isEn ? enRequirements : requirements)
+    : completePuntaCanaContent.requirements;
+  const listBring = hotelDestination === 'bayahibe'
+    ? (isEn ? enBring : bring)
+    : completePuntaCanaContent.bring;
   const listFaqs = hotelDestination === 'bayahibe'
     ? (isEn ? enBayahibeFaqs : bayahibeFaqs)
-    : (isEn ? enFaqs : faqs);
+    : completePuntaCanaContent.faqs;
+  const itinerarySteps = hotelDestination === 'bayahibe'
+    ? pageCopy.steps
+    : completePuntaCanaContent.itinerary.map((step) => [
+        `${step.title} · ${step.time}`,
+        step.description,
+      ] as [string, string]);
 
   return (
     <main className="hotel-tour-page">
@@ -395,7 +409,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <span className="tour-kicker">{pageCopy.itinerary}</span>
               <h2>{pageCopy.itineraryTitle}</h2>
               <div className="tour-steps">
-                {pageCopy.steps.map(([title, body], index) => (
+                {itinerarySteps.map(([title, body], index) => (
                   <article key={title}>
                     <b>{index + 1}</b>
                     <div>

@@ -477,7 +477,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           <div><h3>{copy.footerBooking}</h3><a href={whatsappHref(bookingMessage(locale))}>{copy.whatsapp}</a><a href={`#${sectionIds.prices}`}>{copy.footerPrices}</a><a href={questionsPath(locale)}>{copy.footerFaq}</a><a href={guidesPath(locale)}>{isEn ? 'Buggy guides' : 'Guías de buggy'}</a><a href={searchLandingsPath(locale)}>{isEn ? '304 excursion searches' : '304 búsquedas de excursiones'}</a></div>
           <div><h3>{copy.footerRoute}</h3><a href={`#${sectionIds.route}`}>Playa Macao</a><a href={`#${sectionIds.route}`}>Cenote</a><a href={`#${sectionIds.route}`}>{isEn ? 'Dominican ranch' : 'Rancho dominicano'}</a></div>
         </div>
-        <div className="wrap footer-credit"><a href="https://cynador.com" target="_blank" rel="noreferrer">{isEn ? 'Designed and developed by Cynador' : 'Diseño y desarrollo web por Cynador'}</a></div>
+        <div className="wrap footer-credit"><a href="https://proactivitis.com" target="_blank" rel="noreferrer">{isEn ? 'Operated by Proactivitis' : 'Operada por Proactivitis'}</a></div>
       </footer>
 
       <a className="floating-whatsapp" href={whatsappHref(bookingMessage(locale))} data-track-location="floating_cta"><MessageCircle size={20} /> {copy.book}</a>

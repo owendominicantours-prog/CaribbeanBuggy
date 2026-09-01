@@ -22,7 +22,7 @@ export default function TripAdvisorReviews({ locale, destination, location = 'la
   const scriptUrl = `https://www.jscache.com/wejs?wtype=cdswritereviewlgvi&uniq=${config.uniq}&locationId=${profile.locationId}&lang=${config.lang}&display_version=2`;
 
   return (
-    <div className="tripadvisor-reviews" aria-label={isEn ? `${destinationName} buggy reviews on Tripadvisor` : `Opiniones del buggy de ${destinationName} en Tripadvisor`}>
+    <section className="tripadvisor-reviews" aria-label={isEn ? `${destinationName} buggy reviews on Tripadvisor` : `Opiniones del buggy de ${destinationName} en Tripadvisor`}>
       <div className="tripadvisor-reviews-copy">
         <span><MessageSquareText size={17} /> {isEn ? 'Highlights from excellent reviews' : 'Lo mejor de las opiniones excelentes'}</span>
         <h2>{isEn ? `Five-bubble experiences from ${destinationName} travelers.` : `Experiencias de cinco burbujas de viajeros en ${destinationName}.`}</h2>
@@ -46,6 +46,6 @@ export default function TripAdvisorReviews({ locale, destination, location = 'la
         </div>
         <Script id={`tripadvisor-${destination}-${locale}`} src={scriptUrl} strategy="lazyOnload" />
       </div>
-    </div>
+    </section>
   );
 }
