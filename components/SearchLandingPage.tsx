@@ -18,6 +18,7 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
   const bookingHref = `${isEn ? '/en' : ''}/buggy/${product.id}`;
   const related = getRelatedSearchLandings(landing);
   const destination = landing.destination === 'bayahibe' ? 'Bayahibe / La Romana' : 'Punta Cana';
+  const isBoogieOpportunity = landing.id === 'terminology-punta-cana-9';
   const message = isEn ? `Hello Caribbean Buggy, I found this page: ${copy.title}. I want to check availability.` : `Hola Caribbean Buggy, encontré esta página: ${copy.title}. Quiero confirmar disponibilidad.`;
 
   return (
@@ -36,6 +37,7 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
             <span className="questions-kicker"><Search size={17} /> {copy.eyebrow}</span>
             <h1>{copy.title}</h1>
             <p>{copy.description}</p>
+            {isBoogieOpportunity ? <div className="search-hero-actions"><a href={bookingHref}>{isEn ? 'Book from US$40' : 'Reservar desde US$40'} <ArrowRight size={17} /></a><a href="#details">{isEn ? 'Compare the options' : 'Comparar las opciones'}</a></div> : null}
             <div className="seo-guide-trust"><span><ShieldCheck size={17} /> {isEn ? 'Direct published prices' : 'Precios directos publicados'}</span><span><CheckCircle2 size={17} /> {isEn ? 'Route-specific answer' : 'Respuesta específica de ruta'}</span></div>
             <TripAdvisorReviewLink locale={locale} destination={landing.destination} location={`search_${landing.id}`} />
           </div>
@@ -75,4 +77,3 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
     </main>
   );
 }
-

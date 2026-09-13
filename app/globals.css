@@ -4174,6 +4174,41 @@ a {
   line-height: 1.65;
 }
 
+.search-intent-hero .question-breadcrumb {
+  color: #687386;
+}
+
+.search-intent-hero .seo-guide-trust span {
+  color: #334155;
+}
+
+.search-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.search-hero-actions a {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid #d8c79f;
+  border-radius: 999px;
+  padding: 0 20px;
+  color: #111;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 950;
+}
+
+.search-hero-actions a:first-child {
+  border-color: var(--yellow);
+  background: var(--yellow);
+}
+
 .search-intent-visual {
   overflow: hidden;
   border: 1px solid #eadbc0;
