@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { sendPaidBookingEmails, type BookingEmailPayload } from '../../../../lib/bookingEmails';
-import { updateAdminRecordStatus } from '../../../../lib/adminStore';
+import { markAdminRecordCommandCenterSynced, updateAdminRecordStatus, upsertAdminRecord } from '../../../../lib/adminStore';
 import { calculateBookingTotal, getProduct } from '../../../../lib/buggyProducts';
 import { capturePaypalOrder } from '../../../../lib/paypal';
-import { notifyCommandCenter } from '../../../../lib/commandCenter';
+import { notifyPaidBookingToCommandCenter } from '../../../../lib/commandCenter';
 
 export const runtime = 'nodejs';
 
@@ -25,33 +25,55 @@ export async function POST(request: Request) {
     }
 
     const capture = await capturePaypalOrder(orderID);
-    const paidRecord = await updateAdminRecordStatus(reference || orderID, 'paid', `Pago PayPal confirmado: ${orderID}`);
+    let paidRecord = await updateAdminRecordStatus(reference || orderID, 'paid', `Pago PayPal confirmado: ${orderID}`);
+
+    if (!paidRecord && booking?.productId) {
+      const product = getProduct(booking.productId);
+      if (product) {
+        const pricing = calculateBookingTotal({
+          product,
+          passengers: Number(booking.passengers || product.capacityNumber),
+          pickupZone: String(booking.pickupZone || ''),
+          photos: Boolean(booking.photos),
+          privatePickup: Boolean(booking.privatePickup),
+        });
+        const now = new Date().toISOString();
+        paidRecord = await upsertAdminRecord({
+          id: reference || orderID,
+          reference: reference || orderID,
+          orderId: orderID,
+          type: 'booking',
+          source: 'paypal_capture_recovery',
+          status: 'paid',
+          createdAt: now,
+          updatedAt: now,
+          productId: product.id,
+          productName: product.title,
+          customer: { name: booking.name, email: booking.email, phone: booking.phone },
+          booking: {
+            date: booking.date,
+            pickupWindow: booking.pickupWindow,
+            hotel: booking.hotel,
+            pickupZone: booking.pickupZone,
+            passengers: pricing.passengers,
+            language: booking.language,
+            paymentPreference: booking.paymentPreference,
+            photos: booking.photos,
+            privatePickup: booking.privatePickup,
+            total: pricing.total,
+            vehicles: pricing.vehicles,
+          },
+          notes: [`${new Date().toLocaleString('es-DO')}: Registro reconstruido desde captura PayPal confirmada.`],
+          raw: { paypalOrderId: orderID },
+        });
+      }
+    }
 
     if (paidRecord) {
-      await notifyCommandCenter({
-        kind: 'BOOKING',
-        sourceSite: 'caribbean-buggy',
-        sourceBrand: 'Caribbean Buggy',
-        externalId: paidRecord.reference || paidRecord.id,
-        customer: paidRecord.customer,
-        customerLanguage: paidRecord.booking.language,
-        title: paidRecord.productName || 'Reserva de buggy',
-        body: `Hotel: ${paidRecord.booking.hotel || 'Por confirmar'}. Vehiculos: ${paidRecord.booking.vehicles || 1}.`,
-        amount: paidRecord.booking.total,
-        currency: 'USD',
-        eventAt: paidRecord.booking.date,
-        booking: {
-          id: paidRecord.reference || paidRecord.id,
-          status: 'CONFIRMED',
-          paymentStatus: 'paid',
-          date: paidRecord.booking.date,
-          pickupTime: paidRecord.booking.pickupWindow,
-          hotel: paidRecord.booking.hotel,
-          passengers: paidRecord.booking.passengers,
-          vehicleCount: paidRecord.booking.vehicles,
-          paymentMethod: 'paypal'
-        }
-      });
+      const delivery = await notifyPaidBookingToCommandCenter(paidRecord);
+      if (delivery.status === 'sent') {
+        await markAdminRecordCommandCenterSynced(paidRecord.reference || paidRecord.id);
+      }
     }
 
     if (booking?.productId && reference) {

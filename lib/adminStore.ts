@@ -37,6 +37,7 @@ export type AdminRecord = {
     vehicles?: number;
   };
   notes?: string[];
+  commandCenterSyncedAt?: string;
   raw?: unknown;
 };
 
@@ -280,6 +281,30 @@ export async function updateAdminRecordStatus(id: string, status: AdminRecordSta
       : records[index].notes,
     updatedAt: now(),
   };
+  await writeLocalStore(records);
+  return records[index];
+}
+
+export async function markAdminRecordCommandCenterSynced(id: string) {
+  const syncedAt = now();
+  const pool = getPool();
+  if (pool) {
+    await ensureDatabase();
+    const result = await pool.query<{ record: AdminRecord }>(
+      `UPDATE caribbean_buggy_admin_records
+          SET record = jsonb_set(record, '{commandCenterSyncedAt}', to_jsonb($2::text), true),
+              updated_at = $2
+        WHERE id = $1 OR reference = $1 OR order_id = $1
+        RETURNING record`,
+      [id, syncedAt],
+    );
+    return result.rows[0]?.record ?? null;
+  }
+
+  const records = await readLocalStore();
+  const index = records.findIndex((record) => record.id === id || record.reference === id || record.orderId === id);
+  if (index < 0) return null;
+  records[index] = { ...records[index], commandCenterSyncedAt: syncedAt, updatedAt: syncedAt };
   await writeLocalStore(records);
   return records[index];
 }
