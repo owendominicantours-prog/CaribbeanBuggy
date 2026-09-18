@@ -72,9 +72,9 @@ const ES: Omit<PuntaCanaBuggyContent, 'summary'> = {
     { time: '10-20 min', title: 'Llegada y registro', description: 'Organización del grupo, comprobación de la reserva y asignación del buggy según la modalidad pagada.' },
     { time: '10-15 min', title: 'Orientación de seguridad', description: 'Explicación del vehículo, casco, reglas del convoy, distancia segura y señales del guía.' },
     { time: '45-75 min acumulados', title: 'Conducción todoterreno', description: 'Ruta guiada por caminos rurales de Macao con polvo, agua o barro según el clima.' },
-    { time: '20-30 min', title: 'Parada cultural', description: 'Visita a un rancho o casa local con explicación y degustaciones de productos dominicanos incluidas por el operador.' },
-    { time: '20-30 min', title: 'Cueva o cenote', description: 'Parada de agua incluida en la ruta de Punta Cana. El baño depende de las condiciones del lugar y las indicaciones del guía.' },
-    { time: '20-40 min', title: 'Playa Macao', description: 'Tiempo para caminar, tomar fotografías o bañarse con precaución cuando el estado del mar lo permite.' },
+    { time: '20-30 min', title: 'Parada cultural', description: 'Visita a una casa típica o rancho dominicano para conocer el café, el cacao, el tabaco y la mamajuana, su preparación y las tradiciones locales. Las degustaciones ofrecidas por el operador forman parte de la parada; las compras son opcionales y los productos con alcohol se reservan a los adultos.' },
+    { time: '20-30 min', title: 'Cueva o cenote', description: 'La cueva contiene un cenote de agua dulce al que se accede por escaleras. Baja con cuidado y sigue al personal. Bañarse es opcional y depende de las condiciones del lugar; puedes disfrutar la visita sin entrar al agua. No se promete ni se exige realizar saltos.' },
+    { time: '20-40 min', title: 'Playa Macao', description: 'Disfruta el paisaje de arena clara y aguas azules de Macao. Puedes caminar por la playa, tomar fotografías o descansar durante la parada. El oleaje puede ser fuerte: el baño depende del estado del mar y de las indicaciones del guía.' },
     { time: 'Variable', title: 'Regreso', description: 'Tramo final al rancho, devolución del equipo y transporte compartido al punto de recogida.' }
   ],
   faqs: [
@@ -106,9 +106,9 @@ const EN: Omit<PuntaCanaBuggyContent, 'summary'> = {
     { time: '10-20 min', title: 'Arrival and check-in', description: 'Reservation check, group organization and buggy assignment for the paid option.' },
     { time: '10-15 min', title: 'Safety briefing', description: 'Vehicle controls, helmet, convoy rules, safe distance and guide signals.' },
     { time: '45-75 min total', title: 'Off-road driving', description: 'Guided route on Macao rural roads with dust, water or mud depending on weather.' },
-    { time: '20-30 min', title: 'Cultural stop', description: 'Visit to a local ranch or home with an explanation and operator-provided Dominican tastings.' },
-    { time: '20-30 min', title: 'Cave or cenote', description: 'Water stop on the Punta Cana route. Swimming depends on site conditions and guide instructions.' },
-    { time: '20-40 min', title: 'Macao Beach', description: 'Time to walk, take photos or swim carefully when sea conditions allow.' },
+    { time: '20-30 min', title: 'Cultural stop', description: 'Visit a traditional Dominican home or ranch to learn about coffee, cacao, tobacco and mamajuana, their preparation and local traditions. Operator-provided tastings are part of the stop; purchases are optional and alcoholic products are for adults only.' },
+    { time: '20-30 min', title: 'Cave or cenote', description: 'The cave contains a freshwater cenote reached by steps. Take care going down and follow staff instructions. Swimming is optional and depends on site conditions; you can enjoy the visit without entering the water. Jumping is neither promised nor required.' },
+    { time: '20-40 min', title: 'Macao Beach', description: 'Enjoy the pale sand and blue water of Macao. Walk along the beach, take photos or relax during the stop. Surf can be strong: swimming depends on sea conditions and guide instructions.' },
     { time: 'Variable', title: 'Return', description: 'Final drive to the ranch, equipment return and shared transportation to the confirmed pickup point.' }
   ],
   faqs: [
