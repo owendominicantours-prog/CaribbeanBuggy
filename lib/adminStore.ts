@@ -226,7 +226,9 @@ export async function upsertAdminRecord(record: AdminRecord) {
   return merged;
 }
 
-export async function updateAdminRecordStatus(id: string, status: AdminRecordStatus, note?: string) {
+export type AdminRecordEdit = { customer?: AdminRecord['customer']; booking?: Pick<AdminRecord['booking'], 'date' | 'pickupWindow' | 'hotel' | 'pickupZone' | 'language'> };
+
+export async function updateAdminRecordStatus(id: string, status?: AdminRecordStatus, note?: string, edit: AdminRecordEdit = {}) {
   const pool = getPool();
   if (pool) {
     await ensureDatabase();
@@ -250,7 +252,9 @@ export async function updateAdminRecordStatus(id: string, status: AdminRecordSta
 
       const updated: AdminRecord = {
         ...previous,
-        status,
+        status: status ?? previous.status,
+        customer: { ...previous.customer, ...edit.customer },
+        booking: { ...previous.booking, ...edit.booking },
         notes: note
           ? [...(previous.notes ?? []), `${new Date().toLocaleString('es-DO')}: ${note}`]
           : previous.notes,
@@ -275,7 +279,9 @@ export async function updateAdminRecordStatus(id: string, status: AdminRecordSta
   if (index < 0) return null;
   records[index] = {
     ...records[index],
-    status,
+    status: status ?? records[index].status,
+    customer: { ...records[index].customer, ...edit.customer },
+    booking: { ...records[index].booking, ...edit.booking },
     notes: note
       ? [...(records[index].notes ?? []), `${new Date().toLocaleString('es-DO')}: ${note}`]
       : records[index].notes,

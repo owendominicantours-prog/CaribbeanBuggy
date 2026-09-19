@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { AdminRecord, AdminRecordStatus } from '../../lib/adminStore';
 import type { SeoInventoryItem, SeoInventoryType } from '../../lib/seoInventory';
 import type { VisitSnapshot } from '../../lib/visitStore';
@@ -40,12 +40,12 @@ function money(value?: number) {
 }
 
 function formatDate(value?: string) {
-  if (!value) return '-';
+  if (!value || !Number.isFinite(Date.parse(value))) return '-';
   const options: Intl.DateTimeFormatOptions = value.includes('T')
     ? { dateStyle: 'medium', timeStyle: 'short' }
     : { dateStyle: 'medium' };
 
-  return new Intl.DateTimeFormat('es-DO', options).format(new Date(value));
+  return new Intl.DateTimeFormat('es-DO', options).format(new Date(value.includes('T') ? value : value + 'T12:00:00'));
 }
 
 function whatsappLink(phone?: string) {
@@ -56,6 +56,26 @@ function whatsappLink(phone?: string) {
 export default function AdminPanelClient({ initialRecords, initialSeoPages, initialVisits, recordsPersistent }: AdminPanelClientProps) {
   const [records, setRecords] = useState(initialRecords);
   const [activePanel, setActivePanel] = useState<'operations' | 'seo'>('operations');
+  const [period, setPeriod] = useState('upcoming');
+  const [from, setFrom] = useState('');
+  const [to, setTo] = useState('');
+  const [product, setProduct] = useState('');
+  const [kind, setKind] = useState('all');
+  const [draft, setDraft] = useState<AdminRecord | null>(null);
+  const editorRef = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (!draft) return;
+    editorRef.current?.showModal();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previous; };
+  }, [draft?.id]);
+  const [note, setNote] = useState('');
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+  const weekEnd = new Date(Date.parse(today + 'T12:00:00Z') + 6 * 86400000).toISOString().slice(0,10);
+  const active = (r: AdminRecord) => r.status !== 'cancelled' && r.status !== 'completed';
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | AdminRecordStatus>('all');
   const [savingId, setSavingId] = useState('');
@@ -86,9 +106,11 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         .join(' ')
         .toLowerCase();
 
-      return matchesStatus && (!needle || haystack.includes(needle));
-    });
-  }, [query, records, statusFilter]);
+      const date = record.booking.date?.slice(0,10) || '';
+      const matchesPeriod = period === 'all' || (period === 'missing' ? !date : period === 'past' ? !!date && date < today : active(record) && !!date && (period === 'today' ? date === today : period === 'week' ? date >= today && date <= weekEnd : date >= today));
+      return matchesStatus && matchesPeriod && (!product || record.productName === product) && (kind === 'all' || record.type === kind) && (!from || date >= from) && (!to || (!!date && date <= to)) && (!needle || haystack.includes(needle));
+    }).sort((a,b) => (a.booking.date || '9999').localeCompare(b.booking.date || '9999') || (a.booking.pickupWindow || '').localeCompare(b.booking.pickupWindow || ''));
+  }, [query, records, statusFilter, period, from, to, product, kind, today, weekEnd]);
 
   const summary = useMemo(
     () => ({
@@ -121,6 +143,8 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
 
   async function changeStatus(id: string, status: AdminRecordStatus) {
     setSavingId(id);
+    setError('');
+    setNotice('');
 
     try {
       const response = await fetch(`/api/admin/records/${id}`, {
@@ -136,9 +160,25 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
 
       const updated = (await response.json()) as AdminRecord;
       setRecords((current) => current.map((record) => (record.id === updated.id ? updated : record)));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No se pudo guardar.');
     } finally {
       setSavingId('');
     }
+  }
+
+  async function saveDetails(event: React.FormEvent) {
+    event.preventDefault();
+    if (!draft || savingId) return;
+    setSavingId(draft.id); setError(''); setNotice('');
+    try {
+      const response = await fetch(`/api/admin/records/${encodeURIComponent(draft.id)}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ customer: draft.customer, booking: { date: draft.booking.date || '', pickupWindow: draft.booking.pickupWindow || '', hotel: draft.booking.hotel || '', pickupZone: draft.booking.pickupZone || '', language: draft.booking.language || '' }, note }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'No se pudo guardar.');
+      setRecords(rows => rows.map(r => r.id === data.id ? data : r));
+      setDraft(null); setNotice('Reserva actualizada correctamente.');
+    } catch(e) { setError(e instanceof Error ? e.message : 'No se pudo guardar.'); }
+    finally { setSavingId(''); }
   }
 
   async function logout() {
@@ -195,7 +235,20 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         </article>
       </section>
 
-      <section className="admin-toolbar">
+      <section className="admin-stat-grid">
+        <article><span>Servicios hoy</span><strong>{records.filter(r => active(r) && r.type === 'booking' && r.booking.date === today).length}</strong></article>
+        <article><span>Servicios en 7 días</span><strong>{records.filter(r => active(r) && r.type === 'booking' && r.booking.date && r.booking.date >= today && r.booking.date <= weekEnd).length}</strong></article>
+        <article><span>Sin fecha</span><strong>{records.filter(r => active(r) && !r.booking.date).length}</strong></article>
+      </section>
+      {error && !draft && <p role="alert" className="admin-feedback error">{error}</p>}
+      {notice && <p role="status" className="admin-feedback">{notice}</p>}
+      <section className="admin-toolbar admin-operation-filters">
+        <label>Periodo<select aria-label="Periodo" value={period} onChange={e => setPeriod(e.target.value)}>{[['upcoming','Próximas'],['today','Hoy'],['week','Próximos 7 días'],['all','Todas'],['past','Pasadas'],['missing','Sin fecha']].map(([v,l]) => <option key={v} value={v}>{l}</option>)}</select></label>
+        <label>Tipo<select aria-label="Tipo" value={kind} onChange={e => setKind(e.target.value)}><option value="all">Reservas y consultas</option><option value="booking">Reservas</option><option value="inquiry">Consultas</option></select></label>
+        <label>Servicio<select aria-label="Servicio" value={product} onChange={e => setProduct(e.target.value)}><option value="">Todos los servicios</option>{[...new Set(records.map(r => r.productName).filter(Boolean))].map(name => <option key={name} value={name}>{name}</option>)}</select></label>
+        <label>Desde<input type="date" value={from} onChange={e => setFrom(e.target.value)} /></label>
+        <label>Hasta<input type="date" min={from} value={to} onChange={e => setTo(e.target.value)} /></label>
+        <button type="button" onClick={() => { setQuery(''); setStatusFilter('all'); setPeriod('all'); setKind('all'); setProduct(''); setFrom(''); setTo(''); }}>Limpiar filtros</button>
         <input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -211,6 +264,8 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         </select>
       </section>
 
+      <p>{filteredRecords.length} registros encontrados</p>
+      {!filteredRecords.length && <p className="admin-feedback">No hay reservas para estos filtros. Selecciona Todas o Sin fecha para revisar otros registros.</p>}
       <section className="admin-record-grid">
         {filteredRecords.map((record) => {
           const wa = whatsappLink(record.customer.phone);
@@ -240,7 +295,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
                   <span>Servicio</span>
                   <b>{record.booking.date || '-'} / {record.booking.pickupWindow || '-'}</b>
                   <small>{record.booking.hotel || '-'}</small>
-                  <small>{record.booking.pickupZone || '-'}</small>
+                  <small>{record.booking.pickupZone || '-'}</small><small>Idioma: {record.booking.language || 'Por confirmar'}</small><small>Fotos: {record.booking.photos ? 'Si' : 'No'} / Recogida privada: {record.booking.privatePickup ? 'Si' : 'No'}</small>
                 </div>
                 <div>
                   <span>Operacion</span>
@@ -251,9 +306,10 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
               </div>
 
               <div className="admin-record-actions">
+                <button type="button" disabled={!!savingId} onClick={() => { setDraft({ ...record, customer: { ...record.customer }, booking: { ...record.booking } }); setNote(''); setError(''); setNotice(''); }}>Editar reserva</button>
                 <select
                   value={record.status}
-                  disabled={savingId === record.id}
+                  disabled={!!savingId}
                   onChange={(event) => changeStatus(record.id, event.target.value as AdminRecordStatus)}
                 >
                   {statusOptions.map((status) => (
@@ -320,6 +376,17 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         </section>
         {seoLimit < seoPages.length ? <button className="admin-load-more" type="button" onClick={() => setSeoLimit((current) => current + 100)}>Mostrar 100 páginas más</button> : null}
       </>}
+      {draft && <dialog ref={editorRef} className="admin-editor-backdrop" aria-label="Editar reserva" onCancel={e => { e.preventDefault(); if (!savingId) setDraft(null); }}><form className="admin-editor" onSubmit={saveDetails}>
+        <h2>Editar reserva</h2><p>{draft.reference || draft.id} · {draft.productName}</p>
+        <div className="admin-editor-fields">
+          {([['name','Cliente'],['email','Correo'],['phone','Teléfono']] as const).map(([key,label],i) => <label key={key}>{label}<input autoFocus={i === 0} maxLength={300} type={key === 'email' ? 'email' : 'text'} value={draft.customer[key] || ''} onChange={e => setDraft({ ...draft, customer: { ...draft.customer, [key]: e.target.value } })} /></label>)}
+          {([['date','Fecha'],['pickupWindow','Hora de recogida'],['hotel','Hotel o punto de encuentro'],['pickupZone','Zona'],['language','Idioma']] as const).map(([key,label]) => <label key={key}>{label}<input maxLength={300} type={key === 'date' ? 'date' : 'text'} value={draft.booking[key] || ''} onChange={e => setDraft({ ...draft, booking: { ...draft.booking, [key]: e.target.value } })} /></label>)}
+        </div>
+        <p>{draft.booking.passengers || '-'} pasajeros · {draft.booking.vehicles || '-'} vehículos · Total: {money(draft.booking.total)}</p>
+        <label>Agregar nota interna<textarea maxLength={2000} rows={3} value={note} onChange={e => setNote(e.target.value)} /></label>
+        {error && <p role="alert" className="admin-feedback error">{error}</p>}
+        <div className="admin-record-actions"><button type="button" disabled={!!savingId} onClick={() => setDraft(null)}>Cancelar</button><button type="submit" disabled={!!savingId}>{savingId ? 'Guardando...' : 'Guardar cambios'}</button></div>
+      </form></dialog>}
     </main>
   );
 }
