@@ -10,7 +10,7 @@ let pool:Pool|undefined;
 export async function calendarExport(offset: number) {
  if(!process.env.DATABASE_URL)throw new Error('Storage unavailable');
  pool??=new Pool({connectionString:process.env.DATABASE_URL,max:2,connectionTimeoutMillis:8000,ssl:process.env.DATABASE_SSL==='disable'?false:process.env.DATABASE_SSL==='require'||process.env.DATABASE_URL.includes('sslmode=require')?{rejectUnauthorized:false}:undefined});
- const result=await pool.query('SELECT record FROM caribbean_buggy_admin_records ORDER BY id LIMIT 251 OFFSET $1',[offset]);
+ const result=await pool.query("SELECT record FROM caribbean_buggy_admin_records WHERE record->>'type'='booking' ORDER BY id LIMIT 251 OFFSET $1",[offset]);
  const rows=result.rows.slice(0,250).map(r=>r.record);
  return {records:rows,nextOffset:result.rows.length>250?offset+250:null};
 }
