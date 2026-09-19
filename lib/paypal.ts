@@ -83,19 +83,36 @@ export async function createPaypalOrder({
 
 export async function capturePaypalOrder(orderId: string) {
   const token = await getAccessToken();
-  const response = await fetch(`${paypalBase}/v2/checkout/orders/${orderId}/capture`, {
+  let response: Response;
+  try { response = await fetch(`${paypalBase}/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
+      'PayPal-Request-Id': `capture-${orderId}`,
     },
     cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`PayPal capture failed with ${response.status}: ${errorText}`);
+  }); } catch {
+    // The request may have succeeded at PayPal before the connection failed.
+    const existing = await getPaypalOrder(orderId);
+    if (existing.status === 'COMPLETED') return existing;
+    throw new Error('PayPal capture could not be verified');
   }
 
+  if (!response.ok) {
+    const existing = await getPaypalOrder(orderId);
+    if (existing.status === 'COMPLETED') return existing;
+    throw new Error(`PayPal capture not completed (${response.status})`);
+  }
+
+  return response.json();
+}
+
+export async function getPaypalOrder(orderId: string) {
+  const token = await getAccessToken();
+  const response = await fetch(`${paypalBase}/v2/checkout/orders/${encodeURIComponent(orderId)}`, {
+    headers: { Authorization: `Bearer ${token}` }, cache: 'no-store', signal: AbortSignal.timeout(15000),
+  });
+  if (!response.ok) throw new Error(`PayPal verification HTTP ${response.status}`);
   return response.json();
 }

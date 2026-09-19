@@ -181,6 +181,18 @@ export async function listAdminRecords() {
   return records.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
+export async function getAdminRecord(id: string) {
+  const pool = getPool();
+  if (pool) {
+    await ensureDatabase();
+    const result = await pool.query<{ record: AdminRecord }>(
+      'SELECT record FROM caribbean_buggy_admin_records WHERE id=$1 OR reference=$1 OR order_id=$1 LIMIT 1', [id],
+    );
+    return result.rows[0]?.record ?? null;
+  }
+  return (await readLocalStore()).find(r => r.id === id || r.reference === id || r.orderId === id) ?? null;
+}
+
 export async function upsertAdminRecord(record: AdminRecord) {
   const pool = getPool();
   if (pool) {

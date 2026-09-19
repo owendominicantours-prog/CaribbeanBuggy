@@ -186,6 +186,19 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
     window.location.href = '/admin/login';
   }
 
+  async function reconcilePayment(record: AdminRecord) {
+    setSavingId(record.id); setError(''); setNotice('');
+    try {
+      const response = await fetch(`/api/admin/records/${encodeURIComponent(record.id)}/reconcile`, { method: 'POST' });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'No se pudo verificar PayPal.');
+      if (result.status !== 'paid') throw new Error('El pago todavía no está conciliado.');
+      setRecords(rows => rows.map(r => r.id === record.id ? { ...r, status: 'paid' } : r));
+      setNotice('PayPal confirmó el pago y la reserva está pagada. No se realizó otro cobro.');
+    } catch (e) { setError(e instanceof Error ? e.message : 'No se pudo verificar PayPal.'); }
+    finally { setSavingId(''); }
+  }
+
   async function refreshVisits() {
     setRefreshingVisits(true);
     try {
@@ -306,6 +319,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
               </div>
 
               <div className="admin-record-actions">
+                {record.orderId && (record.status === 'capture_failed' || record.status === 'pending_payment') && <button type="button" disabled={!!savingId} onClick={() => reconcilePayment(record)}>{savingId === record.id ? 'Verificando...' : 'Verificar pago en PayPal'}</button>}
                 <button type="button" disabled={!!savingId} onClick={() => { setDraft({ ...record, customer: { ...record.customer }, booking: { ...record.booking } }); setNote(''); setError(''); setNotice(''); }}>Editar reserva</button>
                 <select
                   value={record.status}
