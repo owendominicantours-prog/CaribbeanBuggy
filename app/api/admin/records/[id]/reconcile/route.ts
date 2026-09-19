@@ -1,6 +1,5 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { timingSafeEqual } from 'crypto';
 import { ADMIN_COOKIE_NAME, verifyAdminToken } from '../../../../../../lib/adminAuth';
 import { getAdminRecord, updateAdminRecordStatus } from '../../../../../../lib/adminStore';
 import { getPaypalOrder } from '../../../../../../lib/paypal';
@@ -8,17 +7,10 @@ import { verifyCompletedPayment } from '../../../../../../lib/paypalPayment';
 
 export const runtime = 'nodejs';
 
-function maintenanceAuthorized(request: Request, reference: string) {
-  const expected = process.env.PAYPAL_RECONCILE_TOKEN || '';
-  const expires = Number(expected.split('.')[0]);
-  const actual = request.headers.get('authorization')?.replace(/^Bearer /, '') || '';
-  return !!expected && expected.split('.')[1] === reference && expires > Date.now() && Buffer.byteLength(actual) === Buffer.byteLength(expected) && timingSafeEqual(Buffer.from(expected), Buffer.from(actual));
-}
-
-export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
+export async function POST(_request: Request, context: { params: Promise<{ id: string }> }) {
   const jar = await cookies();
   const { id } = await context.params;
-  if (!verifyAdminToken(jar.get(ADMIN_COOKIE_NAME)?.value) && !maintenanceAuthorized(request, id)) return NextResponse.json({ error: 'No autorizado.' }, { status: 401 });
+  if (!verifyAdminToken(jar.get(ADMIN_COOKIE_NAME)?.value)) return NextResponse.json({ error: 'No autorizado.' }, { status: 401 });
   try {
     const record = await getAdminRecord(id);
     if (!record?.orderId) return NextResponse.json({ error: 'Reserva sin orden PayPal.' }, { status: 404 });
