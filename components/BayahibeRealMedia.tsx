@@ -2,12 +2,15 @@ import Image from 'next/image';
 import { Camera, PlayCircle } from 'lucide-react';
 
 const photos = [
-  '/buggy/bayahibe/buggy-lodo-bayahibe.jpg',
-  '/buggy/bayahibe/convoy-lodo-bayahibe.jpg',
-  '/buggy/bayahibe/buggy-canaveral-bayahibe.jpg',
-  '/buggy/bayahibe/parada-cana-azucar-bayahibe.jpg',
-  '/buggy/bayahibe/viajeros-buggy-bayahibe.jpg',
-  '/buggy/bayahibe/rio-chavon-bayahibe.jpg',
+  "/buggy/bayahibe/new-20260921/buggy-mud.jpg",
+  "/buggy/bayahibe/new-20260921/traveler-sugarcane.jpg",
+  "/buggy/bayahibe/new-20260921/country-route.jpg",
+  "/buggy/bayahibe/new-20260921/family-buggy.jpg",
+  "/buggy/bayahibe/new-20260921/travelers.jpg",
+  "/buggy/bayahibe/new-20260921/atv-mud.jpg",
+  "/buggy/bayahibe/new-20260921/sugarcane-stop.jpg",
+  "/buggy/bayahibe/new-20260921/group.jpg",
+  "/buggy/bayahibe/rio-chavon-bayahibe.jpg"
 ];
 
 export default function BayahibeRealMedia({ locale }: { locale: 'es' | 'en' }) {
