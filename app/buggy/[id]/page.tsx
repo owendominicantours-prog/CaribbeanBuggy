@@ -81,7 +81,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
   const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
   const localizedRequirements = isBayahibe ? requirements : completeContent.requirements;
   const localizedBring = isBayahibe ? bring : completeContent.bring;
-  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs.map(([q, a]) => [q, /precio|price/i.test(q) ? "La oferta es de US$30 por persona. Una persona paga US$30; dos, US$60; tres, US$90; y cuatro, US$120. El total se calcula con los viajeros de la reserva." : a]);
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -162,6 +162,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <div className="detail-badges">
               <span><Users size={17} /> {product.capacityLabel}</span>
               <span><Clock3 size={17} /> {product.durationLabel}</span>
+              {product.offerPerPerson && <p style={{ flexBasis: "100%", color: "#facc15", fontWeight: 700 }}>Oferta especial: US$30 por persona<br/><small><del>US${product.regular}</del> / US${product.promo} (${product.capacityNumber} personas)</small></p>}
               <span><BadgeDollarSign size={17} /> Desde US${product.promo}</span>
             </div>
           </div>

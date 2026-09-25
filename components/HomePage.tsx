@@ -99,6 +99,7 @@ function productCapacity(product: BuggyProduct, locale: Locale) {
 }
 
 function productNote(product: BuggyProduct, locale: Locale) {
+  if (product.offerPerPerson) return locale === "en" ? "US$30 per person" : "US$30 por persona";
   if (locale === 'es') return product.note;
   return product.capacityNumber === 4 ? 'Total for all 4 seats' : 'Price per vehicle';
 }
@@ -342,6 +343,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
             </div>
             <p className="hook">{isEn ? (product.capacityNumber === 2 ? 'The favorite for couples and friends.' : product.capacityNumber === 4 ? 'Keep the whole group together.' : 'Your own buggy, your own wheel.') : product.hook}</p>
             <p>{productDescription(product, locale)}</p>
+            {product.offerPerPerson && <p className="kicker">{isEn ? "Special offer: US$30 per person" : "Oferta especial: US$30 por persona"}</p>}
             <div className="price-row">
               <small>{copy.before} US${product.regular}</small>
               <strong>US${product.promo}</strong>
@@ -390,7 +392,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           </div>
           <aside className="deal-card">
             <div className="deal-card-status"><i /><div><b>{copy.dealStatus}</b><small>{copy.dealStatusNote}</small></div></div>
-            <span>{copy.from}</span><strong>US$40</strong><p>{copy.dealBody}</p>
+            <span>{copy.from}</span><strong>US$30</strong><p>{copy.dealBody}</p>
             <ul>{copy.dealItems.map((item) => <li key={item}><CheckCircle2 size={17} /> {item}</li>)}</ul>
             <a href={`#${sectionIds.prices}`} data-track-event="booking_cta_click" data-track-location="hero_deal">{copy.dealCta} <ArrowRight size={17} /></a>
           </aside>

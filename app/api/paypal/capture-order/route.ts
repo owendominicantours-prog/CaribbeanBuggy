@@ -44,6 +44,11 @@ export async function POST(request: Request) {
           paymentPreference: record.booking.paymentPreference || 'paypal', photos: !!record.booking.photos, privatePickup: !!record.booking.privatePickup,
         };
         const pricing = calculateBookingTotal({ product, passengers: booking.passengers, pickupZone: booking.pickupZone, photos: booking.photos, privatePickup: booking.privatePickup });
+        // Preserve the amount actually charged for existing PayPal orders.
+        if (typeof record.booking.total === 'number' && Number.isFinite(record.booking.total)) {
+          pricing.baseTotal += record.booking.total - pricing.total;
+          pricing.total = record.booking.total;
+        }
         try { await sendPaidBookingEmails({ booking, product, pricing, orderId: orderID, reference: record.reference }); }
         catch { console.error('paid_booking_email_pending'); }
       }

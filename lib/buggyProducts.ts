@@ -10,6 +10,7 @@ export type BuggyProduct = {
   hook: string;
   description: string;
   longDescription: string;
+  offerPerPerson?: number;
   regular: number;
   promo: number;
   capacityLabel: string;
@@ -43,7 +44,7 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Individual',
     seoTitle: 'Tour en Buggy Individual Punta Cana | Mejor Precio',
     seoDescription:
-      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 40 USD con recogida incluida.',
+      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 30 USD con recogida incluida.',
     destination: 'Punta Cana',
     routeLabel: 'Punta Cana, Macao y cenote',
     durationLabel: '4 horas con traslado',
@@ -53,8 +54,9 @@ export const products: BuggyProduct[] = [
       'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para viajeros solos que quieren conducir durante toda la ruta, ensuciarse en el lodo y vivir Macao sin compartir el volante.',
     longDescription:
       'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en hoteles principales de Bavaro, Punta Cana, Macao, Cabeza de Toro y zonas cercanas segun disponibilidad.',
-    regular: 55,
-    promo: 40,
+    regular: 40,
+    promo: 30,
+    offerPerPerson: 30,
     capacityLabel: '1 adulto',
     capacityNumber: 1,
     note: 'Precio por vehiculo',
@@ -66,7 +68,7 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Doble',
     seoTitle: 'Excursion en Buggy Doble en Punta Cana | Oferta Especial',
     seoDescription:
-      'Disfruta con tu pareja o amigo un tour en buggy doble en Punta Cana desde 75 USD por vehiculo, con recogida en el hotel incluida.',
+      'Disfruta con tu pareja o amigo un tour en buggy doble en Punta Cana desde 30 USD por persona, con recogida en el hotel incluida.',
     destination: 'Punta Cana',
     routeLabel: 'Punta Cana, Macao y cenote',
     durationLabel: '4 horas con traslado',
@@ -76,8 +78,9 @@ export const products: BuggyProduct[] = [
       'La excursion mas popular de Punta Cana para parejas y amigos. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos caminos de lodo, rancho dominicano, cenote y Playa Macao.',
     longDescription:
       'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos sin pagar de mas por persona. Incluye transporte desde zonas principales, guia, parada cultural con cafe y cacao, cenote, Playa Macao y asistencia por WhatsApp antes de la recogida.',
-    regular: 95,
-    promo: 75,
+    regular: 75,
+    promo: 60,
+    offerPerPerson: 30,
     capacityLabel: 'Piloto + copiloto',
     capacityNumber: 2,
     note: 'Precio total por 2 pasajeros',
@@ -89,7 +92,7 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Familiar',
     seoTitle: 'Buggy Familiar en Punta Cana de 4 Plazas | Economico',
     seoDescription:
-      'Reserva un buggy familiar de 4 plazas en Punta Cana desde 140 USD por vehiculo. Ruta por Macao, cenote, playa y recogida incluida.',
+      'Reserva un buggy familiar de 4 plazas en Punta Cana desde 30 USD por persona. Ruta por Macao, cenote, playa y recogida incluida.',
     destination: 'Punta Cana',
     routeLabel: 'Punta Cana, Macao y cenote',
     durationLabel: '4 horas con traslado',
@@ -99,8 +102,9 @@ export const products: BuggyProduct[] = [
       'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en familia o grupo pequeno.',
     longDescription:
       'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, casco, instrucciones de seguridad, recogida coordinada, rancho dominicano, cenote y parada en Playa Macao segun la operacion del dia.',
-    regular: 180,
-    promo: 140,
+    regular: 140,
+    promo: 120,
+    offerPerPerson: 30,
     capacityLabel: 'Hasta 4 personas',
     capacityNumber: 4,
     note: 'Precio total por las 4 plazas',
@@ -233,7 +237,7 @@ export function calculateBookingTotal({
   const selectedZone = pickupZones.find((zone) => zone.label === pickupZone) ?? pickupZones[0];
   const safePassengers = Math.max(1, Math.min(20, Math.floor(passengers || product.capacityNumber)));
   const vehicles = Math.max(1, Math.ceil(safePassengers / product.capacityNumber));
-  const baseTotal = vehicles * product.promo;
+  const baseTotal = product.offerPerPerson ? safePassengers * product.offerPerPerson : vehicles * product.promo;
   const zoneFee = selectedZone.fee;
   const photosFee = photos ? 25 : 0;
   const privatePickupFee = privatePickup ? 30 : 0;

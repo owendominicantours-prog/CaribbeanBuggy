@@ -507,6 +507,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     <form className="booking-widget booking-widget-stepped" onSubmit={handleSubmit}>
       <div className="booking-widget-head">
         <span>{copy.secure}</span>
+        {product.offerPerPerson && <p className="kicker">{locale === "en" ? "Special offer" : "Oferta especial"}: US$30 {locale === "en" ? "per person" : "por persona"}</p>}
         <strong>US${total}</strong>
         <small>{copy.calculated} {passengers} {copy.people}</small>
       </div>
@@ -677,7 +678,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       {bookingStep === 3 ? (
         <>
           <div className="booking-breakdown" aria-live="polite">
-            <p><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</p>
+            <p>{product.offerPerPerson ? <><b>{pricing.passengers}</b> {copy.people} x US${product.offerPerPerson}</> : <><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</>}</p>
             <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
             {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
           </div>
