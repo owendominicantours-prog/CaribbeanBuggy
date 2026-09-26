@@ -1,0 +1,3 @@
+import {confirm,SITE} from "../../../../lib/stripeAdapter";
+import {stripe} from "../../../../lib/stripeCheckout";
+export async function POST(r:Request){let event;try{event=stripe().webhooks.constructEvent(await r.text(),r.headers.get("stripe-signature")||"",process.env.STRIPE_WEBHOOK_SECRET||"");}catch{return new Response("Invalid signature",{status:400});}try{if(event.type==="checkout.session.completed"||event.type==="checkout.session.async_payment_succeeded"){const s=event.data.object;if(s.metadata?.site===SITE&&s.payment_status==="paid")await confirm(s.id);}return Response.json({received:true});}catch{return new Response("Confirmation pending",{status:500});}}

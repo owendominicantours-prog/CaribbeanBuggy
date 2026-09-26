@@ -74,21 +74,21 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         payNow: 'Pay in full now',
         cardFirst: 'Try card first',
         helpFirst: 'I need help before paying',
-        payButton: 'Pay safely by card or PayPal',
+        payButton: 'Pay safely by card',
         paidTitle: 'Payment received.',
         paidText: 'We will contact you to confirm pickup and exact time.',
-        choosePayment: 'Choose card, PayPal or any available method.',
+        choosePayment: 'Pay by card with Stripe.',
         paypalCard: 'PayPal may show direct card payment depending on your country and browser.',
         loading: 'Loading secure payment...',
         help: 'WhatsApp support',
-        protected: 'Payment protected by PayPal',
+        protected: 'Payment protected by Stripe',
         external: 'Card details are processed outside our website',
         note: 'After payment we confirm availability, pickup time and operational details by WhatsApp or email.',
         notConfigured: 'PayPal is not configured in this installation yet.',
         loadError: 'We could not load PayPal. Try again or contact us on WhatsApp.',
         createError: 'We could not create the PayPal order.',
         captureError: 'We could not capture the payment.',
-        paymentError: 'PayPal could not complete the payment. You can try another card or contact us on WhatsApp.',
+        paymentError: 'Stripe could not open the payment. You can try another card or contact us on WhatsApp.',
         renderError: 'We could not show the payment form. Try again.',
         saving: 'Saving your reservation securely...',
         saveError: 'We could not save your reservation. Please try again or contact us on WhatsApp.',
@@ -134,21 +134,21 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         payNow: 'Pagar total ahora',
         cardFirst: 'Intentar tarjeta primero',
         helpFirst: 'Necesito ayuda antes de pagar',
-        payButton: 'Pagar seguro con tarjeta o PayPal',
+        payButton: 'Pagar seguro con tarjeta',
         paidTitle: 'Pago recibido.',
         paidText: 'Te contactaremos para confirmar recogida y hora exacta.',
-        choosePayment: 'Elige tarjeta, PayPal o metodo disponible.',
+        choosePayment: 'Paga con tarjeta mediante Stripe.',
         paypalCard: 'PayPal puede mostrar pago directo con tarjeta segun tu pais y navegador.',
         loading: 'Cargando pago seguro...',
         help: 'Ayuda por WhatsApp',
-        protected: 'Pago protegido por PayPal',
+        protected: 'Pago protegido por Stripe',
         external: 'Datos de tarjeta procesados fuera de nuestra web',
         note: 'Despues del pago confirmamos disponibilidad, hora de recogida y detalles operativos por WhatsApp o correo.',
         notConfigured: 'PayPal aun no esta configurado en esta instalacion.',
         loadError: 'No pudimos cargar PayPal. Intenta de nuevo o contacta por WhatsApp.',
         createError: 'No se pudo crear la orden de PayPal.',
         captureError: 'No se pudo capturar el pago.',
-        paymentError: 'PayPal no pudo completar el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.',
+        paymentError: 'Stripe no pudo abrir el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.',
         renderError: 'No pudimos mostrar el formulario de pago. Intenta de nuevo.',
         saving: 'Guardando tu reserva de forma segura...',
         saveError: 'No pudimos guardar tu reserva. Intenta nuevamente o escribenos por WhatsApp.',
@@ -197,111 +197,15 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   });
   const total = pricing.total;
 
-  useEffect(() => {
-    const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-    if (!clientId) {
-      setPaymentError(copy.notConfigured);
-      return;
-    }
-
-    if (window.paypal) {
-      setPaypalReady(true);
-      return;
-    }
-
-    const existingScript = document.querySelector<HTMLScriptElement>('script[data-caribbean-paypal]');
-    if (existingScript) {
-      existingScript.addEventListener('load', () => setPaypalReady(true), { once: true });
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}&currency=USD&intent=capture&components=buttons&enable-funding=card`;
-    script.async = true;
-    script.dataset.caribbeanPaypal = 'true';
-    script.onload = () => setPaypalReady(true);
-    script.onerror = () => setPaymentError(copy.loadError);
-    document.body.appendChild(script);
-  }, []);
-
-  useEffect(() => {
-    if (!showPayment || !paypalReady || !paypalContainerRef.current || paymentStatus === 'paid') return;
-
-    paypalContainerRef.current.innerHTML = '';
-    setPaymentError('');
-
-    window.paypal
-      ?.Buttons({
-        style: {
-          layout: 'vertical',
-          color: 'gold',
-          shape: 'rect',
-          label: 'pay',
-        },
-        createOrder: async () => {
-          setPaymentStatus('loading');
-          const response = await fetch('/api/paypal/create-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(buildPayload()),
-          });
-          const data = (await response.json()) as {
-            id?: string;
-            reference?: string;
-            error?: string;
-          };
-
-          if (!response.ok || !data.id) {
-            throw new Error(data.error || copy.createError);
-          }
-
-          if (data.reference) {
-            bookingReferenceRef.current = data.reference;
-            setBookingReference(data.reference);
-          }
-          return data.id;
-        },
-        onApprove: async (data) => {
-          const response = await fetch('/api/paypal/capture-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              orderID: data.orderID,
-              reference: bookingReferenceRef.current || bookingReference,
-              booking: buildPayload(),
-            }),
-          });
-          const capture = (await response.json()) as { error?: string; status?: string };
-
-          if (!response.ok) {
-            throw new Error(capture.error || copy.captureError);
-          }
-
-          window.dataLayer?.push({
-            event: 'purchase',
-            transaction_id: data.orderID,
-            booking_reference: bookingReferenceRef.current || bookingReference,
-            product_id: product.id,
-            product_name: product.title,
-            value: total,
-            currency: 'USD',
-            passengers,
-          });
-          setPaymentStatus('paid');
-        },
-        onError: (error) => {
-          console.error('paypal_checkout_error', error);
-          setPaymentStatus('idle');
-          setPaymentError(copy.paymentError);
-        },
-      })
-      .render(paypalContainerRef.current)
-      .catch((error) => {
-        console.error('paypal_render_error', error);
-        setPaymentStatus('idle');
-        setPaymentError(copy.renderError);
-      });
-  }, [showPayment, paypalReady, renderToken, paymentStatus]);
+  const stripeRequestId = useRef("");
+  async function openStripe() {
+    setPaymentError(""); setPaymentStatus('loading');
+    if (!stripeRequestId.current) stripeRequestId.current = crypto.randomUUID();
+    try { const r = await fetch('/api/stripe/checkout', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...buildPayload(),requestId:stripeRequestId.current})});
+      const d = await r.json(); if(!r.ok || typeof d.url !== 'string' || !d.url.startsWith('https://checkout.stripe.com/')) throw Error(d.error || copy.paymentError);
+      window.location.assign(d.url);
+    } catch(e) { setPaymentStatus('idle');setPaymentError(e instanceof Error ? e.message : copy.paymentError); }
+  }
 
   function buildPayload() {
     return {
@@ -719,9 +623,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
               ) : (
                 <>
                   <b>{copy.choosePayment}</b>
-                  <span>{copy.paypalCard}</span>
-                  <div ref={paypalContainerRef} className="paypal-buttons" />
-                  {!paypalReady && !paymentError ? <p className="booking-note">{copy.loading}</p> : null}
+                  <button type="button" className="booking-submit" disabled={paymentStatus === 'loading'} onClick={openStripe}>{paymentStatus === 'loading' ? copy.loading : (language === 'en' ? 'Pay securely with Stripe' : 'Pagar seguro con Stripe')}</button>
+                  <p className="booking-note">{language === 'en' ? 'Card payment. Your booking is confirmed after payment verification.' : 'Pago con tarjeta. Tu reserva se confirma al verificar el pago.'}</p>
                 </>
               )}
               {paymentError ? <p className="payment-error">{paymentError}</p> : null}
