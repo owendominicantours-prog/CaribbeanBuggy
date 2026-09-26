@@ -1,6 +1,12 @@
 import Stripe from "stripe";
 import { Pool } from "pg";
-export type Order = { id:string; amount:number; email:string; title:string; payload:unknown };
+export type Order = { id:string; amount:number; email:string; title:string; details?:Record<string,string|number|undefined>; payload:unknown };
+export function paymentMetadata(site:string,order:Order){
+ const metadata:Record<string,string>={site,bookingId:order.id,booking_reference:order.id,product_name:order.title.slice(0,450),amount_due:order.amount.toFixed(2),currency:"USD",payment_mode:"full"};
+ const allowed=["product_id","activity_date","pickup_time","hotel","pickup_zone","travelers","vehicles","vehicle_summary","customer_name","customer_email","customer_phone","language","source_url"];
+ for(const key of allowed){const value=order.details?.[key];if(value===undefined||value===null)continue;let text=String(value).trim();if(key==="source_url"){try{const u=new URL(text);if(!["https:","http:"].includes(u.protocol))continue;text=u.origin+u.pathname;}catch{continue;}}if(text)metadata[key]=text.slice(0,450);}
+ return metadata;
+}
 let pool:Pool;
 const db=()=>pool ||= new Pool({connectionString:process.env.DATABASE_URL,max:3,connectionTimeoutMillis:10000});
 export const stripe=()=>new Stripe(process.env.STRIPE_SECRET_KEY || "missing");
@@ -12,7 +18,9 @@ export async function checkout(site:string,origin:string,order:Order){
  const row=(await c.query("SELECT * FROM ecosystem_stripe_checkouts WHERE site=$1 AND booking_id=$2 FOR UPDATE",[site,order.id])).rows[0];if(row.amount!==cents)throw Error("Booking amount changed");
  let attempt=row.attempt;
  if(row.session_id){const old=await stripe().checkout.sessions.retrieve(row.session_id);if(old.status==="open"&&old.url){await c.query("COMMIT");return old.url;}if(old.status!=="expired")throw Error("Payment already submitted. Check your confirmation.");attempt++;}
- const session=await stripe().checkout.sessions.create({mode:"payment",payment_method_types:["card"],customer_email:order.email,client_reference_id:order.id,metadata:{site,bookingId:order.id},payment_intent_data:{metadata:{site,bookingId:order.id}},line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:cents,product_data:{name:order.title}}}],success_url:origin+"/stripe-confirmation?session_id={CHECKOUT_SESSION_ID}",cancel_url:origin+"/stripe-confirmation?cancelled=1"},{idempotencyKey:site+":"+order.id+":"+attempt});
+ const metadata=paymentMetadata(site,order);
+ const description=[order.title,metadata.activity_date,metadata.pickup_time,metadata.hotel,metadata.travelers ? metadata.travelers+" travelers" : "",order.id].filter(Boolean).join(" | ").slice(0,900);
+ const session=await stripe().checkout.sessions.create({mode:"payment",payment_method_types:["card"],customer_email:order.email,client_reference_id:order.id,metadata,payment_intent_data:{metadata,description},line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:cents,product_data:{name:order.title}}}],success_url:origin+"/stripe-confirmation?session_id={CHECKOUT_SESSION_ID}",cancel_url:origin+"/stripe-confirmation?cancelled=1"},{idempotencyKey:site+":"+order.id+":"+attempt});
  await c.query("UPDATE ecosystem_stripe_checkouts SET session_id=$3,attempt=$4 WHERE site=$1 AND booking_id=$2",[site,order.id,session.id,attempt]);await c.query("COMMIT");return session.url;
  }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }

@@ -5,3 +5,5 @@ Card checkout uses Stripe-hosted Checkout. Production keys and webhook secrets a
 Validation: TypeScript and production builds passed; mocked lifecycle tests cover unpaid, mismatched amount/site, retry and duplicate fulfillment. A real Stripe TEST Checkout was created and expired without a charge. No live card was charged. Actual email/operations delivery after a live payment remains to be observed.
 
 Migration adds ecosystem_stripe_checkouts on first use; Buggy & Cenote adds stripe_session_id to its booking table when fulfilling. No existing booking is deleted. Email delivery is at-least-once if interrupted between sending and persistence.
+
+Stripe Session and PaymentIntent metadata now include booking reference, product, date/time, pickup hotel/zone, travelers, vehicles, language and lead contact. Payment description includes service summary. Only allowlisted fields are sent; URL query strings and fragments are excluded, values limited to 450 characters. Applies to newly created sessions; existing sessions retain their original metadata.
