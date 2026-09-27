@@ -1,3 +1,4 @@
+import {deliverOnce} from "./paymentDelivery";
 import {checkout,fulfill} from "./stripeCheckout";
 import {calculateBookingTotal,getProduct,createBookingReference} from "./buggyProducts";
 import {upsertAdminRecord,getAdminRecord,markAdminRecordCommandCenterSynced} from "./adminStore";
@@ -14,4 +15,13 @@ export async function start(p:any){const product=getProduct(p.productId);if(!pro
  await upsertAdminRecord({id,reference:id,type:"booking",source:"stripe_checkout",status:"pending_payment",createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),productId:product.id,productName:product.title,customer:{name:p.name,email:p.email,phone:p.phone},booking:{...booking,total:pricing.total,vehicles:pricing.vehicles}});
  return checkout(SITE,"https://www.caribbeanboggie.com",{id,amount:pricing.total,email:p.email,title:product.title,details:{product_id:product.id,activity_date:booking.date,pickup_time:booking.pickupWindow,hotel:booking.hotel,pickup_zone:booking.pickupZone,travelers:pricing.passengers,vehicles:pricing.vehicles,customer_name:booking.name,customer_email:booking.email,customer_phone:booking.phone,language:booking.language,source_url:"https://www.caribbeanboggie.com"},payload:{id,booking,pricing,productId:product.id}});
 }
-export const confirm=(id:string)=>fulfill(SITE,id,async(p,s)=>{const record=await getAdminRecord(p.id);if(!record||record.status==="cancelled")throw Error("Booking unavailable");const paid=await upsertAdminRecord({...record,orderId:s.id,status:"paid",updatedAt:new Date().toISOString()});const current=await getAdminRecord(p.id);if(!current)throw Error("Booking persistence failed");if(!current.commandCenterSyncedAt){const delivery=await notifyPaidBookingToCommandCenter(current);if(delivery.status!=="sent")throw Error("Operations notification pending");await markAdminRecordCommandCenterSynced(current.id);}const product=getProduct(p.productId);if(!product)throw Error("Product missing");await sendPaidBookingEmails({booking:p.booking,product,pricing:p.pricing,orderId:s.id,reference:p.id});});
+export const confirm=(id:string)=>fulfill(SITE,id,async(p,s)=>{
+const record=await getAdminRecord(p.id);if(!record||record.status==="cancelled")throw Error("Booking unavailable");
+await upsertAdminRecord({...record,orderId:s.id,status:"paid",updatedAt:new Date().toISOString()});
+const current=await getAdminRecord(p.id);if(!current)throw Error("Booking persistence failed");
+const product=getProduct(p.productId);if(!product)throw Error("Product missing");
+const result=await Promise.all([
+ deliverOnce(SITE,p.id,"operations",async()=>{if(!current.commandCenterSyncedAt){const delivery=await notifyPaidBookingToCommandCenter(current);if(delivery.status!=="sent")throw Error("Operations notification pending");await markAdminRecordCommandCenterSynced(current.id);}}),
+ sendPaidBookingEmails({booking:p.booking,product,pricing:p.pricing,orderId:s.id,reference:p.id})
+]);return result.every(Boolean);
+});

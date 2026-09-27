@@ -1,3 +1,4 @@
+import {deliverOnce} from "./paymentDelivery";
 import type { BuggyProduct } from './buggyProducts';
 import { proactivitisPhone, siteUrl } from './buggyProducts';
 import { sendEmail } from './email';
@@ -67,7 +68,7 @@ export async function sendPaidBookingEmails({
 
   const adminRows = [
     row('Referencia', reference),
-    row('PayPal Order', orderId),
+    row('Payment reference', orderId),
     row('Producto', product.title),
     row('Fecha', booking.date),
     row('Turno', booking.pickupWindow),
@@ -126,7 +127,7 @@ export async function sendPaidBookingEmails({
   const adminText = [
     'Nueva reserva pagada Caribbean Buggy',
     `Referencia: ${reference}`,
-    `PayPal Order: ${orderId}`,
+    `Payment reference: ${orderId}`,
     `Producto: ${product.title}`,
     `Fecha: ${booking.date}`,
     `Turno: ${booking.pickupWindow}`,
@@ -141,19 +142,21 @@ export async function sendPaidBookingEmails({
     `Total: ${money(pricing.total)}`,
   ].join('\n');
 
-  await Promise.allSettled([
+  const deliveries = await Promise.all([
+    deliverOnce("caribbean-buggy",reference,"admin_email",()=>
     sendEmail({
       to: adminTo,
       subject: `Nueva reserva pagada ${reference} - ${product.title}`,
       html: adminHtml,
       text: adminText,
       replyTo: booking.email,
-    }),
-    sendEmail({
+    })),
+    deliverOnce("caribbean-buggy",reference,"customer_email",()=>sendEmail({
       to: booking.email,
       subject: `Reserva recibida ${reference} - Caribbean Buggy`,
       html: customerHtml,
       text: `Reserva recibida ${reference}. Producto: ${product.title}. Fecha: ${booking.date}. Total: ${money(pricing.total)}. Te confirmaremos por WhatsApp.`,
-    }),
+    })),
   ]);
+  return deliveries.every(Boolean);
 }

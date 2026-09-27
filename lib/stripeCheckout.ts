@@ -24,12 +24,12 @@ export async function checkout(site:string,origin:string,order:Order){
  await c.query("UPDATE ecosystem_stripe_checkouts SET session_id=$3,attempt=$4 WHERE site=$1 AND booking_id=$2",[site,order.id,session.id,attempt]);await c.query("COMMIT");return session.url;
  }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }
-export async function fulfill(site:string,id:string,deliver:(payload:any,session:Stripe.Checkout.Session)=>Promise<void>){
+export async function fulfill(site:string,id:string,deliver:(payload:any,session:Stripe.Checkout.Session)=>Promise<boolean | void>){
  await ready();if(!/^cs_(live|test)_[a-zA-Z0-9]+$/.test(id))throw Error("Invalid session");const s=await stripe().checkout.sessions.retrieve(id);
  if(s.metadata?.site!==site||s.payment_status!=="paid"||s.currency!=="usd")throw Error("Payment not confirmed");
  const c=await db().connect();try{await c.query("BEGIN");await c.query("SELECT pg_advisory_xact_lock(hashtext($1))",[site+s.metadata.bookingId]);const row=(await c.query("SELECT * FROM ecosystem_stripe_checkouts WHERE site=$1 AND session_id=$2 FOR UPDATE",[site,id])).rows[0];
  if(!row||row.booking_id!==s.metadata.bookingId||row.amount!==s.amount_total)throw Error("Payment mismatch");
- if(!row.fulfilled){await deliver(row.payload,s);await c.query("UPDATE ecosystem_stripe_checkouts SET fulfilled=true WHERE site=$1 AND session_id=$2",[site,id]);}
- await c.query("COMMIT");return {paid:true,reference:row.booking_id,amount:row.amount/100,currency:"USD",transactionId:s.id};
+ let deliveryPending=false; if(!row.fulfilled){deliveryPending=(await deliver(row.payload,s))===false;if(!deliveryPending)await c.query("UPDATE ecosystem_stripe_checkouts SET fulfilled=true WHERE site=$1 AND session_id=$2",[site,id]);}
+ await c.query("COMMIT");return {paid:true,deliveryPending,reference:row.booking_id,amount:row.amount/100,currency:"USD",transactionId:s.id};
  }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }

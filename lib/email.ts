@@ -24,6 +24,7 @@ function getTransporter() {
     host,
     port,
     secure: port === 465,
+    connectionTimeout:10000,greetingTimeout:10000,socketTimeout:15000,
     auth: {
       user,
       pass,
@@ -37,11 +38,10 @@ export async function sendEmail({ to, subject, html, text, replyTo }: MailInput)
   const agent = getTransporter();
 
   if (!agent) {
-    console.warn('email_not_configured_missing_smtp_pass', { to, subject });
-    return { skipped: true };
+    throw new Error('SMTP not configured');
   }
 
-  await agent.sendMail({
+  const info = await agent.sendMail({
     from,
     to,
     subject,
@@ -50,5 +50,6 @@ export async function sendEmail({ to, subject, html, text, replyTo }: MailInput)
     replyTo,
   });
 
+  if (!info.accepted?.length || info.rejected?.length) throw new Error("SMTP recipient rejected");
   return { skipped: false };
 }
