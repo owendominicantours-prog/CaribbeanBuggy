@@ -1,4 +1,12 @@
 import HomePage, { buildHomeSchema } from '../../components/HomePage';
+import { siteUrl } from '../../lib/buggyProducts';
+
+export const metadata = {
+  alternates: {
+    canonical: siteUrl,
+    languages: { en: `${siteUrl}/en`, es: siteUrl, 'x-default': siteUrl },
+  },
+};
 
 const schema = buildHomeSchema('es');
 
