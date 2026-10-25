@@ -18,7 +18,8 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import Image from 'next/image';
-import LanguageSwitch from './LanguageSwitch';
+import AdventureHeader from './AdventureHeader';
+import VehicleComparison from './VehicleComparison';
 import {
   bring,
   faqs,
@@ -99,7 +100,7 @@ function productCapacity(product: BuggyProduct, locale: Locale) {
 }
 
 function productNote(product: BuggyProduct, locale: Locale) {
-  if (product.offerPerPerson) return locale === "en" ? "US$30 per person" : "US$30 por persona";
+  if (product.offerPerPerson) return locale === "en" ? `US${product.offerPerPerson} per traveler` : `US${product.offerPerPerson} por viajero`;
   if (locale === 'es') return product.note;
   return product.capacityNumber === 4 ? 'Total for all 4 seats' : 'Price per vehicle';
 }
@@ -146,7 +147,7 @@ export function buildHomeSchema(locale: Locale) {
         contactPoint: {
           '@type': 'ContactPoint',
           contactType: 'reservations',
-          telephone: '+1-829-475-6298',
+          telephone: '+1-829-553-9900',
           availableLanguage: ['Spanish', 'English'],
         },
       },
@@ -216,18 +217,18 @@ export default function HomePage({ locale }: { locale: Locale }) {
     ? {
         prices: 'Prices', route: 'Route', included: 'Included', faq: 'FAQ', book: 'Book now',
         eyebrow: 'Punta Cana · Macao Beach · Hotel pickup',
-        title: 'The Punta Cana buggy tour you came for.',
+        title: 'Trade the resort for a Punta Cana buggy adventure.',
         intro: 'Mud, rural trails, Dominican culture, cenote and Macao Beach—with direct pricing and coordinated hotel pickup.',
         seeOptions: 'See buggy options', ask: 'Ask on WhatsApp',
-        heroProof: ['Secure card or PayPal payment', 'Pickup coordinated by WhatsApp', 'Clear price per vehicle'],
-        from: 'From', dealBody: 'Single buggy with round-trip transportation included.',
-        dealStatus: 'Direct booking with local confirmation', dealStatusNote: 'We coordinate pickup after booking.',
+        heroProof: ['Secure card payment with Stripe', 'Pickup coordinated by WhatsApp', 'Clear price per vehicle'],
+        from: 'From', dealBody: 'Per traveler in a double or family buggy. Single buggy: US$50.',
+        dealStatus: 'Book. Pay. Your adventure is confirmed.', dealStatusNote: 'Your e-ticket by email. Pickup details the day before.',
         dealItems: ['Hotel pickup', 'Cenote + Macao Beach', 'Local guide and safety equipment'], dealCta: 'Choose your buggy',
         highlights: [
           ['Pickup included', 'Round-trip transport from main Punta Cana and Bavaro hotel zones.', Car],
           ['Real off-road route', 'Mud trails, Macao Beach, Dominican ranch and cenote.', MapPin],
           ['Direct pricing', 'Clear prices per vehicle with no hotel desk commissions.', BadgeDollarSign],
-          ['Secure booking', 'Pay by card or PayPal and receive clear instructions.', ShieldCheck],
+          ['Secure booking', 'Pay by card through Stripe and receive clear instructions.', ShieldCheck],
         ] as Array<[string, string, LucideIcon]>,
         optionsKicker: 'Choose your destination', optionsTitle: 'One clear price. The right buggy for your group.',
         optionsBody: 'Compare capacity and destination first, then complete the booking form in a few steps.',
@@ -239,7 +240,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         bookingSteps: [
           ['Choose your buggy', 'Compare single, double or family capacity and select your destination.', Users],
           ['Add date and hotel', 'Tell us when you are going and where we should coordinate pickup.', CalendarDays],
-          ['Confirm securely', 'Review the total and pay by card or PayPal.', CreditCard],
+          ['Confirm securely', 'Review the total and pay by card through Stripe.', CreditCard],
         ] as Array<[string, string, LucideIcon]>,
         routeKicker: 'The experience', routeTitle: 'Four stops. One unforgettable muddy day.',
         routeBody: 'The route combines real off-road driving with local culture and natural stops. Order may vary according to operations.',
@@ -264,18 +265,18 @@ export default function HomePage({ locale }: { locale: Locale }) {
     : {
         prices: 'Precios', route: 'Ruta', included: 'Incluye', faq: 'FAQ', book: 'Reservar',
         eyebrow: 'Punta Cana · Playa Macao · Recogida incluida',
-        title: 'El tour en buggy de Punta Cana que viniste a vivir.',
+        title: 'Tu día de barro. Tu Punta Cana en buggy.',
         intro: 'Lodo, caminos rurales, cultura dominicana, cenote y Playa Macao, con precio directo y recogida coordinada en tu hotel.',
         seeOptions: 'Ver opciones', ask: 'Preguntar por WhatsApp',
-        heroProof: ['Pago seguro con tarjeta o PayPal', 'Recogida coordinada por WhatsApp', 'Precio claro por vehículo'],
-        from: 'Desde', dealBody: 'Buggy individual con transporte ida y vuelta incluido.',
-        dealStatus: 'Reserva directa con confirmación local', dealStatusNote: 'Coordinamos tu recogida después de reservar.',
+        heroProof: ['Pago seguro con tarjeta y Stripe', 'Recogida coordinada por WhatsApp', 'Precio claro por vehículo'],
+        from: 'Desde', dealBody: 'Por viajero en buggy doble o familiar. Buggy individual: US$50.',
+        dealStatus: 'Reserva. Paga. Tu aventura está confirmada.', dealStatusNote: 'E-ticket por correo. Recogida coordinada el día antes.',
         dealItems: ['Recogida en hotel', 'Cenote + Playa Macao', 'Guía local y equipo de seguridad'], dealCta: 'Elegir mi buggy',
         highlights: [
           ['Recogida incluida', 'Transporte ida y vuelta desde hoteles principales de Punta Cana y Bávaro.', Car],
           ['Ruta auténtica', 'Lodo, Playa Macao, rancho dominicano y parada en cenote.', MapPin],
           ['Precio directo', 'Tarifas claras por vehículo, sin comisiones del hotel.', BadgeDollarSign],
-          ['Reserva segura', 'Paga con tarjeta o PayPal y recibe instrucciones claras.', ShieldCheck],
+          ['Reserva segura', 'Paga con tarjeta mediante Stripe y recibe instrucciones claras.', ShieldCheck],
         ] as Array<[string, string, LucideIcon]>,
         optionsKicker: 'Elige tu destino', optionsTitle: 'Un precio claro. El buggy correcto para tu grupo.',
         optionsBody: 'Compara capacidad y destino; después completa la reserva en pocos pasos.',
@@ -287,7 +288,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         bookingSteps: [
           ['Elige tu buggy', 'Compara individual, doble o familiar y selecciona el destino.', Users],
           ['Agrega fecha y hotel', 'Indica cuándo vas y dónde coordinamos la recogida.', CalendarDays],
-          ['Confirma seguro', 'Revisa el total y paga con tarjeta o PayPal.', CreditCard],
+          ['Confirma seguro', 'Revisa el total y paga con tarjeta mediante Stripe.', CreditCard],
         ] as Array<[string, string, LucideIcon]>,
         routeKicker: 'La experiencia', routeTitle: 'Cuatro paradas. Un día de lodo inolvidable.',
         routeBody: 'La ruta combina conducción off-road real, cultura local y paradas naturales. El orden puede variar según la operación.',
@@ -323,13 +324,6 @@ export default function HomePage({ locale }: { locale: Locale }) {
         {groupProducts.map((product) => (
           <article className={`product-card ${product.popular ? 'popular' : ''}`} id={product.id} key={product.id}>
             {product.popular ? <div className="badge"><Sparkles size={14} /> {copy.popular}</div> : null}
-            <div className="product-top">
-              <div>
-                <span>{productCapacity(product, locale)}</span>
-                <h3>{productTitle(product, locale)}</h3>
-              </div>
-              <Users aria-hidden="true" />
-            </div>
             <div className="product-image-shell">
               <Image
                 className="product-photo"
@@ -341,20 +335,29 @@ export default function HomePage({ locale }: { locale: Locale }) {
               />
               <span>{product.destination}</span>
             </div>
+            <div className="product-card-body">
+            <div className="product-top">
+              <div>
+                <span>{productCapacity(product, locale)}</span>
+                <h3>{productTitle(product, locale)}</h3>
+              </div>
+              <Users aria-hidden="true" />
+            </div>
+
             <p className="hook">{isEn ? (product.capacityNumber === 2 ? 'The favorite for couples and friends.' : product.capacityNumber === 4 ? 'Keep the whole group together.' : 'Your own buggy, your own wheel.') : product.hook}</p>
             <p>{productDescription(product, locale)}</p>
-            {product.offerPerPerson && <p className="kicker">{isEn ? "Special offer: US$30 per person" : "Oferta especial: US$30 por persona"}</p>}
             <div className="price-row">
-              <small>{copy.before} US${product.regular}</small>
               <strong>US${product.promo}</strong>
+              <span className="card-price-caption">{isEn ? `Total for ${product.capacityNumber} ${product.capacityNumber === 1 ? 'person' : 'people'}` : `Total para ${product.capacityNumber} ${product.capacityNumber === 1 ? 'persona' : 'personas'}`}</span>
+              {product.offerPerPerson ? <span className="card-per-person">{isEn ? `US$${product.offerPerPerson} per traveler` : `US$${product.offerPerPerson} por viajero`}</span> : <span className="card-per-person">{isEn ? 'Price per buggy' : 'Precio por buggy'}</span>}
             </div>
-            <div className="meta">
+            <div className="product-card-meta">
               <span><Users size={16} /> {productCapacity(product, locale)}</span>
               <span><Clock3 size={16} /> {isEn ? 'Approx. 4 hours with transfer' : product.durationLabel}</span>
-              <span><BadgeDollarSign size={16} /> {productNote(product, locale)}</span>
             </div>
             <TripAdvisorReviewLink locale={locale} destination={destination === 'Bayahibe' ? 'bayahibe' : 'punta-cana'} location={`product_card_${product.id}`} />
-            <a href={`${base}/buggy/${product.id}`} data-product-id={product.id}>{copy.details} <ArrowRight size={17} /></a>
+            <a className="product-book-link" href={`${base}/buggy/${product.id}`} data-product-id={product.id}>{copy.details} <ArrowRight size={17} /></a>
+            </div>
           </article>
         ))}
       </div>
@@ -363,16 +366,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
 
   return (
     <main className="public-site">
-      <header className="site-header">
-        <a className="brand" href={base || '/'} aria-label="Caribbean Buggy"><span>Caribbean</span><b>Buggy</b></a>
-        <nav aria-label={isEn ? 'Main navigation' : 'Navegación principal'}>
-          <a href={`#${sectionIds.prices}`}>{copy.prices}</a><a href={`#${sectionIds.route}`}>{copy.route}</a><a href={`#${sectionIds.included}`}>{copy.included}</a><a href={questionsPath(locale)}>{copy.faq}</a>
-        </nav>
-        <div className="header-actions">
-          <LanguageSwitch current={locale} esHref="/" enHref="/en" />
-          <a className="header-cta" href={`#${sectionIds.prices}`} data-track-event="booking_cta_click" data-track-location="header">{copy.book}</a>
-        </div>
-      </header>
+      <AdventureHeader locale={locale} />
 
       <section className="hero">
         <Image className="hero-bg-image" src="/buggy/doble.jpeg" alt="" fill priority sizes="100vw" />
@@ -413,6 +407,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
+      <VehicleComparison locale={locale}/>
       <section className="section booking-flow-section">
         <div className="wrap booking-flow-layout">
           <div className="booking-flow-copy"><span className="kicker">{copy.bookingKicker}</span><h2>{copy.bookingTitle}</h2><p>{copy.bookingBody}</p><a className="primary-btn" href={`#${sectionIds.prices}`}>{copy.seeOptions} <ArrowRight size={18} /></a></div>

@@ -40,7 +40,7 @@ const bayahibeGallery = [
   '/buggy/bayahibe/parada-cana-azucar-bayahibe.jpg',
   '/buggy/bayahibe/rio-chavon-bayahibe.jpg',
 ];
-const BUGGY_VIDEO_URL = 'https://cfplxlfjp1i96vih.public.blob.vercel-storage.com/Videos/Buggy%20Punta%20cana.mp4';
+const BUGGY_VIDEO_URL = '';
 const BAYAHIBE_VIDEO_URL = '/buggy/bayahibe/tour-buggy-bayahibe.mp4';
 
 const enIncluded = [
@@ -164,7 +164,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         cta: `Book from ${hotel.name}`,
         whatsapp: 'Ask on WhatsApp',
         price: `From US$${featuredProduct.promo}`,
-        priceNote: 'Secure payment by card or PayPal',
+        priceNote: 'Secure card payment with Stripe',
         facts: ['Zone', 'Estimated drive to ranch', 'Options', 'Pickup'],
         options: 'Single, double or family buggy',
         videoKicker: 'Real preview',
@@ -213,7 +213,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         cta: `Reservar desde ${hotel.name}`,
         whatsapp: 'Preguntar por WhatsApp',
         price: `Desde US$${featuredProduct.promo}`,
-        priceNote: 'Pago seguro con tarjeta o PayPal',
+        priceNote: 'Pago seguro con tarjeta mediante Stripe',
         facts: ['Zona', 'Tiempo estimado al rancho', 'Modalidades', 'Pickup'],
         options: 'Individual, doble o familiar',
         videoKicker: 'Vista real',
@@ -369,7 +369,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <span><ShieldCheck size={18} /> WhatsApp support</span>
             </div>
 
-            <section className="tour-video-section" id="video">
+            {videoUrl ? <section className="tour-video-section" id="video">
               <div>
                 <span className="tour-kicker">{pageCopy.videoKicker}</span>
                 <h2>{pageCopy.videoTitle}</h2>
@@ -380,7 +380,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
                   <source src={videoUrl} type="video/mp4" />
                 </video>
               </div>
-            </section>
+            </section> : null}
 
             <section id="included" className="tour-section tour-service-grid">
               <span className="tour-kicker">{pageCopy.how}</span>

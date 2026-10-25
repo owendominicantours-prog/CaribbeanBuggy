@@ -213,7 +213,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         <div>
           <span>Caribbean Buggy</span>
           <h1>{activePanel === 'operations' ? 'Reservas y consultas' : 'SEO y visitas propias'}</h1>
-          <p>{activePanel === 'operations' ? 'Control operativo para pagos PayPal, consultas por WhatsApp y solicitudes pendientes.' : 'Inventario de las 1,000 páginas canónicas y contador interno de tráfico por URL.'}</p>
+          <p>{activePanel === 'operations' ? 'Control operativo para pagos Stripe, consultas por WhatsApp y solicitudes pendientes.' : 'Inventario de las 1,000 páginas canónicas y contador interno de tráfico por URL.'}</p>
         </div>
         <button type="button" onClick={logout}>
           Cerrar sesion
@@ -227,7 +227,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
 
       {activePanel === 'operations' ? <>
       <section className={`admin-storage-banner ${recordsPersistent ? 'persistent' : 'temporary'}`}>
-        <div><b>{recordsPersistent ? 'Base de reservas permanente activa' : 'Almacenamiento temporal'}</b><span>{recordsPersistent ? 'Las reservas y consultas se conservan entre despliegues y reinicios de Vercel.' : 'Configura DATABASE_URL para conservar reservas entre despliegues.'}</span></div>
+        <div><b>{recordsPersistent ? 'Base de reservas permanente activa' : 'Almacenamiento temporal'}</b><span>{recordsPersistent ? 'Las reservas y consultas se conservan entre despliegues y reinicios del servidor.' : 'Configura DATABASE_URL para conservar reservas entre despliegues.'}</span></div>
       </section>
       <section className="admin-stat-grid">
         <article>
@@ -319,7 +319,6 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
               </div>
 
               <div className="admin-record-actions">
-                {record.orderId && (record.status === 'capture_failed' || record.status === 'pending_payment') && <button type="button" disabled={!!savingId} onClick={() => reconcilePayment(record)}>{savingId === record.id ? 'Verificando...' : 'Verificar pago en PayPal'}</button>}
                 <button type="button" disabled={!!savingId} onClick={() => { setDraft({ ...record, customer: { ...record.customer }, booking: { ...record.booking } }); setNote(''); setError(''); setNotice(''); }}>Editar reserva</button>
                 <select
                   value={record.status}
@@ -362,7 +361,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
         </section>
 
         <section className={`admin-storage-banner ${visits.persistent ? 'persistent' : 'temporary'}`}>
-          <div><b>{visits.persistent ? 'Contador persistente activo' : 'Contador temporal'}</b><span>{visits.persistent ? 'Las métricas se conservan entre despliegues mediante Redis.' : 'Configura KV_REST_API_URL y KV_REST_API_TOKEN en Vercel para conservar las métricas entre despliegues.'}</span></div>
+          <div><b>{visits.persistent ? 'Contador persistente activo' : 'Contador temporal'}</b><span>{visits.persistent ? 'Las métricas se conservan entre despliegues mediante Redis.' : 'Las métricas se guardan en el almacenamiento persistente del servidor.'}</span></div>
           <button type="button" onClick={refreshVisits} disabled={refreshingVisits}>{refreshingVisits ? 'Actualizando…' : 'Actualizar visitas'}</button>
         </section>
 

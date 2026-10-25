@@ -25,8 +25,8 @@ export type BuggyProduct = {
 };
 
 export const siteUrl = 'https://www.caribbeanboggie.com';
-export const whatsappBase = 'https://wa.me/18294756298';
-export const proactivitisPhone = '+1-829-475-6298';
+export const whatsappBase = 'https://wa.me/18295539900';
+export const proactivitisPhone = '+1-829-553-9900';
 
 export const pickupZones = [
   { label: 'Bavaro / Punta Cana', fee: 0 },
@@ -44,7 +44,7 @@ export const products: BuggyProduct[] = [
     title: 'Buggy Individual',
     seoTitle: 'Tour en Buggy Individual Punta Cana | Mejor Precio',
     seoDescription:
-      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote desde 30 USD con recogida incluida.',
+      'Conduce tu propio buggy en Punta Cana. Tour individual off-road hacia Playa Macao y cenote por 50 USD con recogida incluida.',
     destination: 'Punta Cana',
     routeLabel: 'Punta Cana, Macao y cenote',
     durationLabel: '4 horas con traslado',
@@ -54,9 +54,9 @@ export const products: BuggyProduct[] = [
       'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para viajeros solos que quieren conducir durante toda la ruta, ensuciarse en el lodo y vivir Macao sin compartir el volante.',
     longDescription:
       'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en hoteles principales de Bavaro, Punta Cana, Macao, Cabeza de Toro y zonas cercanas segun disponibilidad.',
-    regular: 40,
-    promo: 30,
-    offerPerPerson: 30,
+    regular: 50,
+    promo: 50,
+    offerPerPerson: 50,
     capacityLabel: '1 adulto',
     capacityNumber: 1,
     note: 'Precio por vehiculo',
@@ -221,23 +221,39 @@ export function whatsappHref(message: string) {
   return `${whatsappBase}?text=${encodeURIComponent(message)}`;
 }
 
+export function availablePickupZones(product: BuggyProduct) {
+  const bayahibe = product.destination.includes('Bayahibe');
+  return pickupZones.filter(z => !z.label.startsWith('Otra zona') && (bayahibe ? z.label==='Bayahibe / La Romana' : z.label!=='Bayahibe / La Romana'));
+}
+
 export function calculateBookingTotal({
   product,
   passengers,
   pickupZone,
   photos,
   privatePickup,
+  fleet,
 }: {
   product: BuggyProduct;
   passengers: number;
   pickupZone: string;
   photos: boolean;
   privatePickup: boolean;
+  fleet?: Record<string, number>;
 }) {
-  const selectedZone = pickupZones.find((zone) => zone.label === pickupZone) ?? pickupZones[0];
-  const safePassengers = Math.max(1, Math.min(20, Math.floor(passengers || product.capacityNumber)));
-  const vehicles = Math.max(1, Math.ceil(safePassengers / product.capacityNumber));
-  const baseTotal = product.offerPerPerson ? safePassengers * product.offerPerPerson : vehicles * product.promo;
+  const selectedZone = availablePickupZones(product).find(zone => zone.label===pickupZone);
+  if (!selectedZone) throw new Error('Choose a pickup zone served by this tour. Contact us for other areas.');
+  if (!Number.isInteger(passengers) || passengers < 1 || passengers > 20) throw new Error('Choose between 1 and 20 travelers.');
+  const safePassengers = passengers;
+  const choices = bookingFleetProducts(product);
+  const rows = fleet ? Object.entries(fleet).map(([id,count]) => {
+    const selected = choices.find(p=>p.id===id);
+    if (!selected || !Number.isInteger(count) || count<0 || count>20) throw new Error('Invalid buggy quantities.');
+    return {product:selected,count};
+  }) : [{product,count:Math.max(1,Math.ceil(safePassengers/product.capacityNumber))}];
+  const vehicles = rows.reduce((n,r)=>n+r.count,0);
+  const capacity = rows.reduce((n,r)=>n+r.count*r.product.capacityNumber,0);
+  const baseTotal = fleet ? rows.reduce((n,r)=>n+r.count*r.product.promo,0) : product.offerPerPerson ? (safePassengers === 1 ? 50 : safePassengers * product.offerPerPerson) : vehicles * product.promo;
   const zoneFee = selectedZone.fee;
   const photosFee = photos ? 25 : 0;
   const privatePickupFee = privatePickup ? 30 : 0;
@@ -245,12 +261,22 @@ export function calculateBookingTotal({
   return {
     passengers: safePassengers,
     vehicles,
+    capacity,
+    validFleet:vehicles>0 && vehicles<=passengers && capacity>=passengers,
+    fleetSummary:rows.filter(r=>r.count).map(r=>`${r.count} × ${r.product.title}`).join(' · '),
     baseTotal,
     zoneFee,
     photosFee,
     privatePickupFee,
     total: baseTotal + zoneFee + photosFee + privatePickupFee,
   };
+}
+
+export function bookingFleetProducts(product: BuggyProduct) {
+  const puntaCana=['buggy-individual','buggy-doble','buggy-familiar'];
+  const bayahibe=['bayahibe-buggy-individual','bayahibe-buggy-doble','bayahibe-buggy-familiar'];
+  const ids=puntaCana.includes(product.id)?puntaCana:bayahibe.includes(product.id)?bayahibe:[product.id];
+  return products.filter(p=>ids.includes(p.id));
 }
 
 export function createBookingReference() {

@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import BookingCalculator from '../../../components/BookingCalculator';
-import LanguageSwitch from '../../../components/LanguageSwitch';
+import AdventureHeader from '../../../components/AdventureHeader';
+import AdventureGallery from '../../../components/AdventureGallery';
 import { bring, getProduct, products, proactivitisPhone, requirements, siteUrl } from '../../../lib/buggyProducts';
 import { guidePath, seoGuides } from '../../../lib/seoGuides';
 import TripAdvisorReviews from '../../../components/TripAdvisorReviews';
@@ -81,7 +82,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
   const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
   const localizedRequirements = isBayahibe ? requirements : completeContent.requirements;
   const localizedBring = isBayahibe ? bring : completeContent.bring;
-  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs.map(([q, a]) => [q, /precio|price/i.test(q) ? "La oferta es de US$30 por persona. Una persona paga US$30; dos, US$60; tres, US$90; y cuatro, US$120. El total se calcula con los viajeros de la reserva." : a]);
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs.map(([q, a]) => [q, /precio|price/i.test(q) ? "El precio se cobra por buggy: individual US$50, doble US$60 y familiar US$120. Elige la cantidad de cada tipo para tu grupo. Cinco individuales cuestan US$250; dos dobles y un individual, US$170. Cada persona necesita asiento." : a]);
   const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
   const schema = {
     '@context': 'https://schema.org',
@@ -135,22 +136,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
     <main className="detail-page">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
-      <header className="site-header">
-        <a className="brand" href="/" aria-label="Caribbean Buggy">
-          <span>Caribbean</span>
-          <b>Buggy</b>
-        </a>
-        <nav aria-label="Detalle">
-          <a href="/#precios">Precios</a>
-          <a href="#reservar">Reservar</a>
-          <a href="#incluye">Incluye</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-        <div className="header-actions">
-          <LanguageSwitch current="es" esHref={`/buggy/${product.id}`} enHref={`/en/buggy/${product.id}`} />
-          <a className="header-cta" href="#reservar">Reservar</a>
-        </div>
-      </header>
+      <AdventureHeader locale="es" esHref={`/buggy/${product.id}`} enHref={`/en/buggy/${product.id}`} bookingHref="#reservar" />
 
       <section className="detail-hero">
         <div className="wrap detail-hero-grid">
@@ -162,28 +148,28 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             <div className="detail-badges">
               <span><Users size={17} /> {product.capacityLabel}</span>
               <span><Clock3 size={17} /> {product.durationLabel}</span>
-              {product.offerPerPerson && <p style={{ flexBasis: "100%", color: "#facc15", fontWeight: 700 }}>Oferta especial: US$30 por persona<br/><small><del>US${product.regular}</del> / US${product.promo} (${product.capacityNumber} personas)</small></p>}
               <span><BadgeDollarSign size={17} /> Desde US${product.promo}</span>
             </div>
           </div>
-          <Image src={product.image} alt={`${product.title} en ${product.destination}`} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 46vw" />
+          <AdventureGallery cover={product.image} title={product.title} bayahibe={isBayahibe} locale="es" />
         </div>
       </section>
 
-      <section id="reservar" className="section detail-booking-section">
+      <div className="wrap viator-detail-layout"><div className="viator-detail-content">
+      <section id="descripcion" className="section detail-booking-section">
         <div className="wrap detail-booking-grid">
-          <BookingCalculator product={product} />
+          
           <div className="detail-copy">
             <span className="kicker">Reserva con datos completos</span>
-            <h2>Calcula el total y solicita tu plaza.</h2>
+            <h2>Tu aventura empieza aquí. Reserva y paga.</h2>
             <p>
               El sistema calcula los vehiculos necesarios segun el grupo y la zona, y prepara una
-              solicitud completa para que el equipo confirme disponibilidad sin volver a pedirte todos los datos.
+              reserva que puedes pagar directamente con tarjeta. Recibirás tu e-ticket al verificarse el pago.
             </p>
             <div className="logic-grid">
               <article><b>1</b><span>Elige fecha, hotel, zona y cantidad de personas.</span></article>
-              <article><b>2</b><span>Selecciona si prefieres deposito, pago total o confirmar primero.</span></article>
-              <article><b>3</b><span>Recibe confirmacion y un enlace de pago seguro por WhatsApp.</span></article>
+              <article><b>2</b><span>Revisa el total y paga directamente con Stripe.</span></article>
+              <article><b>3</b><span>Recibe tu e-ticket confirmado. Te escribimos un día antes.</span></article>
             </div>
           </div>
         </div>
@@ -302,11 +288,12 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
+      </div><aside id="reservar" className="viator-booking-sidebar"><BookingCalculator product={product} /></aside></div>
       <footer className="footer">
         <div className="wrap footer-grid">
           <div>
             <a className="brand footer-brand" href="/"><span>Caribbean</span><b>Buggy</b></a>
-            <p>Reservas operadas y confirmadas por WhatsApp con Proactivitis: {proactivitisPhone}.</p>
+            <p>Soporte local para tu reserva Proactivitis: {proactivitisPhone}.</p>
           </div>
           <div>
             <h3>Productos</h3>

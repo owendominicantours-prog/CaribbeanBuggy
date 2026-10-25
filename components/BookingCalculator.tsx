@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { CheckCircle2, CreditCard, Loader2, LockKeyhole, MessageCircle } from 'lucide-react';
 import type { BuggyProduct } from '../lib/buggyProducts';
-import { calculateBookingTotal, pickupZones, whatsappHref } from '../lib/buggyProducts';
+import { calculateBookingTotal, availablePickupZones, whatsappHref, bookingFleetProducts } from '../lib/buggyProducts';
 
 type BookingCalculatorProps = {
   product: BuggyProduct;
@@ -12,30 +12,7 @@ type BookingCalculatorProps = {
   locale?: 'es' | 'en';
 };
 
-type PayPalActions = {
-  order: {
-    create: () => Promise<string>;
-    capture?: () => Promise<unknown>;
-  };
-};
-
-type PayPalButtonsOptions = {
-  style?: Record<string, string>;
-  createOrder: () => Promise<string>;
-  onApprove: (data: { orderID?: string }, actions: PayPalActions) => Promise<void>;
-  onError: (error: unknown) => void;
-};
-
-declare global {
-  interface Window {
-    paypal?: {
-      Buttons: (options: PayPalButtonsOptions) => {
-        render: (selector: HTMLElement) => Promise<void>;
-      };
-    };
-    dataLayer?: Array<Record<string, unknown>>;
-  }
-}
+declare global { interface Window { dataLayer?: Array<Record<string, unknown>>; } }
 
 const subscribeToDominicanDate = () => () => undefined;
 const getDominicanDate = () => new Date().toLocaleDateString('en-CA', {
@@ -78,15 +55,11 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         paidTitle: 'Payment received.',
         paidText: 'We will contact you to confirm pickup and exact time.',
         choosePayment: 'Pay by card with Stripe.',
-        paypalCard: 'PayPal may show direct card payment depending on your country and browser.',
         loading: 'Loading secure payment...',
         help: 'WhatsApp support',
         protected: 'Payment protected by Stripe',
         external: 'Card details are processed outside our website',
-        note: 'After payment we confirm availability, pickup time and operational details by WhatsApp or email.',
-        notConfigured: 'PayPal is not configured in this installation yet.',
-        loadError: 'We could not load PayPal. Try again or contact us on WhatsApp.',
-        createError: 'We could not create the PayPal order.',
+        note: 'Your booking is confirmed after verified payment. We email your e-ticket and contact you one day before the tour with pickup details.',
         captureError: 'We could not capture the payment.',
         paymentError: 'Stripe could not open the payment. You can try another card or contact us on WhatsApp.',
         renderError: 'We could not show the payment form. Try again.',
@@ -138,15 +111,11 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         paidTitle: 'Pago recibido.',
         paidText: 'Te contactaremos para confirmar recogida y hora exacta.',
         choosePayment: 'Paga con tarjeta mediante Stripe.',
-        paypalCard: 'PayPal puede mostrar pago directo con tarjeta segun tu pais y navegador.',
         loading: 'Cargando pago seguro...',
         help: 'Ayuda por WhatsApp',
         protected: 'Pago protegido por Stripe',
         external: 'Datos de tarjeta procesados fuera de nuestra web',
-        note: 'Despues del pago confirmamos disponibilidad, hora de recogida y detalles operativos por WhatsApp o correo.',
-        notConfigured: 'PayPal aun no esta configurado en esta instalacion.',
-        loadError: 'No pudimos cargar PayPal. Intenta de nuevo o contacta por WhatsApp.',
-        createError: 'No se pudo crear la orden de PayPal.',
+        note: 'Tu reserva queda confirmada después del pago verificado. Recibes tu e-ticket y te escribimos un día antes con los detalles de recogida.',
         captureError: 'No se pudo capturar el pago.',
         paymentError: 'Stripe no pudo abrir el pago. Puedes intentar otra tarjeta o escribir por WhatsApp.',
         renderError: 'No pudimos mostrar el formulario de pago. Intenta de nuevo.',
@@ -165,9 +134,14 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
         paymentPreference: 'Preferencia de pago',
         estimatedTotal: 'Total estimado web',
       };
+  const pickupZones=availablePickupZones(product);
   const [date, setDate] = useState('');
   const [passengers, setPassengers] = useState(product.capacityNumber);
-  const [pickupZone, setPickupZone] = useState(defaultPickupZone || pickupZones[0].label);
+  const [fleet,setFleet]=useState<Record<string,number>>({[product.id]:1});
+  const [fleetConfirmed,setFleetConfirmed]=useState(true);
+  const fleetChoices=bookingFleetProducts(product);
+  const fleetRequired=locale==='en'?'Choose your buggy quantities and confirm the total before continuing.':'Elige cuántos buggies quieres y confirma el total antes de continuar.';
+  const [pickupZone, setPickupZone] = useState(pickupZones.find(z=>z.label===defaultPickupZone)?.label || pickupZones[0].label);
   const [hotel, setHotel] = useState(defaultHotel);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -175,15 +149,15 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   const [language, setLanguage] = useState(locale === 'en' ? 'English' : copy.spanish);
   const [pickupWindow, setPickupWindow] = useState(copy.first);
   const [paymentPreference, setPaymentPreference] = useState(copy.payNow);
-  const [paypalReady, setPaypalReady] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'loading' | 'paid'>('idle');
   const [paymentError, setPaymentError] = useState('');
   const [bookingReference, setBookingReference] = useState('');
   const [renderToken, setRenderToken] = useState(0);
   const [bookingStep, setBookingStep] = useState<1 | 2 | 3>(1);
+  const formRef=useRef<HTMLFormElement>(null);
+  useEffect(()=>{if(bookingStep>1)formRef.current?.scrollIntoView({behavior:'auto',block:'start'});},[bookingStep]);
   const [stepNotice, setStepNotice] = useState('');
-  const paypalContainerRef = useRef<HTMLDivElement>(null);
   const bookingReferenceRef = useRef('');
   const leadIdRef = useRef('');
 
@@ -194,6 +168,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
     pickupZone,
     photos: false,
     privatePickup: false,
+    fleet,
   });
   const total = pricing.total;
 
@@ -210,8 +185,11 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
   function buildPayload() {
     return {
       productId: product.id,
+      locale,
       date,
       passengers,
+      fleet,
+      fleetConfirmed,
       pickupZone,
       hotel: hotel.trim(),
       name: name.trim(),
@@ -312,6 +290,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       };
 
   function goToStep(step: 1 | 2 | 3) {
+    if(step>1 && (!fleetConfirmed || !pricing.validFleet)){setBookingStep(1);setStepNotice(fleetRequired);return;}
     if (step > 1 && (!date || !hotel.trim())) {
       setBookingStep(1);
       setStepNotice(stepText.missingTrip);
@@ -347,72 +326,19 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!date || !hotel.trim()) {
-      goToStep(1);
-      return;
-    }
-
-    if (!name.trim() || !phone.trim() || !email.trim()) {
-      goToStep(2);
-      return;
-    }
-
-    setPaymentStatus('loading');
-    setPaymentError('');
-    setStepNotice(copy.saving);
-
-    try {
-      if (!leadIdRef.current) {
-        const response = await fetch('/api/inquiries', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            source: 'booking_checkout_started',
-            productId: product.id,
-            productName: product.title,
-            booking: buildPayload(),
-            pricing: {
-              total,
-              vehicles: pricing.vehicles,
-              passengers: pricing.passengers,
-              baseTotal: pricing.baseTotal,
-              zoneFee: pricing.zoneFee,
-              photosFee: pricing.photosFee,
-              privatePickupFee: pricing.privatePickupFee,
-            },
-          }),
-        });
-        const data = (await response.json().catch(() => ({}))) as { id?: string; error?: string };
-        if (!response.ok || !data.id) throw new Error(data.error || copy.saveError);
-        leadIdRef.current = data.id;
-      }
-
-      setShowPayment(true);
-      setPaymentStatus('idle');
-      setStepNotice('');
-      setRenderToken(Date.now());
-      window.dataLayer?.push({
-        event: 'begin_checkout',
-        product_id: product.id,
-        product_name: product.title,
-        value: total,
-        currency: 'USD',
-        passengers,
-      });
-    } catch (error) {
-      console.error('booking_lead_store_error', error);
-      setPaymentStatus('idle');
-      setStepNotice(copy.saveError);
-    }
+    if(!fleetConfirmed || !pricing.validFleet){setBookingStep(1);setStepNotice(fleetRequired);return;}
+    if (!date || !hotel.trim()) { goToStep(1); return; }
+    if (!name.trim() || !phone.trim() || !email.trim()) { goToStep(2); return; }
+    window.dataLayer?.push({event:'begin_checkout',product_id:product.id,value:total,currency:'USD'});
+    await openStripe();
   };
 
   return (
-    <form className="booking-widget booking-widget-stepped" onSubmit={handleSubmit}>
+    <form ref={formRef} className="booking-widget booking-widget-stepped" onSubmit={handleSubmit}>
       <div className="booking-widget-head">
         <span>{copy.secure}</span>
-        {product.offerPerPerson && <p className="kicker">{locale === "en" ? "Special offer" : "Oferta especial"}: US$30 {locale === "en" ? "per person" : "por persona"}</p>}
-        <strong>US${total}</strong>
+        <p className="kicker">{locale === "en" ? "Price for your selected buggies" : "Precio de tus buggies seleccionados"}</p>
+        <strong>{pricing.validFleet?`US$${total}`:"—"}</strong>
         <small>{copy.calculated} {passengers} {copy.people}</small>
       </div>
 
@@ -449,6 +375,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
                 required
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
+                onInput={(event) => setDate(event.currentTarget.value)}
               />
             </div>
             <div className="booking-field">
@@ -460,11 +387,12 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
                 type="number"
                 required
                 value={passengers}
-                onChange={(event) => setPassengers(Math.max(1, Number(event.target.value) || 1))}
+                onChange={(event) => {setPassengers(Math.max(1, Math.min(20, Number(event.target.value) || 1)));setFleetConfirmed(false);}}
               />
             </div>
           </div>
 
+          <fieldset className="buggy-fleet-choice"><legend>{locale==='en'?'How will your group ride?':'¿Cómo viajará tu grupo?'}</legend><p>{fleetRequired}</p>{fleetChoices.map(p=><label key={p.id}>{p.title} · {p.capacityNumber} {locale==='en'?'seats':'plazas'} · US${p.promo}<input aria-label={`${locale==='en'?'Quantity':'Cantidad'} ${p.title}`} type="number" min={0} max={passengers} value={fleet[p.id]||0} onChange={e=>{setFleet({...fleet,[p.id]:Math.max(0,Math.min(passengers,Number(e.target.value)||0))});setFleetConfirmed(false);}}/></label>)}<p><strong>{pricing.fleetSummary || (locale==='en'?'Choose your buggies':'Elige tus buggies')}</strong><br/>{pricing.capacity} {locale==='en'?'seats for':'plazas para'} {passengers} {copy.people} · US${pricing.baseTotal}</p>{!pricing.validFleet && <p role="alert">{locale==='en'?'Every traveler needs a seat. Add enough buggies.':'Cada persona necesita asiento. Agrega suficientes buggies.'}</p>}<label><input type="checkbox" checked={fleetConfirmed} disabled={!pricing.validFleet} onChange={e=>setFleetConfirmed(e.target.checked)}/>{locale==='en'?'I confirm these buggy quantities and the total.':'Confirmo estas cantidades de buggies y el total.'}</label></fieldset>
           <div className="booking-field">
             <label htmlFor={`hotel-${product.id}`}>{copy.hotel}</label>
             <input
@@ -562,8 +490,8 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
                 onChange={(event) => setPaymentPreference(event.target.value)}
               >
                 <option>{copy.payNow}</option>
-                <option>{copy.cardFirst}</option>
-                <option>{copy.helpFirst}</option>
+
+
               </select>
             </div>
           </div>
@@ -582,7 +510,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
       {bookingStep === 3 ? (
         <>
           <div className="booking-breakdown" aria-live="polite">
-            <p>{product.offerPerPerson ? <><b>{pricing.passengers}</b> {copy.people} x US${product.offerPerPerson}</> : <><b>{pricing.vehicles}</b> {copy.vehicles} x US${product.promo}</>}</p>
+            <p>{pricing.fleetSummary} · US${pricing.baseTotal}</p>
             <p>{copy.base}: <b>US${pricing.baseTotal}</b></p>
             {pricing.zoneFee ? <p>{copy.zone}: <b>US${pricing.zoneFee}</b></p> : null}
           </div>
@@ -608,8 +536,9 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             </button>
           </div>
 
+          {paymentError && !showPayment ? <p className="payment-error" role="alert">{paymentError}</p> : null}
           {showPayment ? (
-            <div className="paypal-panel">
+            <div className="stripe-panel">
               <div className="booking-lead-saved">
                 <CheckCircle2 size={19} />
                 <span><b>{copy.savedTitle}</b><small>{copy.savedText}</small></span>

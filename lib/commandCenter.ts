@@ -29,7 +29,7 @@ export async function notifyPaidBookingToCommandCenter(record: AdminRecord) {
     customer: record.customer,
     customerLanguage: record.booking.language,
     title: record.productName || 'Reserva de buggy',
-    body: `Hotel: ${record.booking.hotel || 'Por confirmar'}. Vehiculos: ${record.booking.vehicles || 1}.`,
+    body: `Hotel: ${record.booking.hotel || 'Por confirmar'}. Vehiculos: ${record.booking.vehicles || 1}. Distribución: ${record.booking.fleetSummary || 'Ver reserva'}.`,
     amount: record.booking.total,
     currency: 'USD',
     eventAt: record.booking.date,
@@ -42,7 +42,7 @@ export async function notifyPaidBookingToCommandCenter(record: AdminRecord) {
       hotel: record.booking.hotel,
       passengers: record.booking.passengers,
       vehicleCount: record.booking.vehicles,
-      paymentMethod: 'paypal'
+      paymentMethod: record.source === 'stripe_checkout' ? 'stripe' : 'paypal'
     }
   });
 }

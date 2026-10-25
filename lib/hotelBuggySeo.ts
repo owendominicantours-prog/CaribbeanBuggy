@@ -139,7 +139,7 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
         '@id': `${siteUrl}/#business`,
         name: 'Caribbean Buggy',
         url: siteUrl,
-        telephone: '+1-829-475-6298',
+        telephone: '+1-829-553-9900',
         areaServed: { '@type': 'Country', name: 'Dominican Republic' },
       },
       {

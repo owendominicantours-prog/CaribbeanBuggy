@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     locale: 'en_US',
     type: 'website',
   },
+  twitter: { card: 'summary_large_image', title: 'Punta Cana Buggy Tours | Single $50, Double $60, Family $120', description: 'Compare vehicle prices, hotel pickup and Punta Cana or Bayahibe routes. Choose your buggies and book securely.', images: ['/buggy/doble.jpeg'] },
 };
 
 const schema = buildHomeSchema('en');

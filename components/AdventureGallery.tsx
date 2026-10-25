@@ -1,0 +1,11 @@
+'use client';
+import Image from 'next/image';
+import {useRef,useState} from 'react';
+import {Camera,ChevronLeft,ChevronRight,X} from 'lucide-react';
+
+export default function AdventureGallery({cover,title,bayahibe=false,locale='es'}:{cover:string;title:string;bayahibe?:boolean;locale?:'es'|'en'}){
+ const photos=[cover,...(bayahibe?['/buggy/bayahibe/ruta-charcos-bayahibe.jpg','/buggy/bayahibe/salida-buggies-bayahibe.jpg','/buggy/bayahibe/viajeros-buggy-bayahibe.jpg']:['/buggy/ruta-1.jpeg','/buggy/ruta-2.jpeg','/buggy/ruta-3.jpeg'])].filter((p,i,a)=>a.indexOf(p)===i);
+ const [selected,setSelected]=useState(0);const dialog=useRef<HTMLDialogElement>(null);const en=locale==='en';
+ const next=(delta:number)=>setSelected(i=>(i+delta+photos.length)%photos.length);
+ return <div className="adventure-gallery"><button type="button" className="adventure-gallery-main" onClick={()=>dialog.current?.showModal()} aria-label={en?'Open tour photo gallery':'Abrir galería de fotos del tour'}><Image src={photos[selected]} alt={`${title} · ${en?'Real tour photograph':'Foto real del recorrido'} ${selected+1}`} width={1200} height={800} priority sizes="(max-width: 980px) 100vw, 50vw"/><span><Camera size={17}/>{en?'See tour photos':'Ver fotos del tour'} · {photos.length}</span></button><div className="adventure-thumbnails">{photos.map((p,i)=><button type="button" key={p} onClick={()=>setSelected(i)} aria-label={(en?'Show photo ':'Mostrar foto ')+(i+1)} aria-pressed={selected===i}><Image src={p} alt="" width={640} height={420} sizes="(max-width: 760px) 30vw, 20vw"/></button>)}</div><dialog ref={dialog} className="adventure-lightbox" onKeyDown={e=>{if(e.key==='ArrowLeft')next(-1);if(e.key==='ArrowRight')next(1)}}><button type="button" className="gallery-close" onClick={()=>dialog.current?.close()} aria-label={en?'Close gallery':'Cerrar galería'}><X/></button><Image src={photos[selected]} alt={`${title} · ${selected+1}`} width={1600} height={1000} sizes="90vw"/><div className="lightbox-controls"><button type="button" onClick={()=>next(-1)} aria-label={en?'Previous photo':'Foto anterior'}><ChevronLeft/></button><span>{selected+1} / {photos.length}</span><button type="button" onClick={()=>next(1)} aria-label={en?'Next photo':'Foto siguiente'}><ChevronRight/></button></div></dialog></div>
+}

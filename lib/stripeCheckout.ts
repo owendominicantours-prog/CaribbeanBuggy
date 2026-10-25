@@ -20,7 +20,7 @@ export async function checkout(site:string,origin:string,order:Order){
  if(row.session_id){const old=await stripe().checkout.sessions.retrieve(row.session_id);if(old.status==="open"&&old.url){await c.query("COMMIT");return old.url;}if(old.status!=="expired")throw Error("Payment already submitted. Check your confirmation.");attempt++;}
  const metadata=paymentMetadata(site,order);
  const description=[order.title,metadata.activity_date,metadata.pickup_time,metadata.hotel,metadata.travelers ? metadata.travelers+" travelers" : "",order.id].filter(Boolean).join(" | ").slice(0,900);
- const session=await stripe().checkout.sessions.create({mode:"payment",payment_method_types:["card"],customer_email:order.email,client_reference_id:order.id,metadata,payment_intent_data:{metadata,description},line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:cents,product_data:{name:order.title}}}],success_url:origin+"/stripe-confirmation?session_id={CHECKOUT_SESSION_ID}",cancel_url:origin+"/stripe-confirmation?cancelled=1"},{idempotencyKey:site+":"+order.id+":"+attempt});
+ const session=await stripe().checkout.sessions.create({mode:"payment",payment_method_types:["card"],customer_email:order.email,client_reference_id:order.id,metadata,payment_intent_data:{metadata,description},line_items:[{quantity:1,price_data:{currency:"usd",unit_amount:cents,product_data:{name:order.title}}}],success_url:origin+"/stripe-confirmation?session_id={CHECKOUT_SESSION_ID}&locale="+(order.details?.locale==='en'?'en':'es'),cancel_url:origin+"/stripe-confirmation?cancelled=1"},{idempotencyKey:site+":"+order.id+":"+attempt});
  await c.query("UPDATE ecosystem_stripe_checkouts SET session_id=$3,attempt=$4 WHERE site=$1 AND booking_id=$2",[site,order.id,session.id,attempt]);await c.query("COMMIT");return session.url;
  }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }
@@ -30,6 +30,6 @@ export async function fulfill(site:string,id:string,deliver:(payload:any,session
  const c=await db().connect();try{await c.query("BEGIN");await c.query("SELECT pg_advisory_xact_lock(hashtext($1))",[site+s.metadata.bookingId]);const row=(await c.query("SELECT * FROM ecosystem_stripe_checkouts WHERE site=$1 AND session_id=$2 FOR UPDATE",[site,id])).rows[0];
  if(!row||row.booking_id!==s.metadata.bookingId||row.amount!==s.amount_total)throw Error("Payment mismatch");
  let deliveryPending=false; if(!row.fulfilled){deliveryPending=(await deliver(row.payload,s))===false;if(!deliveryPending)await c.query("UPDATE ecosystem_stripe_checkouts SET fulfilled=true WHERE site=$1 AND session_id=$2",[site,id]);}
- await c.query("COMMIT");return {paid:true,deliveryPending,reference:row.booking_id,amount:row.amount/100,currency:"USD",transactionId:s.id};
+ await c.query("COMMIT");return {paid:true,deliveryPending,reference:row.booking_id,amount:row.amount/100,currency:"USD",transactionId:s.id,ticket:{title:row.payload.booking?.productId?String(row.payload.productTitle||row.payload.booking.productId):String(row.payload.productTitle||"Buggy tour"),name:row.payload.booking.name,date:row.payload.booking.date,hotel:row.payload.booking.hotel,travelers:row.payload.pricing.passengers,vehicles:row.payload.pricing.vehicles,pickupWindow:row.payload.booking.pickupWindow}};
  }catch(e){await c.query("ROLLBACK");throw e;}finally{c.release();}
 }

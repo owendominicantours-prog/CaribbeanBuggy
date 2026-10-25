@@ -1,4 +1,5 @@
 import { siteUrl } from './buggyProducts';
+import seoRedirects from '../seo-redirects.json';
 
 export type SearchLandingLocale = 'es' | 'en';
 export type SearchLandingDestination = 'punta-cana' | 'bayahibe';
@@ -84,7 +85,7 @@ const angles: Record<SearchLandingCategory, Angle[]> = {
   booking: [
     ['precio del tour', 'tour price'], ['buggy económico', 'affordable buggy'], ['mejor tour en buggy', 'best buggy tour'],
     ['opiniones verificables', 'verifiable reviews'], ['reseñas de Tripadvisor', 'Tripadvisor reviews'], ['fotos reales', 'real photos'],
-    ['video real', 'real video'], ['reserva online', 'online booking'], ['pago con PayPal', 'PayPal payment'],
+    ['video real', 'real video'], ['reserva online', 'online booking'], ['pago seguro con tarjeta', 'secure card payment'],
     ['pago con tarjeta', 'card payment'], ['reserva por WhatsApp', 'WhatsApp booking'], ['pago de depósito', 'deposit payment'],
     ['precio sin cargos ocultos', 'price without hidden fees'], ['precio por vehículo', 'price per vehicle'], ['disponibilidad inmediata', 'immediate availability'],
     ['confirmación el mismo día', 'same-day confirmation'], ['reserva segura', 'secure booking'], ['reserva directa', 'direct booking'],
@@ -129,8 +130,8 @@ function priceFacts(destination: SearchLandingDestination, locale: SearchLanding
     ? 'Published Bayahibe prices start at US$75 for a single buggy, US$145 for a double and US$290 for a family vehicle.'
     : 'Los precios publicados de Bayahibe comienzan en US$75 para buggy individual, US$145 para doble y US$290 para familiar.';
   return locale === 'en'
-    ? 'Published Punta Cana prices start at US$40 for a single buggy, US$75 for a double and US$140 for a family vehicle.'
-    : 'Los precios publicados de Punta Cana comienzan en US$40 para buggy individual, US$75 para doble y US$140 para familiar.';
+    ? 'Published Punta Cana prices start at US$50 for a single buggy, US$60 for a double and US$120 for a family vehicle.'
+    : 'Los precios publicados de Punta Cana comienzan en US$50 para buggy individual, US$60 para doble y US$120 para familiar.';
 }
 
 function categoryGuidance(category: SearchLandingCategory, focus: string, destination: string, locale: SearchLandingLocale) {
@@ -166,40 +167,40 @@ function makeCopy(category: SearchLandingCategory, destination: SearchLandingDes
     return en ? {
       slug: 'boogie-tour-in-punta-cana-route-price-and-booking',
       title: 'Boogie Tour Punta Cana: buggy options, prices and booking',
-      metaTitle: 'Boogie Tour Punta Cana | Buggy from US$40',
-      description: 'Looking for a buggy tour in Punta Cana? Compare vehicles for 1, 2 or up to 4 guests from US$40, with pickup, a cenote and Macao Beach.',
+      metaTitle: 'Boogie Tour Punta Cana | Buggy from US$50',
+      description: 'Looking for a buggy tour in Punta Cana? Compare vehicles for 1, 2 or up to 4 guests from US$50, with pickup, a cenote and Macao Beach.',
       eyebrow: categoryLabel,
-      answer: 'If you searched for “boogie tour,” you are probably looking for a buggy tour: a guided off-road experience where you choose the vehicle capacity before booking. In Punta Cana, published prices start at US$40 per vehicle.',
+      answer: 'If you searched for “boogie tour,” you are probably looking for a buggy tour: a guided off-road experience where you choose the vehicle capacity before booking. In Punta Cana, published prices start at US$50 per vehicle.',
       sections: [
         { title: 'Boogie tour or buggy tour?', body: 'Both searches usually refer to the same off-road activity. The bookable service is listed as a buggy tour, and the important details are the number of seats, the route, pickup coverage and the final vehicle total.' },
         { title: 'The Punta Cana route', body: 'The experience follows off-road trails in the Macao area and includes a Dominican ranch, a cave or cenote and Macao Beach according to daily operating and access conditions. Total time is approximately four hours including coordinated transportation.' },
-        { title: 'Current vehicle prices', body: 'A single buggy for one adult starts at US$40, a double buggy for a driver and passenger starts at US$75, and a family buggy for up to four guests starts at US$140. These are published prices per vehicle, not per person.' },
+        { title: 'Current vehicle prices', body: 'A single buggy for one adult starts at US$50, a double buggy for a driver and passenger starts at US$60, and a family buggy for up to four guests starts at US$120. These are published prices per vehicle, not per person.' },
         { title: 'How to reserve', body: 'Choose the vehicle, date and number of guests, then enter the exact hotel or meeting location. Pickup is coordinated for the main Bávaro and Punta Cana operating zones, and the team confirms the departure details by WhatsApp or email.' },
       ],
       checklist: ['Choose 1, 2 or up to 4 seats', 'Enter the exact hotel or accommodation', 'Review the total per vehicle', 'Wait for the confirmed pickup time'],
       faqs: [
         ['Is a boogie tour the same as a buggy tour?', 'In this search context, yes. The reservable activity is the guided Punta Cana buggy tour described on this page.'],
-        ['How much does a Punta Cana boogie tour cost?', 'Published prices start at US$40 for a single buggy, US$75 for a double buggy and US$140 for a family buggy.'],
+        ['How much does a Punta Cana boogie tour cost?', 'Published prices start at US$50 for a single buggy, US$60 for a double buggy and US$120 for a family buggy.'],
         ['Is hotel pickup included?', 'Pickup and return are coordinated for the main operating zones. Enter the exact accommodation so the team can confirm the authorized point.'],
         ['Which stops are included?', 'The planned route includes Macao-area off-road trails, a Dominican ranch, a cave or cenote and Macao Beach, subject to safe daily access.'],
       ],
     } : {
       slug: 'boogie-tour-en-punta-cana-ruta-precio-y-reserva',
       title: 'Boogie Tour en Punta Cana: opciones, precios y reserva',
-      metaTitle: 'Boogie Tour Punta Cana | Buggy desde US$40',
-      description: '¿Buscabas un buggy tour en Punta Cana? Compara vehículos para 1, 2 o hasta 4 personas desde US$40, con recogida, cenote y Playa Macao.',
+      metaTitle: 'Boogie Tour Punta Cana | Buggy desde US$50',
+      description: '¿Buscabas un buggy tour en Punta Cana? Compara vehículos para 1, 2 o hasta 4 personas desde US$50, con recogida, cenote y Playa Macao.',
       eyebrow: categoryLabel,
-      answer: 'Si buscaste “boogie tour”, probablemente buscas un tour en buggy: una experiencia off-road guiada donde eliges la capacidad del vehículo antes de reservar. En Punta Cana, los precios publicados comienzan en US$40 por vehículo.',
+      answer: 'Si buscaste “boogie tour”, probablemente buscas un tour en buggy: una experiencia off-road guiada donde eliges la capacidad del vehículo antes de reservar. En Punta Cana, los precios publicados comienzan en US$50 por vehículo.',
       sections: [
         { title: '¿Boogie tour o tour en buggy?', body: 'Ambas búsquedas suelen referirse a la misma actividad todoterreno. El servicio reservable aparece como tour en buggy; lo importante es comprobar las plazas, la ruta, la zona de recogida y el total final del vehículo.' },
         { title: 'La ruta de Punta Cana', body: 'La experiencia recorre caminos off-road de la zona de Macao e incluye rancho dominicano, cueva o cenote y Playa Macao según las condiciones de acceso y operación del día. El tiempo total aproximado es de cuatro horas con el transporte coordinado.' },
-        { title: 'Precios actuales por vehículo', body: 'El buggy individual para un adulto comienza en US$40, el doble para piloto y copiloto en US$75 y el familiar para hasta cuatro personas en US$140. Son precios publicados por vehículo, no por persona.' },
+        { title: 'Precios actuales por vehículo', body: 'El buggy individual para un adulto comienza en US$50, el doble para piloto y copiloto en US$60 y el familiar para hasta cuatro personas en US$120. Son precios publicados por vehículo, no por persona.' },
         { title: 'Cómo reservar', body: 'Elige vehículo, fecha y cantidad de viajeros; después escribe el hotel o punto de encuentro exacto. La recogida se coordina en las zonas operativas principales de Bávaro y Punta Cana, y el equipo confirma la salida por WhatsApp o correo.' },
       ],
       checklist: ['Elegir 1, 2 o hasta 4 plazas', 'Escribir el hotel o alojamiento exacto', 'Revisar el total por vehículo', 'Esperar la hora de recogida confirmada'],
       faqs: [
         ['¿Boogie tour es lo mismo que tour en buggy?', 'En esta búsqueda, sí. La actividad reservable es el tour guiado en buggy de Punta Cana descrito en esta página.'],
-        ['¿Cuánto cuesta un boogie tour en Punta Cana?', 'Los precios publicados comienzan en US$40 para buggy individual, US$75 para doble y US$140 para familiar.'],
+        ['¿Cuánto cuesta un boogie tour en Punta Cana?', 'Los precios publicados comienzan en US$50 para buggy individual, US$60 para doble y US$120 para familiar.'],
         ['¿Incluye recogida en el hotel?', 'Se coordinan recogida y regreso en las zonas operativas principales. Escribe el alojamiento exacto para confirmar el punto autorizado.'],
         ['¿Qué paradas incluye?', 'La ruta prevista incluye caminos off-road de Macao, rancho dominicano, cueva o cenote y Playa Macao, sujeto al acceso seguro del día.'],
       ],
@@ -265,7 +266,8 @@ export const searchLandings: SearchLanding[] = categoryOrder.flatMap((category) 
 );
 
 export function searchLandingPath(landing: SearchLanding, locale: SearchLandingLocale) {
-  return locale === 'en' ? `/en/excursions/${landing.en.slug}` : `/excursiones/${landing.es.slug}`;
+  const original = locale === 'en' ? `/en/excursions/${landing.en.slug}` : `/excursiones/${landing.es.slug}`;
+  return seoRedirects.find(item => item.source === original)?.destination ?? original;
 }
 
 export function searchLandingCanonical(landing: SearchLanding, locale: SearchLandingLocale) {

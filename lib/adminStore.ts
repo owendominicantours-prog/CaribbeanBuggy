@@ -35,6 +35,8 @@ export type AdminRecord = {
     paymentPreference?: string;
     total?: number;
     vehicles?: number;
+    fleet?: Record<string,number>;
+    fleetSummary?: string;
   };
   notes?: string[];
   commandCenterSyncedAt?: string;
@@ -311,7 +313,7 @@ export async function markAdminRecordCommandCenterSynced(id: string) {
     const result = await pool.query<{ record: AdminRecord }>(
       `UPDATE caribbean_buggy_admin_records
           SET record = jsonb_set(record, '{commandCenterSyncedAt}', to_jsonb($2::text), true),
-              updated_at = $2
+              updated_at = $2::timestamptz
         WHERE id = $1 OR reference = $1 OR order_id = $1
         RETURNING record`,
       [id, syncedAt],

@@ -70,17 +70,18 @@ export function buildSearchLandingJsonLd(landing: SearchLanding, locale: SearchL
 
 export function buildSearchLandingsDirectoryJsonLd(locale: SearchLandingLocale, landings: SearchLanding[]) {
   const canonical = `${siteUrl}${searchLandingsPath(locale)}`;
+  const visibleLandings = landings.filter(landing => searchLandingPath(landing, locale) === (locale === 'en' ? `/en/excursions/${landing.en.slug}` : `/excursiones/${landing.es.slug}`));
   return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     '@id': canonical,
-    name: locale === 'en' ? 'Punta Cana and Bayahibe buggy excursion searches' : 'Búsquedas de excursiones en buggy de Punta Cana y Bayahibe',
+    name: locale === 'en' ? 'Punta Cana and Bayahibe buggy tours and planning' : 'Tours de buggy en Punta Cana y Bayahibe: preparación y reserva',
     url: canonical,
     inLanguage: locale === 'en' ? 'en-US' : 'es-DO',
     mainEntity: {
       '@type': 'ItemList',
-      numberOfItems: landings.length,
-      itemListElement: landings.map((landing, index) => ({ '@type': 'ListItem', position: index + 1, name: landing[locale].title, url: `${siteUrl}${searchLandingPath(landing, locale)}` })),
+      numberOfItems: visibleLandings.length,
+      itemListElement: visibleLandings.map((landing, index) => ({ '@type': 'ListItem', position: index + 1, name: landing[locale].title, url: `${siteUrl}${searchLandingPath(landing, locale)}` })),
     },
   };
 }

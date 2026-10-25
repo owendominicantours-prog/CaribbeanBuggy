@@ -1947,7 +1947,7 @@ a {
   }
 }
 
-.paypal-panel {
+.stripe-panel {
   display: grid;
   gap: 10px;
   border: 1px solid rgba(22, 163, 74, 0.24);
@@ -1956,13 +1956,13 @@ a {
   padding: 14px;
 }
 
-.paypal-panel b {
+.stripe-panel b {
   color: #13210f;
   font-size: 15px;
   font-weight: 1000;
 }
 
-.paypal-panel span {
+.stripe-panel span {
   color: #53604b;
   font-size: 13px;
   font-weight: 750;
@@ -4953,3 +4953,6 @@ a {
 .admin-editor input,.admin-editor textarea { width:100%; box-sizing:border-box; border:1px solid #aabbb4; border-radius:8px; padding:12px; font:inherit; }
 .admin-editor .admin-record-actions { margin-top:20px; }
 @media(max-width:600px) { .admin-stat-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .admin-stat-grid article { padding:16px; } .admin-editor-fields { grid-template-columns:1fr; } .admin-editor-backdrop { padding:10px; } .admin-editor { padding:18px; } }
+.buggy-fleet-choice{border:1px solid #bbd3c7;border-radius:12px;padding:16px;margin:14px 0}.buggy-fleet-choice label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0;font-size:14px}.buggy-fleet-choice input[type=number]{width:75px}.buggy-fleet-choice input[type=checkbox]{width:18px;min-width:18px}.buggy-fleet-choice p{font-size:13px;line-height:1.5}
+
+.viator-booking-sidebar{position:static!important}.booking-widget-stepped{scroll-margin-top:100px}

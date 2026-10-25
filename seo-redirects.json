@@ -1,0 +1,272 @@
+[
+  {
+    "source": "/excursiones/tour-en-buggy-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-tour-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/tour-en-buggy-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-tour-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/excursion-en-buggy-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-excursion-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-excursion-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/dune-buggy-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/dune-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/dune-buggy-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/dune-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-4x4-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/4x4-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-4x4-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/4x4-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-off-road-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/off-road-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-off-road-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/off-road-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/boogie-tour-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/boogie-tour-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/boogie-tour-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/boogie-tour-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/boggie-tour-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/boggie-tour-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/boggie-tour-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/boggie-tour-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/paseo-en-buggy-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-ride-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/paseo-en-buggy-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-ride-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-safari-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-safari-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-safari-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/buggy-safari-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-familiar-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/buggy/buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/family-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en/buggy/buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-familiar-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/buggy/bayahibe-buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/family-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/buggy/bayahibe-buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-individual-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/buggy/buggy-individual",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/single-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en/buggy/buggy-individual",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-individual-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/buggy/bayahibe-buggy-individual",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/single-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/buggy/bayahibe-buggy-individual",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-doble-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/buggy/buggy-doble",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/double-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en/buggy/buggy-doble",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-doble-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/buggy/bayahibe-buggy-doble",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/double-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/buggy/bayahibe-buggy-doble",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-de-cuatro-plazas-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/buggy/buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/four-seat-buggy-in-punta-cana-route-price-and-booking",
+    "destination": "/en/buggy/buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-de-cuatro-plazas-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/buggy/bayahibe-buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-dominicano-en-punta-cana-ruta-precio-y-reserva",
+    "destination": "/",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/dominican-buggy-tour-in-punta-cana-route-price-and-booking",
+    "destination": "/en",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/buggy-dominicano-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
+  },
+  {
+    "source": "/en/excursions/dominican-buggy-tour-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
+    "permanent": true
+  }
+]
