@@ -268,5 +268,15 @@
     "source": "/en/excursions/dominican-buggy-tour-in-bayahibe-and-la-romana-route-price-and-booking",
     "destination": "/en/guides/bayahibe-la-romana-buggy-tour-guide",
     "permanent": true
+  },
+  {
+    "source": "/en/excursions/four-seat-buggy-in-bayahibe-and-la-romana-route-price-and-booking",
+    "destination": "/en/buggy/bayahibe-buggy-familiar",
+    "permanent": true
+  },
+  {
+    "source": "/excursiones/excursion-en-buggy-en-bayahibe-y-la-romana-ruta-precio-y-reserva",
+    "destination": "/guias/buggy-bayahibe-la-romana-guia",
+    "permanent": true
   }
 ]
