@@ -1,0 +1,321 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import Image from 'next/image';
+import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
+import BookingCalculator from '../../../../components/BookingCalculator';
+import AdventureHeader from '../../../../components/AdventureHeader';
+import AdventureGallery from '../../../../components/AdventureGallery';
+import { bring, getProduct, products, proactivitisPhone, requirements, siteUrl } from '../../../../lib/buggyProducts';
+import { guidePath, seoGuides } from '../../../../lib/seoGuides';
+import TripAdvisorReviews from '../../../../components/TripAdvisorReviews';
+import { tripadvisorSchemaReference } from '../../../../lib/tripadvisor';
+import BayahibeRealMedia from '../../../../components/BayahibeRealMedia';
+import { getPuntaCanaBuggyContent } from '../../../../lib/puntaCanaBuggyContent';
+
+type DetailPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+const bayahibeIncluded = [
+  'Transporte ida y vuelta desde el hotel o punto confirmado',
+  'Buggy según la modalidad elegida',
+  'Casco e instrucciones de seguridad',
+  'Guía local durante la ruta',
+  'Ruta por cañaverales, comunidades rurales y caminos de lodo',
+  'Parada en el río Chavón según la operación',
+  'Asistencia durante toda la excursión',
+];
+
+const bayahibeFaqs = [
+  ['¿El precio es por persona o por vehículo?', 'El precio publicado es por vehículo según la modalidad elegida.'],
+  ['¿Hay recogida desde hoteles de Bayahibe y La Romana?', 'Sí. La recogida o punto de encuentro autorizado se confirma por WhatsApp según el hotel y la operación.'],
+  ['¿Qué visita la ruta de Bayahibe?', 'La ruta recorre cañaverales, comunidades rurales, charcos y caminos de lodo, con parada en el río Chavón según la operación.'],
+  ['¿Las fotos y el video son reales?', 'Sí. El material mostrado pertenece a la operación real de buggy en Bayahibe y La Romana.'],
+];
+
+export function generateStaticParams() {
+  return products.map((product) => ({ id: product.id }));
+}
+
+export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const product = getProduct(id);
+  if (!product) return {};
+
+  return {
+    title: product.seoTitle,
+    description: product.seoDescription,
+    alternates: {
+      canonical: `${siteUrl}/buggy/${product.id}`,
+      languages: {
+        es: `${siteUrl}/buggy/${product.id}`,
+        en: `${siteUrl}/en/buggy/${product.id}`,
+        'x-default': `${siteUrl}/buggy/${product.id}`,
+      },
+    },
+    openGraph: {
+      title: product.seoTitle,
+      description: product.seoDescription,
+      url: `${siteUrl}/buggy/${product.id}`,
+      siteName: 'Caribbean Buggy',
+      images: [product.image],
+      type: 'website',
+      locale: 'es_DO',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.seoTitle,
+      description: product.seoDescription,
+      images: [product.image],
+    },
+  };
+}
+
+export default async function BuggyDetailPage({ params }: DetailPageProps) {
+  const { id } = await params;
+  const product = getProduct(id);
+  if (!product) notFound();
+
+  const related = products.filter((item) => item.id !== product.id);
+  const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
+  const completeContent = getPuntaCanaBuggyContent(product, 'es');
+  const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
+  const localizedRequirements = isBayahibe ? requirements : completeContent.requirements;
+  const localizedBring = isBayahibe ? bring : completeContent.bring;
+  const localizedFaqs = isBayahibe ? bayahibeFaqs : completeContent.faqs.map(([q, a]) => [q, /precio|price/i.test(q) ? "El precio se cobra por buggy: individual US$50, doble US$60 y familiar US$120. Elige la cantidad de cada tipo para tu grupo. Cinco individuales cuestan US$250; dos dobles y un individual, US$170. Cada persona necesita asiento." : a]);
+  const productGuides = seoGuides.filter((guide) => guide.destination === (isBayahibe ? 'bayahibe' : 'punta-cana') || guide.destination === 'general').slice(0, 4);
+  const schema = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        name: `${product.title} en ${product.destination}`,
+        description: isBayahibe ? product.longDescription : completeContent.summary,
+        image: `${siteUrl}${product.image}`,
+        sku: product.id,
+        brand: { '@type': 'Brand', name: 'Caribbean Buggy' },
+        ...tripadvisorSchemaReference(isBayahibe ? 'bayahibe' : 'punta-cana', 'es'),
+        areaServed: `${product.destination}, Dominican Republic`,
+        offers: {
+          '@type': 'Offer',
+          price: product.promo,
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: `${siteUrl}/buggy/${product.id}`,
+        },
+      },
+      ...(isBayahibe ? [{
+        '@type': 'VideoObject',
+        name: 'Video real del tour en buggy de Bayahibe y La Romana',
+        description: 'Video original de la ruta con buggies, cañaverales, caminos rurales y lodo en Bayahibe.',
+        thumbnailUrl: [`${siteUrl}/buggy/bayahibe/buggy-lodo-bayahibe.jpg`],
+        contentUrl: `${siteUrl}/buggy/bayahibe/tour-buggy-bayahibe.mp4`,
+        uploadDate: '2026-08-13T12:00:00-04:00',
+        duration: 'PT47S',
+      }] : []),
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Buggies Punta Cana', item: `${siteUrl}/#precios` },
+          { '@type': 'ListItem', position: 3, name: product.title, item: `${siteUrl}/buggy/${product.id}` },
+        ],
+      },
+      {
+        '@type': 'FAQPage',
+        mainEntity: localizedFaqs.map(([question, answer]) => ({
+          '@type': 'Question',
+          name: question,
+          acceptedAnswer: { '@type': 'Answer', text: answer },
+        })),
+      },
+    ],
+  };
+
+  return (
+    <main className="detail-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+
+      <AdventureHeader locale="es" esHref={`/buggy/${product.id}`} enHref={`/en/buggy/${product.id}`} bookingHref="#reservar" />
+
+      <section className="detail-hero">
+        <div className="wrap detail-hero-grid">
+          <div>
+            <a className="back-link" href="/"><ArrowLeft size={17} /> Volver a todos los buggies</a>
+            <span className="eyebrow"><MapPin size={16} /> {product.routeLabel}</span>
+            <h1>{product.title} en {product.destination}</h1>
+            <p>{isBayahibe ? product.longDescription : completeContent.summary}</p>
+            <div className="detail-badges">
+              <span><Users size={17} /> {product.capacityLabel}</span>
+              <span><Clock3 size={17} /> {product.durationLabel}</span>
+              <span><BadgeDollarSign size={17} /> Desde US${product.promo}</span>
+            </div>
+          </div>
+          <AdventureGallery cover={product.image} title={product.title} bayahibe={isBayahibe} locale="es" />
+        </div>
+      </section>
+
+      <div className="wrap viator-detail-layout"><div className="viator-detail-content">
+      <section id="descripcion" className="section detail-booking-section">
+        <div className="wrap detail-booking-grid">
+          
+          <div className="detail-copy">
+            <span className="kicker">Reserva con datos completos</span>
+            <h2>Tu aventura empieza aquí. Reserva y paga.</h2>
+            <p>
+              El sistema calcula los vehiculos necesarios segun el grupo y la zona, y prepara una
+              reserva que puedes pagar directamente con tarjeta. Recibirás tu e-ticket al verificarse el pago.
+            </p>
+            <div className="logic-grid">
+              <article><b>1</b><span>Elige fecha, hotel, zona y cantidad de personas.</span></article>
+              <article><b>2</b><span>Revisa el total y paga directamente con Stripe.</span></article>
+              <article><b>3</b><span>Recibe tu e-ticket confirmado. Te escribimos un día antes.</span></article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="incluye" className="section">
+        <div className="wrap detail-info-grid">
+          <article className="info-card">
+            <span className="kicker">Incluido</span>
+            <h2>Lo que recibes con {product.title}.</h2>
+            <div className="check-grid">
+              {localizedIncluded.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
+            </div>
+          </article>
+          <article className="info-card dark">
+            <span className="kicker">Seguridad</span>
+            <h2>Antes de manejar.</h2>
+            <ul>{localizedRequirements.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+          <article className="info-card bring">
+            <span className="kicker">Que llevar</span>
+            <h2>Preparate para el lodo.</h2>
+            <ul>{localizedBring.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+          {!isBayahibe ? (
+            <article className="info-card">
+              <span className="kicker">No incluido</span>
+              <h2>Extras y compras opcionales.</h2>
+              <ul>{completeContent.notIncluded.map((item) => <li key={item}>{item}</li>)}</ul>
+            </article>
+          ) : null}
+        </div>
+      </section>
+
+      {!isBayahibe ? (
+        <section className="section">
+          <div className="wrap">
+            <div className="section-head">
+              <span className="kicker">Itinerario completo</span>
+              <h2>De la recogida al regreso.</h2>
+              <p><strong>{completeContent.activityDuration}.</strong> {completeContent.totalDuration}. Los tiempos son orientativos.</p>
+            </div>
+            <div className="tour-steps">
+              {completeContent.itinerary.map((step, index) => (
+                <article key={step.title}>
+                  <b>{index + 1}</b>
+                  <div>
+                    <span className="kicker">{step.time}</span>
+                    <h3>{step.title}</h3>
+                    <p>{step.description}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="detail-route">
+        <div className="wrap detail-route-grid">
+          <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Ruta real de buggy entre cañaverales de Bayahibe' : 'Ruta de buggy en Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
+          <div>
+            <span className="kicker">Ruta del tour</span>
+            <h2>{isBayahibe ? 'Bayahibe, La Romana y caminos rurales.' : completeContent.routeHeading}</h2>
+            <p>
+              {isBayahibe
+                ? 'La experiencia combina aventura off-road, cultura local y paradas naturales. El orden puede variar según operación, clima y condiciones del camino.'
+                : completeContent.pickup}
+            </p>
+            <div className="route-note">
+              <ShieldCheck />
+              <span>{isBayahibe ? 'El equipo confirma la hora exacta de recogida por WhatsApp antes del servicio.' : completeContent.routeNote}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {isBayahibe ? <BayahibeRealMedia locale="es" /> : null}
+
+      <section id="faq" className="section faq-section">
+        <div className="wrap section-head">
+          <span className="kicker">FAQ</span>
+          <h2>Preguntas comunes sobre {product.title}.</h2>
+        </div>
+        <div className="wrap faq-grid">
+          {localizedFaqs.map(([question, answer]) => (
+            <article key={question}>
+              <h3>{question}</h3>
+              <p>{answer}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="tripadvisor" className="section tripadvisor-section"><div className="wrap"><TripAdvisorReviews locale="es" destination={isBayahibe ? 'bayahibe' : 'punta-cana'} location={`product_landing_${product.id}`} /></div></section>
+
+      <section className="section related-section">
+        <div className="wrap section-head"><span className="kicker">Guías para decidir</span><h2>Conoce la ruta antes de pagar.</h2></div>
+        <div className="wrap seo-guide-related-grid">{productGuides.map((guide) => <a href={guidePath(guide, 'es')} key={guide.id}><span>{guide.es.eyebrow}</span><b>{guide.es.title}</b><ArrowRight size={17} /></a>)}</div>
+      </section>
+
+      <section className="section related-section">
+        <div className="wrap section-head">
+          <span className="kicker">Mas opciones</span>
+          <h2>Tambien puedes reservar.</h2>
+        </div>
+        <div className="wrap related-grid">
+          {related.map((item) => (
+            <a href={`/buggy/${item.id}`} key={item.id}>
+              <Image src={item.image} alt={item.title} width={600} height={398} sizes="(max-width: 680px) 100vw, 33vw" />
+              <span>{item.subtitle}</span>
+              <b>{item.title}</b>
+              <strong>US${item.promo}</strong>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      </div><aside id="reservar" className="viator-booking-sidebar"><BookingCalculator product={product} /></aside></div>
+      <footer className="footer">
+        <div className="wrap footer-grid">
+          <div>
+            <a className="brand footer-brand" href="/"><span>Caribbean</span><b>Buggy</b></a>
+            <p>Soporte local para tu reserva Proactivitis: {proactivitisPhone}.</p>
+          </div>
+          <div>
+            <h3>Productos</h3>
+            {products.map((item) => <a href={`/buggy/${item.id}`} key={item.id}>{item.title}</a>)}
+          </div>
+          <div>
+            <h3>Reservar</h3>
+            <a href="#reservar">Calculadora</a>
+            <a href="/#precios">Ver precios</a>
+            <a href="/guias">Guías de buggy</a>
+          </div>
+        </div>
+        <div className="wrap footer-credit">
+          <a href="https://proactivitis.com" target="_blank" rel="noreferrer">
+            Operada por Proactivitis
+          </a>
+        </div>
+      </footer>
+
+      <a className="detail-floating-cta" href="#reservar">
+        <CalendarCheck2 size={19} /> Reservar desde US${product.promo}
+      </a>
+    </main>
+  );
+}

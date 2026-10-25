@@ -8,7 +8,7 @@ const nextConfig = {
       { source: '/:path*', has: [{ type: 'host', value: 'caribbeanboggie.com' }], destination: 'https://www.caribbeanboggie.com/:path*', permanent: true },
     ];
   },
-  experimental: { cpus: 2 },
+  experimental: { cpus: Number(process.env.NEXT_BUILD_CPUS || 2) },
   turbopack: {
     root: __dirname,
   },
