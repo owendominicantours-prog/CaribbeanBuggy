@@ -311,7 +311,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
             Operada por Proactivitis
           </a>
         </div>
-      </footer>
+      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
 
       <a className="detail-floating-cta" href="#reservar">
         <CalendarCheck2 size={19} /> Reservar desde US${product.promo}

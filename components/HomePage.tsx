@@ -475,7 +475,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
           <div><h3>{copy.footerRoute}</h3><a href={`#${sectionIds.route}`}>Playa Macao</a><a href={`#${sectionIds.route}`}>Cenote</a><a href={`#${sectionIds.route}`}>{isEn ? 'Dominican ranch' : 'Rancho dominicano'}</a></div>
         </div>
         <div className="wrap footer-credit"><a href="https://proactivitis.com" target="_blank" rel="noreferrer">{isEn ? 'Operated by Proactivitis' : 'Operada por Proactivitis'}</a></div>
-      </footer>
+      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
 
       <a className="floating-whatsapp" href={whatsappHref(bookingMessage(locale))} data-track-location="floating_cta"><MessageCircle size={20} /> {copy.book}</a>
     </main>

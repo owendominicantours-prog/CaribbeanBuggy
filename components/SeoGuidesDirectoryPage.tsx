@@ -56,7 +56,7 @@ export default function SeoGuidesDirectoryPage({ locale }: { locale: SeoGuideLoc
         ))}
       </section>
 
-      <footer className="footer"><div className="wrap footer-grid"><div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Useful guides for booking direct.' : 'Guías útiles para reservar directo.'}</p></div><div><h3>{isEn ? 'Learn' : 'Aprender'}</h3><a href={isEn ? '/en/questions' : '/preguntas'}>{isEn ? '100 questions' : '100 preguntas'}</a></div><div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={`${home}#${isEn ? 'prices' : 'precios'}`}>{isEn ? 'Compare buggies' : 'Comparar buggies'}</a></div></div></footer>
+      <footer className="footer"><div className="wrap footer-grid"><div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Useful guides for booking direct.' : 'Guías útiles para reservar directo.'}</p></div><div><h3>{isEn ? 'Learn' : 'Aprender'}</h3><a href={isEn ? '/en/questions' : '/preguntas'}>{isEn ? '100 questions' : '100 preguntas'}</a></div><div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={`${home}#${isEn ? 'prices' : 'precios'}`}>{isEn ? 'Compare buggies' : 'Comparar buggies'}</a></div></div><div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
     </main>
   );
 }

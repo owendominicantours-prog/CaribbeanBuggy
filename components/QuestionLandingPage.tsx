@@ -133,7 +133,7 @@ export default function QuestionLandingPage({ question, locale }: { question: Bu
           <div><h3>{isEn ? 'Learn' : 'Información'}</h3><a href={questionsPath(locale)}>{isEn ? '100 questions' : '100 preguntas'}</a><a href={guidesPath(locale)}>{isEn ? 'Buggy guides' : 'Guías de buggy'}</a><a href={`${home}#${isEn ? 'route' : 'ruta'}`}>{isEn ? 'Tour route' : 'Ruta del tour'}</a></div>
           <div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={bookingHref}>{isEn ? 'Buggy options' : 'Opciones de buggy'}</a><a href={whatsappHref(whatsappMessage)}>WhatsApp</a></div>
         </div>
-      </footer>
+      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
     </main>
   );
 }
