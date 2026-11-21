@@ -1,3 +1,4 @@
+import { PickupInformation } from "./PickupInformation";
 import {
   ArrowLeft,
   ArrowRight,
@@ -369,6 +370,7 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               <span><ShieldCheck size={18} /> WhatsApp support</span>
             </div>
 
+            {hotelDestination === "punta-cana" && <PickupInformation locale={locale} />}
             {videoUrl ? <section className="tour-video-section" id="video">
               <div>
                 <span className="tour-kicker">{pageCopy.videoKicker}</span>

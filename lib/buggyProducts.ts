@@ -1,3 +1,4 @@
+import { pickupPolicy } from './pickupPolicy';
 export type BuggyProduct = {
   id: string;
   title: string;
@@ -32,7 +33,7 @@ export const pickupZones = [
   { label: 'Bavaro / Punta Cana', fee: 0 },
   { label: 'Cabeza de Toro', fee: 0 },
   { label: 'Cap Cana', fee: 10 },
-  { label: 'Uvero Alto', fee: 15 },
+  { label: 'Uvero Alto', fee: 0 },
   { label: 'Macao', fee: 0 },
   { label: 'Bayahibe / La Romana', fee: 0 },
   { label: 'Otra zona - confirmar por WhatsApp', fee: 0 },
@@ -53,7 +54,7 @@ export const products: BuggyProduct[] = [
     description:
       'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para viajeros solos que quieren conducir durante toda la ruta, ensuciarse en el lodo y vivir Macao sin compartir el volante.',
     longDescription:
-      'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en hoteles principales de Bavaro, Punta Cana, Macao, Cabeza de Toro y zonas cercanas segun disponibilidad.',
+      'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en Bávaro, El Cortecito, Macao, Cabeza de Toro y Uvero Alto. Verón y la zona próxima al aeropuerto usan el punto de encuentro en KFC de Downtown.',
     regular: 50,
     promo: 50,
     offerPerPerson: 50,
@@ -183,7 +184,7 @@ export const products: BuggyProduct[] = [
 ];
 
 export const included = [
-  'Transporte ida y vuelta al hotel',
+  'Transporte ida y vuelta desde las zonas incluidas del tour de Punta Cana',
   'Buggy segun modalidad elegida',
   'Casco y equipo de seguridad',
   'Guia oficial multilingue',
@@ -208,7 +209,7 @@ export const bring = [
 
 export const faqs = [
   ['El precio es por persona o por vehiculo?', 'El precio publicado es por vehiculo segun la modalidad: individual, doble o familiar.'],
-  ['Incluye recogida en hotel?', 'Si, incluye recogida y regreso en hoteles de zonas principales de Bavaro y Punta Cana.'],
+  ['Incluye recogida en hotel?', pickupPolicy.es.coverage + " " + pickupPolicy.es.meeting],
   ['Visitamos Playa Macao?', 'Si, la ruta incluye tiempo en Playa Macao y parada para cenote, sujeto a condiciones operativas del dia.'],
   ['Me voy a ensuciar?', 'Si. Es una aventura off-road con lodo, caminos rurales y agua. Recomendamos ropa vieja.'],
 ];

@@ -1,3 +1,4 @@
+import { PickupInformation } from "../../../../components/PickupInformation";
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -155,6 +156,7 @@ export default async function BuggyDetailPage({ params }: DetailPageProps) {
         </div>
       </section>
 
+      {!isBayahibe && <PickupInformation locale="es" />}
       <div className="wrap viator-detail-layout"><div className="viator-detail-content">
       <section id="descripcion" className="section detail-booking-section">
         <div className="wrap detail-booking-grid">

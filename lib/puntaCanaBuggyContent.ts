@@ -1,3 +1,4 @@
+import { pickupPolicy } from './pickupPolicy';
 import type { BuggyProduct } from './buggyProducts';
 
 export type BuggyContentLocale = 'es' | 'en';
@@ -26,8 +27,7 @@ export type PuntaCanaBuggyContent = {
 const ES: Omit<PuntaCanaBuggyContent, 'summary'> = {
   activityDuration: 'Aproximadamente 2.5-3 horas entre conducción y paradas',
   totalDuration: 'Reserva aproximadamente 4 horas contando recogida y regreso',
-  pickup:
-    'Incluye transporte compartido desde hoteles y puntos seleccionados de Bávaro, Punta Cana, Cabeza de Toro y Macao. Cap Cana y Uvero Alto pueden tener suplemento. Tras reservar confirmamos por WhatsApp el punto y la hora exactos; algunos hoteles, villas y apartamentos usan un punto cercano.',
+  pickup: pickupPolicy.es.coverage + " " + pickupPolicy.es.meeting + " " + pickupPolicy.es.other,
   included: [
     'Recogida y regreso compartidos desde las zonas cubiertas',
     'Buggy reservado según modalidad individual, doble o familiar',
@@ -84,7 +84,7 @@ const ES: Omit<PuntaCanaBuggyContent, 'summary'> = {
     ['¿Podemos cambiar de conductor?', 'Sólo cuando el guía lo autorice y ambos conductores cumplen los requisitos. El cambio nunca debe hacerse durante la marcha.'],
     ['¿Me voy a ensuciar?', 'Sí. Puede haber polvo, charcos y barro. Usa ropa que pueda ensuciarse y lleva una muda seca.'],
     ['¿Visitamos cenote y Playa Macao?', 'La operación de Punta Cana incluye una parada de agua y Playa Macao. El orden, tiempo y posibilidad de baño pueden cambiar por seguridad y condiciones del día.'],
-    ['¿La recogida está incluida?', 'Sí, en las zonas cubiertas. Cap Cana, Uvero Alto y otras áreas pueden tener suplemento, mostrado o confirmado antes de completar la reserva.'],
+    ['¿La recogida está incluida?', pickupPolicy.es.coverage + " " + pickupPolicy.es.meeting + " " + pickupPolicy.es.other],
     ['¿Pueden participar niños?', 'Pueden viajar como acompañantes con un adulto si cumplen la edad y condiciones confirmadas para el buggy. No conducen.'],
     ['¿Qué ocurre si llueve?', 'La actividad puede operar con lluvia ligera. La ruta cambia o se cancela si el camino, una inundación o el clima crean un riesgo.'],
     ['¿Las fotografías están incluidas?', 'No. Los paquetes de fotos y recuerdos son compras opcionales de proveedores externos.']
@@ -96,7 +96,7 @@ const ES: Omit<PuntaCanaBuggyContent, 'summary'> = {
 const EN: Omit<PuntaCanaBuggyContent, 'summary'> = {
   activityDuration: 'Approximately 2.5-3 hours of driving and stops',
   totalDuration: 'Allow approximately 4 hours including pickup and return',
-  pickup: 'Shared transportation is included from selected hotels and meeting points in Bavaro, Punta Cana, Cabeza de Toro and Macao. Cap Cana and Uvero Alto may carry a surcharge. After booking, WhatsApp confirms the exact time and point; some hotels, villas and apartments use a nearby meeting point.',
+  pickup: pickupPolicy.en.coverage + " " + pickupPolicy.en.meeting + " " + pickupPolicy.en.other,
   included: ['Shared pickup and return from covered areas', 'Reserved single, double or family buggy', 'Fuel during the route', 'Guide and convoy support', 'Safety briefing before driving', 'Helmet and required safety equipment', 'Off-road route through Macao countryside', 'Cultural stop with operator-provided local tastings', 'Cave or cenote stop and Macao Beach visit according to the confirmed route'],
   notIncluded: ['Food and drinks not listed as included', 'Bandana, goggles, footwear and activity clothing', 'Towel and personal items', 'Professional photos and videos', 'Souvenirs and purchases from outside vendors', 'Optional tips', 'Damage caused by irresponsible driving or ignoring instructions'],
   requirements: ['Drivers must be 18 or older, know how to drive and show valid ID or a driver license if requested by the operator.', 'Children ride as passengers with a responsible adult and must meet the confirmed age and vehicle conditions.', 'Driving after consuming alcohol or impairing substances is prohibited.', 'Not recommended for pregnant travelers or people with serious back, neck, heart or mobility conditions.', 'Drivers must stay in the convoy and follow the guide’s distance, speed and signal instructions.', 'The route can change due to rain, flooding, road conditions, surf or safety instructions.', 'Driver changes require guide approval and both drivers must meet all requirements.'],
@@ -118,7 +118,7 @@ const EN: Omit<PuntaCanaBuggyContent, 'summary'> = {
     ['Can we change drivers?', 'Only with guide approval and when both drivers meet the requirements. Never change drivers while the buggy is moving.'],
     ['Will I get dirty?', 'Yes. Expect dust, puddles and mud. Wear clothes that can get dirty and bring a dry change.'],
     ['Do we visit a cenote and Macao Beach?', 'The Punta Cana operation includes a water stop and Macao Beach. Order, duration and swimming may change for safety and daily conditions.'],
-    ['Is pickup included?', 'Yes in covered zones. Cap Cana, Uvero Alto and other areas may have a surcharge shown or confirmed before completing the booking.'],
+    ['Is pickup included?', pickupPolicy.en.coverage + " " + pickupPolicy.en.meeting + " " + pickupPolicy.en.other],
     ['Can children participate?', 'Children may ride as passengers with a responsible adult when they meet the confirmed age and buggy conditions. They do not drive.'],
     ['What happens if it rains?', 'The activity may run in light rain. The route changes or cancels if roads, flooding or weather create a safety risk.'],
     ['Are photos included?', 'No. Photo packages and souvenirs are optional purchases from outside providers.']

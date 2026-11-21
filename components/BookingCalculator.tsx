@@ -1,4 +1,5 @@
 'use client';
+import { PickupInformation } from './PickupInformation';
 
 import { FormEvent, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { CheckCircle2, CreditCard, Loader2, LockKeyhole, MessageCircle } from 'lucide-react';
@@ -404,6 +405,7 @@ export default function BookingCalculator({ product, defaultHotel = '', defaultP
             />
           </div>
 
+          {!product.destination.includes("Bayahibe") && <PickupInformation locale={locale} compact />}
           <div className="booking-field-row">
             <div className="booking-field">
               <label htmlFor={`pickup-zone-${product.id}`}>{copy.pickupZone}</label>

@@ -1,3 +1,5 @@
+import { pickupPolicy } from '../lib/pickupPolicy';
+import { PickupInformation } from "./PickupInformation";
 import {
   ArrowRight,
   BadgeDollarSign,
@@ -41,13 +43,13 @@ type Locale = 'es' | 'en';
 
 const englishFaqs: Array<[string, string]> = [
   ['Is the price per person or per vehicle?', 'The displayed price is per vehicle according to the selected single, double or family option.'],
-  ['Is hotel pickup included?', 'Yes. Pickup and return are included from the main Bavaro and Punta Cana hotel zones.'],
+  ['Is hotel pickup included?', pickupPolicy.en.coverage + " " + pickupPolicy.en.meeting],
   ['Do we visit Macao Beach?', 'Yes. The route normally includes Macao Beach and a cenote stop, subject to daily operating conditions.'],
   ['Will I get muddy?', 'Yes. This is a real off-road experience with mud, rural roads and water. Wear clothes you do not mind getting dirty.'],
 ];
 
 const englishIncluded = [
-  'Round-trip hotel transportation',
+  'Round-trip transportation from the included Punta Cana tour areas',
   'Buggy according to selected option',
   'Helmet and safety equipment',
   'Multilingual local guide',
@@ -225,7 +227,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
         dealStatus: 'Book. Pay. Your adventure is confirmed.', dealStatusNote: 'Your e-ticket by email. Pickup details the day before.',
         dealItems: ['Hotel pickup', 'Cenote + Macao Beach', 'Local guide and safety equipment'], dealCta: 'Choose your buggy',
         highlights: [
-          ['Pickup included', 'Round-trip transport from main Punta Cana and Bavaro hotel zones.', Car],
+          ['Pickup included', 'Included from Bávaro, El Cortecito, Cabeza de Toro, Macao and Uvero Alto.', Car],
           ['Real off-road route', 'Mud trails, Macao Beach, Dominican ranch and cenote.', MapPin],
           ['Direct pricing', 'Clear prices per vehicle with no hotel desk commissions.', BadgeDollarSign],
           ['Secure booking', 'Pay by card through Stripe and receive clear instructions.', ShieldCheck],
@@ -398,6 +400,8 @@ export default function HomePage({ locale }: { locale: Locale }) {
           {copy.highlights.map(([title, text, Icon]) => <article key={title}><Icon size={24} /><b>{title}</b><span>{text}</span></article>)}
         </div>
       </section>
+
+      <PickupInformation locale={locale} />
 
       <section id={sectionIds.prices} className="section options-section">
         <div className="wrap section-head"><span className="kicker">{copy.optionsKicker}</span><h2>{copy.optionsTitle}</h2><p>{copy.optionsBody}</p></div>
