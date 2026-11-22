@@ -395,7 +395,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
                     <button type="button" role="radio" aria-checked={selected} key={JSON.stringify(option.fleet)} className={`cb-option ${selected ? 'is-selected' : ''}`} onClick={() => { setFleet(option.fleet); setFleetConfirmed(false); }}>
                       <span className="cb-option-tag">{i === 0 ? t.bestFor : t.alternative}</span>
                       <b>{choices.filter((p) => option.fleet[p.id]).map((p) => `${option.fleet[p.id]} × ${vehicleName(p, locale)}`).join(' + ')}</b>
-                      <span className="cb-option-price"><strong>US${option.total}</strong> · US${money(option.total / travelers)} {t.perPerson}</span>
+                      <span className="cb-option-price"><strong>US${option.total + zoneFee}</strong> · US${money((option.total + zoneFee) / travelers)} {t.perPerson}</span>
                       <small>{t.seats(option.seats)}{option.emptySeats ? ` · ${t.emptySeat(option.emptySeats)}` : ''}</small>
                     </button>
                   );
@@ -529,7 +529,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
         {stepIndex > 0 ? <button type="button" className="cb-back" onClick={() => go(STEPS[stepIndex - 1])}><ArrowLeft size={18} /> {t.back}</button> : <span />}
         {step !== 'review' ? (
           <button type="button" className="cb-next" onClick={() => nextFrom(step)} disabled={step === 'date' && !today}>
-            {step === 'group' && totals.valid ? `${t.continueWith} · US$${totals.total}` : t.continueWith} <ArrowRight size={18} />
+            {step === 'group' && totals.valid ? `${t.continueWith} · US$${total}` : t.continueWith} <ArrowRight size={18} />
           </button>
         ) : null}
       </div>
