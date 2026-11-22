@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, MapPin, MessageCircle, Minus, Plus, Search } from 'lucide-react';
-import { products, whatsappHref } from '../../lib/buggyProducts';
+import { products, pickupZones, whatsappHref } from '../../lib/buggyProducts';
 import { fleetOptions, money } from '../../lib/bookingFleet';
 import { areaForHotel, areaFromText, searchHotels, type PickupArea } from '../../lib/pickupLookup';
 import type { HotelBuggyLanding } from '../../lib/hotelBuggyLandings';
@@ -21,7 +21,7 @@ const T = {
     hotelPh: 'Escribe tu hotel',
     included: 'Recogida incluida en tu hotel',
     meeting: 'Sin recogida en tu zona: encuentro en KFC Downtown',
-    capcana: 'Cap Cana: cargo de zona de US$10',
+    capcana: 'Cap Cana: cargo de zona de US$10 incluido en el total',
     bayahibe: 'Recogida o punto de encuentro confirmado por WhatsApp',
     unknown: 'Si no aparece, eliges la zona al reservar',
     cta: 'Elegir fecha y reservar',
@@ -38,7 +38,7 @@ const T = {
     hotelPh: 'Type your hotel',
     included: 'Pickup included at your hotel',
     meeting: 'No pickup in your area: meet at KFC Downtown',
-    capcana: 'Cap Cana: US$10 zone fee',
+    capcana: 'Cap Cana: US$10 zone fee included in the total',
     bayahibe: 'Pickup or meeting point confirmed on WhatsApp',
     unknown: 'Not listed? You choose the area while booking',
     cta: 'Choose a date and book',
@@ -54,7 +54,7 @@ function push(event: string, data: Record<string, unknown>) {
 
 /**
  * The conversion block of the SEO funnel. Same quote engine as the booking (fleetOptions),
- * so the price shown here is exactly what the booking will charge before any zone fee.
+ * The selected pickup area's existing fee is included, matching the booking total.
  */
 export default function FunnelOffer({
   locale,
@@ -94,6 +94,8 @@ export default function FunnelOffer({
 
   const suggestions = focus && !picked ? searchHotels(query, bayahibe, 5) : [];
   const area: PickupArea | null = picked ? areaForHotel(picked) : bayahibe ? null : areaFromText(query);
+  const zoneFee = area ? (pickupZones.find((zone) => zone.label === area.calculatorZone)?.fee ?? 0) : 0;
+  const quoteTotal = (best?.total ?? 0) + zoneFee;
   const label = (cap: number) => (cap === 1 ? t.single : cap === 2 ? t.double : t.family);
   const fleetText = best ? choices.filter((p) => best.fleet[p.id]).map((p) => `${best.fleet[p.id]} ${label(p.capacityNumber)}`).join(' + ') : '';
   const target = (() => {
@@ -128,8 +130,8 @@ export default function FunnelOffer({
       {best ? (
         <div className="cb-quote-price" aria-live="polite">
           <small>{t.best}: {fleetText}</small>
-          <strong>US${money(best.total / travelers)}<em> {t.perPerson}</em></strong>
-          <span>US${best.total} {t.total}</span>
+          <strong>US${money(quoteTotal / travelers)}<em> {t.perPerson}</em></strong>
+          <span>US${quoteTotal} {t.total}</span>
         </div>
       ) : null}
       <label className="cb-quote-hotel">
@@ -151,7 +153,7 @@ export default function FunnelOffer({
         </ul>
       ) : null}
       {status ? <p className={`cb-status cb-status-${picked && bayahibe ? 'bayahibe' : area?.status || 'unknown'}`}>{status}</p> : null}
-      <a className="cb-cta" href={href} data-track-event="booking_cta_click" data-track-location={`funnel_${source.pageType}`} onClick={() => push('funnel_cta_click', { ...track, travelers, value: best?.total, currency: 'USD', target_product: target })}>{t.cta} <ArrowRight size={18} /></a>
+      <a className="cb-cta" href={href} data-track-event="booking_cta_click" data-track-location={`funnel_${source.pageType}`} onClick={() => push('funnel_cta_click', { ...track, travelers, value: best ? quoteTotal : undefined, currency: 'USD', target_product: target })}>{t.cta} <ArrowRight size={18} /></a>
       <p className="cb-quote-note">{t.note}</p>
       {showAsk ? <a className="cb-quote-ask" href={whatsappHref(`${locale === 'en' ? 'Hello Caribbean Buggy, I have a question before booking' : 'Hola Caribbean Buggy, tengo una duda antes de reservar'} (${source.pageType}: ${source.slug}).`)} onClick={() => push('funnel_whatsapp_click', track)}><MessageCircle size={15} /> {t.ask}</a> : null}
     </div>

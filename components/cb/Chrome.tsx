@@ -83,6 +83,7 @@ export function CbFooter({ locale }: { locale: Locale }) {
         </div>
       </div>
       <div className="cb-wrap cb-footer-legal">
+        {en ? <a href="/" hrefLang="es">Español</a> : null}
         <a href="https://proactivitis.com" target="_blank" rel="noreferrer">{en ? 'Operated by Proactivitis' : 'Operada por Proactivitis'}</a>
         <a href="https://proactivitis.com/arrival-excursions">{en ? 'Booked your arrival? Explore your 10% excursion benefit' : '¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles'}</a>
       </div>

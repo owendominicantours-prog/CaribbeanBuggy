@@ -1,4 +1,5 @@
 import { siteUrl } from './buggyProducts';
+import preservedHotelLinks from './hotelRelatedLinks.json';
 
 export type HotelBuggyLanding = {
   slug: string;
@@ -164,7 +165,13 @@ export function getRelatedHotelBuggyLandings(current: HotelBuggyLanding, limit =
   sameDestination.filter((hotel) => hotel.zone === current.zone).forEach(add);
   sameDestination.forEach(add);
 
-  return ordered.slice(0, limit);
+  const selected = ordered.slice(0, limit);
+  // Keep the existing public links when catalogue additions change the rotating neighbours.
+  for (const slug of (preservedHotelLinks as Record<string, string[]>)[current.slug] ?? []) {
+    const hotel = hotelBuggyLandings.find((item) => item.slug === slug);
+    if (hotel && !selected.some((item) => item.slug === slug)) selected.push(hotel);
+  }
+  return selected;
 }
 
 export function getHotelBuggyLanding(slug: string) {
