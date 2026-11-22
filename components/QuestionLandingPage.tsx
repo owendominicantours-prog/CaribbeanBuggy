@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { CbFooter, CbHeader } from './cb/Chrome';
+import FunnelBand from './cb/FunnelBand';
 import { ArrowLeft, ArrowRight, CalendarCheck2, CheckCircle2, MapPin, MessageCircle, ShieldCheck } from 'lucide-react';
-import LanguageSwitch from './LanguageSwitch';
 import {
   categoryLabel,
   getRelatedQuestions,
@@ -64,18 +65,7 @@ export default function QuestionLandingPage({ question, locale }: { question: Bu
 
   return (
     <main className="question-landing-page">
-      <header className="site-header">
-        <a className="brand" href={home} aria-label="Caribbean Buggy"><span>Caribbean</span><b>Buggy</b></a>
-        <nav aria-label={isEn ? 'Question guide' : 'Guía de pregunta'}>
-          <a href={questionsPath(locale)}>{isEn ? '100 questions' : '100 preguntas'}</a>
-          <a href="#answer">{isEn ? 'Answer' : 'Respuesta'}</a>
-          <a href="#related">{isEn ? 'Related' : 'Relacionadas'}</a>
-        </nav>
-        <div className="header-actions">
-          <LanguageSwitch current={locale} esHref={questionPath(question, 'es')} enHref={questionPath(question, 'en')} />
-          <a className="header-cta" href={bookingHref}>{isEn ? 'Book now' : 'Reservar'}</a>
-        </div>
-      </header>
+      <CbHeader locale={locale} esHref={questionPath(question, 'es')} enHref={questionPath(question, 'en')} bookingHref={bookingHref} />
 
       <section className="question-landing-hero">
         <div className="wrap">
@@ -89,6 +79,8 @@ export default function QuestionLandingPage({ question, locale }: { question: Bu
           </div>
         </div>
       </section>
+
+      <FunnelBand locale={locale} destination={question.destination === 'bayahibe' ? 'bayahibe' : 'punta-cana'} defaultTravelers={2} source={{ pageType: 'question', slug: content.slug }} />
 
       <section className="section question-guide-section">
         <div className="wrap question-guide-grid">
@@ -127,13 +119,7 @@ export default function QuestionLandingPage({ question, locale }: { question: Bu
         <div className="wrap all-question-link"><a href={questionsPath(locale)}>{isEn ? 'Browse all 100 questions' : 'Ver las 100 preguntas'} <ArrowRight size={18} /></a></div>
       </section>
 
-      <footer className="footer">
-        <div className="wrap footer-grid">
-          <div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Clear answers before booking your buggy.' : 'Respuestas claras antes de reservar tu buggy.'}</p></div>
-          <div><h3>{isEn ? 'Learn' : 'Información'}</h3><a href={questionsPath(locale)}>{isEn ? '100 questions' : '100 preguntas'}</a><a href={guidesPath(locale)}>{isEn ? 'Buggy guides' : 'Guías de buggy'}</a><a href={`${home}#${isEn ? 'route' : 'ruta'}`}>{isEn ? 'Tour route' : 'Ruta del tour'}</a></div>
-          <div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={bookingHref}>{isEn ? 'Buggy options' : 'Opciones de buggy'}</a><a href={whatsappHref(whatsappMessage)}>WhatsApp</a></div>
-        </div>
-      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
+      <CbFooter locale={locale} />
     </main>
   );
 }

@@ -308,7 +308,7 @@ export default function AdminPanelClient({ initialRecords, initialSeoPages, init
                   <span>Servicio</span>
                   <b>{record.booking.date || '-'} / {record.booking.pickupWindow || '-'}</b>
                   <small>{record.booking.hotel || '-'}</small>
-                  <small>{record.booking.pickupZone || '-'}</small><small>Idioma: {record.booking.language || 'Por confirmar'}</small><small>Fotos: {record.booking.photos ? 'Si' : 'No'} / Recogida privada: {record.booking.privatePickup ? 'Si' : 'No'}</small>
+                  <small>{record.booking.pickupZone || '-'}</small><small>Idioma: {record.booking.language || 'Por confirmar'}</small><small>Fotos: {record.booking.photos ? 'Si' : 'No'} / Recogida privada: {record.booking.privatePickup ? 'Si' : 'No'}</small>{record.booking.attribution ? <small>Origen SEO: {record.booking.attribution.firstPage || '-'}{record.booking.attribution.firstReferrer ? ` (desde ${record.booking.attribution.firstReferrer})` : ''} → reservó en {record.booking.attribution.bookingPage || '-'}</small> : null}
                 </div>
                 <div>
                   <span>Operacion</span>

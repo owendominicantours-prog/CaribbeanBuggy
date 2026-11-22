@@ -54,13 +54,13 @@ export const products: BuggyProduct[] = [
     description:
       'Toma el control absoluto del volante en un buggy todo terreno exclusivo para ti. Ideal para viajeros solos que quieren conducir durante toda la ruta, ensuciarse en el lodo y vivir Macao sin compartir el volante.',
     longDescription:
-      'El Buggy Individual es la opcion para quien quiere manejar su propio vehiculo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas cafe, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en Bávaro, El Cortecito, Macao, Cabeza de Toro y Uvero Alto. Verón y la zona próxima al aeropuerto usan el punto de encuentro en KFC de Downtown.',
+      'El Buggy Individual es la opción para quien quiere manejar su propio vehículo durante toda la ruta. Recorres caminos rurales de Macao, pasas por zonas de lodo, visitas un rancho dominicano, pruebas café, cacao y mamajuana, y disfrutas paradas en cenote y Playa Macao. Incluye recogida coordinada en Bávaro, El Cortecito, Macao, Cabeza de Toro y Uvero Alto. Verón y la zona próxima al aeropuerto usan el punto de encuentro en KFC de Downtown.',
     regular: 50,
     promo: 50,
     offerPerPerson: 50,
     capacityLabel: '1 adulto',
     capacityNumber: 1,
-    note: 'Precio por vehiculo',
+    note: 'Precio por vehículo',
     image: '/buggy/individual.jpeg',
     popular: false,
   },
@@ -76,9 +76,9 @@ export const products: BuggyProduct[] = [
     subtitle: '2 personas',
     hook: 'Perfecto para parejas y amigos.',
     description:
-      'La excursion mas popular de Punta Cana para parejas y amigos. Compartan la adrenalina, cambien de conductor si lo desean y exploren juntos caminos de lodo, rancho dominicano, cenote y Playa Macao.',
+      'Nuestra opción recomendada para parejas y amigos. Compartan la adrenalina y exploren juntos caminos de lodo, rancho dominicano, cenote y Playa Macao. Si quieren turnarse al volante, consúltenlo con el guía.',
     longDescription:
-      'El Buggy Doble combina precio, comodidad y diversion. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos sin pagar de mas por persona. Incluye transporte desde zonas principales, guia, parada cultural con cafe y cacao, cenote, Playa Macao y asistencia por WhatsApp antes de la recogida.',
+      'El Buggy Doble combina precio, comodidad y diversión. Es ideal para parejas, amigos y viajeros que quieren vivir la ruta juntos sin pagar de más por persona. Incluye transporte desde zonas principales, guía, parada cultural con café y cacao, cenote, Playa Macao y asistencia por WhatsApp antes de la recogida.',
     regular: 75,
     promo: 60,
     offerPerPerson: 30,
@@ -98,11 +98,11 @@ export const products: BuggyProduct[] = [
     routeLabel: 'Punta Cana, Macao y cenote',
     durationLabel: '4 horas con traslado',
     subtitle: 'hasta 4 personas',
-    hook: 'Diversion para toda la familia.',
+    hook: 'Diversión para toda la familia.',
     description:
-      'Nadie se queda atras. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en familia o grupo pequeno.',
+      'Nadie se queda atrás. Viajen juntos en un buggy de 4 plazas para disfrutar lodo, cultura dominicana, cenote y Playa Macao en familia o grupo pequeño.',
     longDescription:
-      'El Buggy Familiar permite que el grupo vaya en el mismo vehiculo. Es una opcion practica para familias, pequenos grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, casco, instrucciones de seguridad, recogida coordinada, rancho dominicano, cenote y parada en Playa Macao segun la operacion del dia.',
+      'El Buggy Familiar permite que el grupo vaya en el mismo vehículo. Es una opción práctica para familias, pequeños grupos y viajeros que quieren compartir la experiencia sin separarse. Incluye ruta guiada, casco, instrucciones de seguridad, recogida coordinada, rancho dominicano, cenote y parada en Playa Macao según la operación del día.',
     regular: 140,
     promo: 120,
     offerPerPerson: 30,
@@ -119,19 +119,19 @@ export const products: BuggyProduct[] = [
     seoDescription:
       'Reserva ATV o buggy 4x4 en Bayahibe y La Romana para 1 persona desde 75 USD. Ruta off-road, entorno rural, asistencia local y pickup coordinado.',
     destination: 'Bayahibe / La Romana',
-    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    routeLabel: 'Bayahibe, La Romana y Río Chavón',
     durationLabel: '4 horas con traslado',
     subtitle: '1 persona',
-    hook: 'Aventura privada para manejar tu propio buggy.',
+    hook: 'Tu propio buggy para manejar toda la ruta.',
     description:
       'Ideal para viajeros solos que quieren controlar el volante durante toda la ruta. Recorre caminos rurales de Bayahibe y La Romana, cruza tramos de lodo y disfruta una salida 4x4 con asistencia local.',
     longDescription:
-      'El Bayahibe Buggy Individual esta pensado para una persona que desea manejar su propio vehiculo durante la experiencia. La ruta combina caminos rurales, zonas de vegetacion, ambiente local de La Romana y paradas operativas cerca del area de Bayahibe segun el dia. El equipo confirma por WhatsApp el punto de recogida o encuentro, el horario disponible y cualquier ajuste de operacion antes del tour.',
+      'El Bayahibe Buggy Individual está pensado para una persona que desea manejar su propio vehículo durante la experiencia. La ruta combina caminos rurales, zonas de vegetación, ambiente local de La Romana y paradas operativas cerca del área de Bayahibe según el día. El equipo confirma por WhatsApp el punto de recogida o encuentro, el horario disponible y cualquier ajuste de operación antes del tour.',
     regular: 85,
     promo: 75,
     capacityLabel: '1 adulto',
     capacityNumber: 1,
-    note: 'Precio por vehiculo',
+    note: 'Precio por vehículo',
     image: '/buggy/bayahibe/new-20260921/atv-mud.jpg',
     popular: false,
   },
@@ -140,16 +140,16 @@ export const products: BuggyProduct[] = [
     title: 'Bayahibe Buggy Doble',
     seoTitle: 'Buggy Doble en Bayahibe La Romana | 2 Personas',
     seoDescription:
-      'Buggy doble en Bayahibe y La Romana para 2 personas desde 145 USD por vehiculo. Tour 4x4 con recogida coordinada y confirmacion por WhatsApp.',
+      'Buggy doble en Bayahibe y La Romana para 2 personas desde 145 USD por vehículo. Tour 4x4 con recogida coordinada y confirmación por WhatsApp.',
     destination: 'Bayahibe / La Romana',
-    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    routeLabel: 'Bayahibe, La Romana y Río Chavón',
     durationLabel: '4 horas con traslado',
     subtitle: '2 personas',
-    hook: 'La opcion mas comoda para parejas y amigos.',
+    hook: 'La opción más cómoda para parejas y amigos.',
     description:
-      'Comparte la ruta con otra persona y cambia de conductor si lo desean. Una experiencia off-road en Bayahibe/La Romana con precio cerrado por vehiculo y coordinacion humana antes de salir.',
+      'Comparte la ruta con otra persona en el mismo buggy. Una experiencia off-road en Bayahibe y La Romana con precio cerrado por vehículo y coordinación humana antes de salir. Si quieren turnarse al volante, consúltenlo con el guía.',
     longDescription:
-      'El Bayahibe Buggy Doble es la opcion recomendada para parejas y amigos que quieren vivir la ruta juntos. Incluye coordinacion de recogida o punto de encuentro, instrucciones antes de manejar, ruta rural 4x4 y soporte por WhatsApp. El recorrido puede variar por clima, trafico local y condiciones del camino, siempre manteniendo una operacion segura y organizada.',
+      'El Bayahibe Buggy Doble es la opción recomendada para parejas y amigos que quieren vivir la ruta juntos. Incluye coordinación de recogida o punto de encuentro, instrucciones antes de manejar, ruta rural 4x4 y soporte por WhatsApp. El recorrido puede variar por clima, tráfico local y condiciones del camino, siempre manteniendo una operación segura y organizada.',
     regular: 160,
     promo: 145,
     capacityLabel: 'Piloto + copiloto',
@@ -163,16 +163,16 @@ export const products: BuggyProduct[] = [
     title: 'Bayahibe Buggy Familiar',
     seoTitle: 'Buggy Familiar en Bayahibe La Romana | Hasta 4 Personas',
     seoDescription:
-      'Reserva buggy familiar en Bayahibe y La Romana para hasta 4 personas desde 290 USD por vehiculo. Ruta off-road con pickup coordinado.',
+      'Reserva buggy familiar en Bayahibe y La Romana para hasta 4 personas desde 290 USD por vehículo. Ruta off-road con pickup coordinado.',
     destination: 'Bayahibe / La Romana',
-    routeLabel: 'Bayahibe, La Romana y Rio Chavon',
+    routeLabel: 'Bayahibe, La Romana y Río Chavón',
     durationLabel: '4 horas con traslado',
     subtitle: 'hasta 4 personas',
     hook: 'Una salida 4x4 para disfrutar juntos.',
     description:
-      'Opcion practica para familias o grupos pequenos que quieren ir en el mismo buggy. Precio cerrado por las plazas, ruta rural, asistencia local y confirmacion antes de la recogida.',
+      'Opción práctica para familias o grupos pequeños que quieren ir en el mismo buggy. Precio cerrado por las plazas, ruta rural, asistencia local y confirmación antes de la recogida.',
     longDescription:
-      'El Bayahibe Buggy Familiar permite que hasta cuatro personas compartan el mismo vehiculo durante la experiencia. Es una alternativa conveniente para familias, amigos y grupos pequenos que quieren vivir Bayahibe y La Romana sin separarse. Incluye asistencia del equipo, instrucciones de seguridad, coordinacion del pickup y seguimiento por WhatsApp antes y despues de la reserva.',
+      'El Bayahibe Buggy Familiar permite que hasta cuatro personas compartan el mismo vehículo durante la experiencia. Es una alternativa conveniente para familias, amigos y grupos pequeños que quieren vivir Bayahibe y La Romana sin separarse. Incluye asistencia del equipo, instrucciones de seguridad, coordinación del pickup y seguimiento por WhatsApp antes y después de la reserva.',
     regular: 320,
     promo: 290,
     capacityLabel: 'Hasta 4 personas',
@@ -185,33 +185,33 @@ export const products: BuggyProduct[] = [
 
 export const included = [
   'Transporte ida y vuelta desde las zonas incluidas del tour de Punta Cana',
-  'Buggy segun modalidad elegida',
+  'Buggy según modalidad elegida',
   'Casco y equipo de seguridad',
-  'Guia oficial multilingue',
-  'Degustacion de cafe, cacao y mamajuana',
-  'Parada en cenote privado',
+  'Guía oficial multilingüe',
+  'Degustación de café, cacao y mamajuana',
+  'Parada en cenote',
   'Visita a Playa Macao',
   'Asistencia durante la ruta',
 ];
 
 export const requirements = [
-  'El conductor debe ser mayor de 18 anos y saber conducir.',
-  'Edad minima para ninos acompanantes: 3 anos.',
+  'El conductor debe ser mayor de 18 años y saber conducir.',
+  'Edad mínima para niños acompañantes: 3 años.',
   'No apto para mujeres embarazadas o personas con problemas severos de espalda.',
 ];
 
 export const bring = [
   'Ropa vieja que se pueda manchar.',
-  'Traje de bano y toalla.',
+  'Traje de baño y toalla.',
   'Protector solar biodegradable y gafas de sol.',
   'Efectivo opcional para fotos, bebidas o souvenirs.',
 ];
 
 export const faqs = [
-  ['El precio es por persona o por vehiculo?', 'El precio publicado es por vehiculo segun la modalidad: individual, doble o familiar.'],
-  ['Incluye recogida en hotel?', pickupPolicy.es.coverage + " " + pickupPolicy.es.meeting],
-  ['Visitamos Playa Macao?', 'Si, la ruta incluye tiempo en Playa Macao y parada para cenote, sujeto a condiciones operativas del dia.'],
-  ['Me voy a ensuciar?', 'Si. Es una aventura off-road con lodo, caminos rurales y agua. Recomendamos ropa vieja.'],
+  ['¿El precio es por persona o por vehículo?', 'El precio publicado es por vehículo según la modalidad: individual, doble o familiar.'],
+  ['¿Incluye recogida en hotel?', pickupPolicy.es.coverage + " " + pickupPolicy.es.meeting],
+  ['¿Visitamos Playa Macao?', 'Sí, la ruta incluye tiempo en Playa Macao y parada para cenote, sujeto a condiciones operativas del día.'],
+  ['¿Me voy a ensuciar?', 'Sí. Es una aventura off-road con lodo, caminos rurales y agua. Recomendamos ropa vieja.'],
 ];
 
 export function getProduct(id: string) {

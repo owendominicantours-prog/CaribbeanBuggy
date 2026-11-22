@@ -1,31 +1,16 @@
-import { PickupInformation } from "./PickupInformation";
-import {
-  ArrowLeft,
-  ArrowRight,
-  BadgeDollarSign,
-  CalendarCheck2,
-  CheckCircle2,
-  Clock3,
-  Hotel,
-  ImageIcon,
-  MapPin,
-  ShieldCheck,
-  Users,
-} from 'lucide-react';
+import { ArrowLeft, BadgeDollarSign, Clock3, Hotel, MapPin, Users } from 'lucide-react';
 import Image from 'next/image';
-import BookingCalculator from './BookingCalculator';
-import { getRelatedHotelBuggyLandings, hotelBuggyPath, isBayahibeHotel, type HotelBuggyLanding } from '../lib/hotelBuggyLandings';
+import BookingWizard from './cb/BookingWizard';
+import { CbFooter, CbHeader, StickyBook, homeAnchors } from './cb/Chrome';
+import { DayTimeline, FaqList, GuideCards, HotelLinks, IncludedPanel, PickupPanel, QuickAnswers } from './cb/Sections';
+import { areaForHotel } from '../lib/pickupLookup';
+import { photosFor } from '../lib/sitePhotos';
+import { getRelatedHotelBuggyLandings, hotelBuggyPath, isBayahibeHotel, isMeetingPointHotel, type HotelBuggyLanding } from '../lib/hotelBuggyLandings';
 import type { BuggyProduct } from '../lib/buggyProducts';
-import {
-  bring,
-  faqs,
-  included,
-  requirements,
-} from '../lib/buggyProducts';
+import { bring, requirements } from '../lib/buggyProducts';
 import { getHotelBuggyProducts } from '../lib/hotelBuggySeo';
 import { getPuntaCanaBuggyContent } from '../lib/puntaCanaBuggyContent';
-import LanguageSwitch from './LanguageSwitch';
-import { guidePath, seoGuides } from '../lib/seoGuides';
+import { seoGuides } from '../lib/seoGuides';
 import TripAdvisorReviews from './TripAdvisorReviews';
 
 type HotelBuggyTourPageProps = {
@@ -34,7 +19,6 @@ type HotelBuggyTourPageProps = {
   locale?: 'es' | 'en';
 };
 
-const puntaCanaGallery = ['/buggy/doble.jpeg', '/buggy/ruta-1.jpeg', '/buggy/ruta-2.jpeg', '/buggy/ruta-3.jpeg'];
 const bayahibeGallery = [
   '/buggy/bayahibe/buggy-lodo-bayahibe.jpg',
   '/buggy/bayahibe/convoy-lodo-bayahibe.jpg',
@@ -44,16 +28,6 @@ const bayahibeGallery = [
 const BUGGY_VIDEO_URL = '';
 const BAYAHIBE_VIDEO_URL = '/buggy/bayahibe/tour-buggy-bayahibe.mp4';
 
-const enIncluded = [
-  'Round-trip hotel pickup',
-  'Buggy according to selected option',
-  'Helmet and safety briefing',
-  'Multilingual local guide',
-  'Coffee, cacao and mamajuana tasting',
-  'Cenote stop',
-  'Macao Beach visit',
-  'Route support during the tour',
-];
 
 const bayahibeIncluded = [
   'Transporte ida y vuelta desde el hotel o punto confirmado',
@@ -90,9 +64,9 @@ const enBring = [
 
 const notIncluded = [
   'Fotos, bebidas extra o souvenirs comprados durante la ruta.',
-  'Propinas opcionales para guia, chofer o equipo local.',
-  'Gastos por danos causados al buggy por manejo irresponsable.',
-  'Recogidas fuera de la zona confirmada sin coordinacion previa.',
+  'Propinas opcionales para guía, chofer o equipo local.',
+  'Gastos por daños causados al buggy por manejo irresponsable.',
+  'Recogidas fuera de la zona confirmada sin coordinación previa.',
 ];
 
 const enNotIncluded = [
@@ -102,12 +76,6 @@ const enNotIncluded = [
   'Pickup outside the confirmed zone without previous coordination.',
 ];
 
-const enFaqs = [
-  ['Is the price per person or per vehicle?', 'The listed price is per vehicle depending on the option: single, double or family buggy.'],
-  ['Is hotel pickup included?', 'Yes, pickup and return are included from main Bavaro and Punta Cana hotel zones.'],
-  ['Do we visit Macao Beach?', 'Yes, the route normally includes Macao Beach and a cenote stop, subject to daily operations.'],
-  ['Will I get muddy?', 'Yes. This is an off-road buggy experience with mud, rural roads and water stops. Old clothes are recommended.'],
-];
 
 const bayahibeFaqs = [
   ['¿El precio es por persona o por vehículo?', 'El precio publicado es por vehículo según la modalidad: individual, doble o familiar.'],
@@ -142,7 +110,15 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
   const scopedProducts = getHotelBuggyProducts(hotel);
   const relatedHotels = getRelatedHotelBuggyLandings(hotel, 10);
   const hotelDestination = isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana';
-  const gallery = hotelDestination === 'bayahibe' ? bayahibeGallery : puntaCanaGallery;
+  const meetingPoint = hotelDestination === 'punta-cana' && isMeetingPointHotel(hotel);
+  const pickupNoteText = isEn
+    ? meetingPoint
+      ? 'No accommodation pickup here: meeting point at KFC Downtown, near Coco Bongo. We will confirm the exact KFC meeting time for your departure before the activity.'
+      : hotelDestination === 'bayahibe'
+        ? 'Pickup or meeting point confirmed by WhatsApp before the tour.'
+        : 'Hotel pickup point confirmed by WhatsApp before the tour.'
+    : hotel.pickupNote;
+  const gallery = hotelDestination === 'bayahibe' ? bayahibeGallery : photosFor(hotel.slug, 4).map((p) => p.src);
   const videoUrl = hotelDestination === 'bayahibe' ? BAYAHIBE_VIDEO_URL : BUGGY_VIDEO_URL;
   const hotelGuides = seoGuides.filter((guide) => guide.destination === hotelDestination || guide.destination === 'general').slice(0, 4);
   const featuredProduct = scopedProducts.find((product) => product.popular) ?? scopedProducts[0];
@@ -219,26 +195,26 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
         options: 'Individual, doble o familiar',
         videoKicker: 'Vista real',
         videoTitle: 'Mira la ruta en buggy antes de reservar',
-        videoBody: 'Lodo, caminos rurales, parada en rancho y ambiente de Macao. El video ayuda al cliente a entender la excursion antes de pagar.',
-        includedTitle: 'Que incluye',
+        videoBody: 'Lodo, caminos rurales, parada en rancho y ambiente de Macao. El video ayuda a entender la excursión antes de pagar.',
+        includedTitle: 'Qué incluye',
         notIncludedTitle: 'No incluye',
         includedIntro: 'Todo lo necesario para una experiencia clara desde la recogida en hotel hasta el regreso.',
         bookingSteps: ['Elige fecha y hotel', 'Agrega tus datos', 'Paga o reserva seguro'],
-        how: 'Como funciona',
-        h2: `Ruta organizada para huespedes de ${hotel.name}`,
-        body: `Despues de reservar, nuestro equipo confirma la hora exacta por WhatsApp segun la tanda seleccionada. Recibes instrucciones claras para el punto autorizado de ${hotel.name}. En el rancho recibes instrucciones de seguridad, el buggy reservado y sales con guia por la ruta de Macao.`,
+        how: 'Cómo funciona',
+        h2: `Ruta organizada para huéspedes de ${hotel.name}`,
+        body: `Después de reservar, nuestro equipo confirma la hora exacta por WhatsApp según la tanda seleccionada. Recibes instrucciones claras para el punto autorizado de ${hotel.name}. En el rancho recibes instrucciones de seguridad, el buggy reservado y sales con guía por la ruta de Macao.`,
         important: `Detalles importantes para ${hotel.name}`,
-        bring: 'Que llevar',
+        bring: 'Qué llevar',
         ready: 'Preparado para lodo, agua y fotos',
         itinerary: 'Itinerario',
         itineraryTitle: 'Del pickup en hotel a la aventura en Macao',
         steps: [
-          ['Coordinacion de recogida', `Confirmamos el punto autorizado mas cercano para ${hotel.name}.`],
-          ['Llegada al rancho', 'Instrucciones de seguridad, casco y asignacion del buggy.'],
+          ['Coordinación de recogida', `Confirmamos el punto autorizado más cercano para ${hotel.name}.`],
+          ['Llegada al rancho', 'Instrucciones de seguridad, casco y asignación del buggy.'],
           ['Ruta off-road', 'Caminos rurales de Macao, lodo y paradas locales.'],
-          ['Cenote y playa', 'Tiempo para fotos, parada de agua y Playa Macao segun operacion.'],
+          ['Cenote y playa', 'Tiempo para fotos, parada de agua y Playa Macao según la operación.'],
         ],
-        more: 'Mas opciones de buggy',
+        more: 'Más opciones de buggy',
         related: 'Compara opciones antes de reservar',
         faq: `Preguntas sobre buggy desde ${hotel.name}`,
         nearbyHotelsKicker: 'Más páginas de recogida',
@@ -273,7 +249,24 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
               ['Río Chavón', 'Parada para nadar y refrigerio local según la operación.'],
             ],
       }
-    : basePageCopy;
+    : meetingPoint
+      ? {
+          ...basePageCopy,
+          eyebrow: isEn ? 'Meeting point: KFC Downtown' : 'Punto de encuentro: KFC Downtown',
+          intro: isEn
+            ? `Buggy tour for guests of ${hotel.name}. Accommodation pickup is not included in this area next to PUJ airport: meet us at KFC Downtown, near Coco Bongo, for the Macao off-road route, Dominican ranch, cenote stop and Macao Beach.`
+            : `Tour en buggy para huéspedes de ${hotel.name}. En esta zona próxima al aeropuerto PUJ no incluimos recogida en el alojamiento: nos encontramos en el KFC de Downtown, cerca de Coco Bongo, para la ruta off-road de Macao, rancho dominicano, cenote y Playa Macao.`,
+          badgePickup: isEn ? 'Meet at KFC Downtown' : 'Encuentro en KFC Downtown',
+          includedIntro: isEn ? 'Everything included from the KFC Downtown meeting point until you are back there.' : 'Todo lo incluido desde el punto de encuentro en el KFC de Downtown hasta el regreso al mismo punto.',
+          how: isEn ? 'How the meeting point works' : 'Cómo funciona el punto de encuentro',
+          h2: isEn ? `Meeting point for guests of ${hotel.name}` : `Punto de encuentro para huéspedes de ${hotel.name}`,
+          body: isEn
+            ? `${hotel.name} is in the Punta Cana area next to PUJ airport, where accommodation pickup is not included. You can still book: get to KFC Downtown, near Coco Bongo, on your own. We will confirm the exact KFC meeting time for your departure before the activity.`
+            : `${hotel.name} está en la zona de Punta Cana próxima al aeropuerto PUJ, donde la recogida en el alojamiento no está incluida. Puedes reservar igualmente y llegar por tu cuenta al KFC de Downtown, cerca de Coco Bongo. Confirmaremos la hora exacta de encuentro en el KFC para tu turno antes de la actividad.`,
+          itineraryTitle: isEn ? 'From KFC Downtown to the Macao adventure' : 'Del KFC de Downtown a la aventura en Macao',
+          facts: isEn ? ['Zone', 'Estimated drive to ranch', 'Options', 'Meeting point'] : ['Zona', 'Tiempo estimado al rancho', 'Modalidades', 'Punto de encuentro'],
+        }
+      : basePageCopy;
 
   const listIncluded = hotelDestination === 'bayahibe'
     ? (isEn ? enBayahibeIncluded : bayahibeIncluded)
@@ -292,249 +285,139 @@ export default function HotelBuggyTourPage({ hotel, canonical, locale = 'es' }: 
     : completePuntaCanaContent.faqs;
   const itinerarySteps = hotelDestination === 'bayahibe'
     ? pageCopy.steps
-    : completePuntaCanaContent.itinerary.map((step) => [
-        `${step.title} · ${step.time}`,
-        step.description,
-      ] as [string, string]);
+    : completePuntaCanaContent.itinerary.map((step, index, all) => {
+        if (meetingPoint && index === 0) {
+          return isEn
+            ? ['Meet at KFC Downtown · time confirmed', 'Get to KFC Downtown, near Coco Bongo, on your own. We will confirm the exact KFC meeting time for your departure before the activity.']
+            : ['Encuentro en KFC Downtown · hora confirmada', 'Llegas por tu cuenta al KFC de Downtown, cerca de Coco Bongo. Confirmaremos la hora exacta de encuentro en el KFC para tu turno antes de la actividad.'] as [string, string];
+        }
+        if (meetingPoint && index === all.length - 1) {
+          return [
+            `${step.title} · ${step.time}`,
+            isEn ? 'Final drive to the ranch, equipment return and transport back to the KFC Downtown meeting point.' : 'Tramo final al rancho, devolución del equipo y traslado de vuelta al punto de encuentro en el KFC de Downtown.',
+          ] as [string, string];
+        }
+        return [`${step.title} · ${step.time}`, step.description] as [string, string];
+      });
+
+  const a = homeAnchors(locale);
+  const base = isEn ? '/en' : '';
+  const area = areaForHotel(hotel);
+  const statusTitle = meetingPoint
+    ? (isEn ? 'No pickup at this hotel: meet us at KFC Downtown' : 'Sin recogida en este hotel: encuentro en el KFC de Downtown')
+    : area.status === 'capcana'
+      ? (isEn ? 'Cap Cana: US$10 zone fee' : 'Cap Cana: cargo de zona de US$10')
+      : hotelDestination === 'bayahibe'
+        ? (isEn ? 'Pickup or meeting point confirmed on WhatsApp' : 'Recogida o punto de encuentro confirmado por WhatsApp')
+        : (isEn ? `Pickup and return included from ${hotel.name}` : `Recogida y regreso incluidos desde ${hotel.name}`);
 
   return (
-    <main className="hotel-tour-page">
-      <header className="site-header">
-        <a className="brand" href={isEn ? '/en' : '/'} aria-label="Caribbean Buggy">
-          <span>Caribbean</span>
-          <b>Buggy</b>
-        </a>
-        <nav aria-label={isEn ? 'Tour detail' : 'Detalle'}>
-          <a href="#prices">{pageCopy.navPrices}</a>
-          <a href="#route">{pageCopy.navRoute}</a>
-          <a href="#included">{pageCopy.navIncluded}</a>
-          <a href="#faq">{pageCopy.navFaq}</a>
-        </nav>
-        <div className="header-actions">
-          <LanguageSwitch
-            current={isEn ? 'en' : 'es'}
-            esHref={hotelBuggyPath(hotel.slug, 'es')}
-            enHref={hotelBuggyPath(hotel.slug, 'en')}
-          />
-          <a className="header-cta" href="#book">{pageCopy.reserve}</a>
-        </div>
-      </header>
-
-      <section className="tour-shell">
-        <div className="wrap tour-detail-grid">
-          <article className="tour-main">
-            <a className="tour-back" href={isEn ? '/en' : '/'}>
-              <ArrowLeft size={16} /> {pageCopy.back}
-            </a>
-            <div className="tour-breadcrumb">
-              Caribbean Buggy / {pageCopy.breadcrumb} / {hotel.name}
-            </div>
-            <div className="tour-topline">
-              <span>5.0/5</span>
-              <span>Verified local pickup</span>
-              <span>{hotel.zone}</span>
-            </div>
+    <main className="cb cb-detail cb-hotel">
+      <CbHeader locale={locale} esHref={hotelBuggyPath(hotel.slug, 'es')} enHref={hotelBuggyPath(hotel.slug, 'en')} bookingHref={`#${a.book}`} />
+      <div className="cb-wrap cb-detail-hero">
+        <div className="cb-detail-grid">
+          <div className="cb-detail-main">
+            <nav className="cb-crumbs" aria-label="Breadcrumb"><a href={base || '/'}><ArrowLeft size={13} /> {pageCopy.back}</a><span>/</span><a href={isEn ? '/en/buggy-tour' : '/es/buggy-tour'}>{pageCopy.breadcrumb}</a><span>/</span><span>{hotel.name}</span></nav>
+            <span className="cb-kicker"><MapPin size={13} /> {pageCopy.eyebrow}</span>
             <h1>{pageCopy.h1}</h1>
-            <p className="tour-lead">{pageCopy.intro}</p>
-            <div className="tour-proof-strip" aria-label={isEn ? 'Booking confidence' : 'Confianza para reservar'}>
-              <span>
-                <ShieldCheck size={16} />
-                {isEn ? 'Verified local operator' : 'Operador local verificado'}
-              </span>
-              <span>
-                <CalendarCheck2 size={16} />
-                {isEn ? 'Pickup time confirmed by WhatsApp' : 'Hora confirmada por WhatsApp'}
-              </span>
-              <span>
-                <BadgeDollarSign size={16} />
-                {isEn ? 'Clear price before checkout' : 'Precio claro antes de pagar'}
-              </span>
+            <p className="cb-lead">{pageCopy.intro}</p>
+            <div className={`cb-status cb-status-${meetingPoint ? 'meeting' : area.status} cb-hotel-status`}><b>{statusTitle}</b><span>{meetingPoint ? (isEn ? 'Get there on your own. We will confirm the exact KFC meeting time for your departure before the activity.' : 'Llegas por tu cuenta. Confirmaremos la hora exacta de encuentro en el KFC para tu turno antes de la actividad.') : pickupNoteText}</span></div>
+            <div className="cb-facts">
+              <span><BadgeDollarSign size={16} /> {pageCopy.badgePrice}</span>
+              <span><Clock3 size={16} /> {pageCopy.badgeTime}</span>
+              <span><Hotel size={16} /> {hotel.zone} · {hotel.driveTime} {isEn ? 'to the ranch' : 'al rancho'}</span>
+              <span><Users size={16} /> {pageCopy.options}</span>
             </div>
-
-            <div className="tour-gallery" aria-label={isEn ? 'Buggy tour photos' : 'Fotos del tour en buggy'}>
-              <Image className="tour-gallery-main" src={gallery[0]} alt={pageCopy.h1} width={1200} height={795} priority sizes="(max-width: 980px) 100vw, 55vw" />
-              <div className="tour-gallery-side">
-                {gallery.slice(1).map((image, index) => (
-                  <Image key={image} src={image} alt={`${pageCopy.h1} ${index + 2}`} width={600} height={398} sizes="(max-width: 680px) 33vw, 24vw" />
-                ))}
-                <a href="#book" className="tour-photo-count">
-                  <ImageIcon size={16} /> {isEn ? 'Book this route' : 'Reservar esta ruta'}
-                </a>
-              </div>
+            <div className="cb-gallery">
+              {gallery.map((image, index) => <Image key={image} src={image} alt={index === 0 ? pageCopy.h1 : `${pageCopy.h1} ${index + 1}`} width={index === 0 ? 1200 : 600} height={index === 0 ? 795 : 398} priority={index === 0} sizes={index === 0 ? '(max-width: 1060px) 100vw, 50vw' : '(max-width: 1060px) 50vw, 25vw'} />)}
             </div>
-
-            <div className="tour-quick-facts">
-              <span><BadgeDollarSign size={18} /> {pageCopy.badgePrice}</span>
-              <span><Clock3 size={18} /> {pageCopy.badgeTime}</span>
-              <span><Hotel size={18} /> {pageCopy.badgePickup}</span>
-              <span><ShieldCheck size={18} /> WhatsApp support</span>
-            </div>
-
-            {hotelDestination === "punta-cana" && <PickupInformation locale={locale} />}
-            {videoUrl ? <section className="tour-video-section" id="video">
-              <div>
-                <span className="tour-kicker">{pageCopy.videoKicker}</span>
-                <h2>{pageCopy.videoTitle}</h2>
-                <p>{pageCopy.videoBody}</p>
-              </div>
-              <div className="tour-video-frame">
-                <video controls playsInline preload="metadata" poster={gallery[0]}>
-                  <source src={videoUrl} type="video/mp4" />
-                </video>
-              </div>
-            </section> : null}
-
-            <section id="included" className="tour-section tour-service-grid">
-              <span className="tour-kicker">{pageCopy.how}</span>
-              <h2>{pageCopy.h2}</h2>
-              <p>{pageCopy.body}</p>
-              <div className="tour-service-lists">
-                <article className="tour-list-card tour-list-card-positive">
-                  <h3>{pageCopy.includedTitle}</h3>
-                  <p>{pageCopy.includedIntro}</p>
-                  <div className="tour-checklist">
-                    {listIncluded.map((item) => (
-                      <span key={item}><CheckCircle2 size={17} /> {item}</span>
-                    ))}
-                  </div>
-                </article>
-                <article className="tour-list-card">
-                  <h3>{pageCopy.notIncludedTitle}</h3>
-                  <ul>
-                    {listNotIncluded.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                </article>
-              </div>
-            </section>
-
-            <section id="route" className="tour-section">
-              <span className="tour-kicker">{pageCopy.itinerary}</span>
-              <h2>{pageCopy.itineraryTitle}</h2>
-              <div className="tour-steps">
-                {itinerarySteps.map(([title, body], index) => (
-                  <article key={title}>
-                    <b>{index + 1}</b>
-                    <div>
-                      <h3>{title}</h3>
-                      <p>{body}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section className="tour-section tour-two-columns">
-              <article>
-                <span className="tour-kicker">{isEn ? 'Before booking' : 'Antes de reservar'}</span>
-                <h2>{pageCopy.important}</h2>
-                <ul>{listRequirements.map((item) => <li key={item}>{item}</li>)}</ul>
-                <ul>
-                  <li>{hotel.pickupNote}</li>
-                  <li>{isEn ? 'Exact pickup time may vary by route, traffic and confirmed departure.' : 'La hora exacta puede variar por ruta de recogida, trafico y tanda confirmada.'}</li>
-                </ul>
-              </article>
-              <article>
-                <span className="tour-kicker">{pageCopy.bring}</span>
-                <h2>{pageCopy.ready}</h2>
-                <ul>{listBring.map((item) => <li key={item}>{item}</li>)}</ul>
-              </article>
-            </section>
-
-            <section className="tour-section">
-              <span className="tour-kicker">{pageCopy.more}</span>
-              <h2>{pageCopy.related}</h2>
-              <div className="tour-related">
-                {scopedProducts.map((product) => (
-                  <a href={`${isEn ? '/en' : ''}/buggy/${product.id}`} key={product.id}>
-                    <Image src={product.image} alt={titleFor(product, locale)} width={500} height={331} sizes="(max-width: 680px) 100vw, 240px" />
-                    <div>
-                      <span>{product.subtitle}</span>
-                      <b>{titleFor(product, locale)}</b>
-                      <strong>US${product.promo}</strong>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </section>
-
-            <section id="faq" className="tour-section">
-              <span className="tour-kicker">FAQ</span>
-              <h2>{pageCopy.faq}</h2>
-              <div className="tour-faq">
-                {listFaqs.map(([question, answer]) => (
-                  <article key={question}>
-                    <h3>{question}</h3>
-                    <p>{answer}</p>
-                  </article>
-                ))}
-              </div>
-            </section>
-
-            <section id="tripadvisor" className="tour-section hotel-tripadvisor-section"><TripAdvisorReviews locale={locale} destination={hotelDestination} location={`hotel_landing_${hotel.slug}`} /></section>
-
-            <section className="tour-section hotel-related-section" aria-labelledby="related-hotels-title">
-              <span className="tour-kicker">{pageCopy.nearbyHotelsKicker}</span>
-              <h2 id="related-hotels-title">{pageCopy.nearbyHotelsTitle}</h2>
-              <p>{pageCopy.nearbyHotelsBody}</p>
-              <div className="hotel-link-grid hotel-link-grid-compact">
-                {relatedHotels.map((relatedHotel) => (
-                  <a href={hotelBuggyPath(relatedHotel.slug, locale)} key={relatedHotel.slug}>
-                    <span>{relatedHotel.zone}</span>
-                    <b>{pageCopy.nearbyHotelLink} {relatedHotel.name}</b>
-                    <small>{relatedHotel.driveTime} {isEn ? 'approx. to the ranch' : 'aprox. al rancho'}</small>
-                    <ArrowRight size={17} />
-                  </a>
-                ))}
-              </div>
-            </section>
-
-            <section className="tour-section hotel-related-section" aria-labelledby="hotel-guides-title">
-              <span className="tour-kicker">{isEn ? 'Plan before booking' : 'Planifica antes de reservar'}</span>
-              <h2 id="hotel-guides-title">{isEn ? `Buggy guides for guests at ${hotel.name}` : `Guías de buggy para huéspedes de ${hotel.name}`}</h2>
-              <p>{isEn ? 'Understand the route, price, pickup and vehicle before choosing.' : 'Entiende la ruta, el precio, la recogida y el vehículo antes de elegir.'}</p>
-              <div className="seo-guide-related-grid">
-                {hotelGuides.map((guide) => <a href={guidePath(guide, locale)} key={guide.id}><span>{guide[locale].eyebrow}</span><b>{guide[locale].title}</b><ArrowRight size={17} /></a>)}
-              </div>
-            </section>
-          </article>
-
-          <aside id="book" className="tour-sidebar">
-            <div className="tour-mobile-booking-intro">
-              <span>{pageCopy.eyebrow}</span>
-              <strong>{hotel.name}</strong>
-              <small>{isEn ? 'Choose your date and reserve below.' : 'Elige tu fecha y reserva a continuación.'}</small>
-            </div>
-            <div id="booking-form" className="tour-booking-form-shell">
-              <BookingCalculator
-                product={featuredProduct}
-                defaultHotel={hotel.name}
-                defaultPickupZone={zoneForCalculator(hotel.zone)}
-                locale={locale}
-              />
-            </div>
-            <div id="prices" className="tour-price-card">
-              <span>{pageCopy.price}</span>
-              <strong>US${featuredProduct.promo}</strong>
-              <small>{pageCopy.priceNote}</small>
-              <a href="#booking-form">{pageCopy.reserve}</a>
-            </div>
-            <div className="tour-hotel-card">
-              <article><MapPin size={18} /><b>{pageCopy.facts[0]}</b><span>{hotel.zone}</span></article>
-              <article><Clock3 size={18} /><b>{pageCopy.facts[1]}</b><span>{hotel.driveTime}</span></article>
-              <article><Users size={18} /><b>{pageCopy.facts[2]}</b><span>{pageCopy.options}</span></article>
-              <article><ShieldCheck size={18} /><b>{pageCopy.facts[3]}</b><span>{hotel.pickupNote}</span></article>
-            </div>
-            <div className="tour-booking-steps" aria-label={isEn ? 'Booking steps' : 'Pasos de reserva'}>
-              {pageCopy.bookingSteps.map((step, index) => (
-                <span key={step}>
-                  <b>{index + 1}</b>
-                  {step}
-                </span>
-              ))}
-            </div>
+          </div>
+          <aside className="cb-aside" id={a.book}>
+            <BookingWizard product={featuredProduct} defaultHotel={hotel.name} defaultPickupZone={zoneForCalculator(hotel.zone)} locale={locale} />
           </aside>
         </div>
-      </section>
+      </div>
+
+      <div className="cb-wrap cb-detail-grid">
+        <div className="cb-detail-main">
+          <section className="cb-detail-block">
+            <span className="cb-kicker">{isEn ? 'Before you ask' : 'Antes de preguntar'}</span>
+            <QuickAnswers locale={locale} bayahibe={hotelDestination === 'bayahibe'} />
+          </section>
+
+          {videoUrl ? (
+            <section className="cb-detail-block" id="video">
+              <span className="cb-kicker">{pageCopy.videoKicker}</span>
+              <h2>{pageCopy.videoTitle}</h2>
+              <p>{pageCopy.videoBody}</p>
+              <video controls playsInline preload="metadata" poster={gallery[0]} style={{ width: '100%', borderRadius: 20 }}>
+                <source src={videoUrl} type="video/mp4" />
+              </video>
+            </section>
+          ) : null}
+
+          <section className="cb-detail-block" id={a.pickup}>
+            <span className="cb-kicker">{pageCopy.how}</span>
+            <h2>{pageCopy.h2}</h2>
+            <p>{pageCopy.body}</p>
+            {hotelDestination === 'punta-cana' ? <PickupPanel locale={locale} /> : null}
+          </section>
+
+          <section className="cb-detail-block" id={a.route}>
+            <span className="cb-kicker">{pageCopy.itinerary}</span>
+            <h2>{pageCopy.itineraryTitle}</h2>
+            <DayTimeline steps={itinerarySteps.map(([title, body]) => { const [name, time] = title.split(' · '); return { title: name, time: time || '', description: body }; })} />
+          </section>
+
+          <section className="cb-detail-block" id={a.included}>
+            <span className="cb-kicker">{pageCopy.includedTitle}</span>
+            <h2>{pageCopy.important}</h2>
+            <p>{pageCopy.includedIntro}</p>
+            <IncludedPanel locale={locale} included={listIncluded} notIncluded={listNotIncluded} requirements={[...listRequirements, pickupNoteText, meetingPoint ? (isEn ? 'We confirm the exact KFC meeting time for your departure before the activity.' : 'Confirmaremos la hora exacta de encuentro en el KFC para tu turno antes de la actividad.') : (isEn ? 'Exact pickup time may vary by route, traffic and confirmed departure.' : 'La hora exacta puede variar por ruta de recogida, tráfico y tanda confirmada.')]} bring={listBring} />
+          </section>
+
+          <section className="cb-detail-block" id={a.faq}>
+            <span className="cb-kicker">FAQ</span>
+            <h2>{pageCopy.faq}</h2>
+            <FaqList faqs={listFaqs} />
+          </section>
+
+          <section className="cb-detail-block cb-legacy" id="tripadvisor">
+            <TripAdvisorReviews locale={locale} destination={hotelDestination} location={`hotel_landing_${hotel.slug}`} />
+          </section>
+
+          <section className="cb-detail-block">
+            <span className="cb-kicker">{pageCopy.more}</span>
+            <h2>{pageCopy.related}</h2>
+            <div className="cb-related">
+              {scopedProducts.map((product) => (
+                <a href={`${base}/buggy/${product.id}`} key={product.id}>
+                  <Image src={product.image} alt={titleFor(product, locale)} width={500} height={331} sizes="(max-width: 760px) 50vw, 220px" />
+                  <span>{product.subtitle}</span>
+                  <b>{titleFor(product, locale)}</b>
+                  <strong>US${product.promo}</strong>
+                </a>
+              ))}
+            </div>
+          </section>
+
+          <section className="cb-detail-block" aria-labelledby="related-hotels-title">
+            <span className="cb-kicker">{pageCopy.nearbyHotelsKicker}</span>
+            <h2 id="related-hotels-title">{pageCopy.nearbyHotelsTitle}</h2>
+            <p>{pageCopy.nearbyHotelsBody}</p>
+            <HotelLinks hotels={relatedHotels} locale={locale} timeLabel={isEn ? 'approx. to the ranch' : 'aprox. al rancho'} />
+          </section>
+
+          <section className="cb-detail-block" aria-labelledby="hotel-guides-title">
+            <span className="cb-kicker">{isEn ? 'Plan before booking' : 'Planifica antes de reservar'}</span>
+            <h2 id="hotel-guides-title">{isEn ? `Buggy guides for guests at ${hotel.name}` : `Guías de buggy para huéspedes de ${hotel.name}`}</h2>
+            <GuideCards guides={hotelGuides} locale={locale} withImages={false} />
+          </section>
+        </div>
+      </div>
+
+      <CbFooter locale={locale} />
+      <StickyBook locale={locale} href={`#${a.book}`} price={pageCopy.badgePrice.replace(/^(Desde|From) /, '')} />
     </main>
   );
 }

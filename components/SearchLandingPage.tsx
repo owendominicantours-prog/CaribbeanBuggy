@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { CbFooter, CbHeader } from './cb/Chrome';
+import FunnelBand from './cb/FunnelBand';
 import { ArrowLeft, ArrowRight, CheckCircle2, Compass, MessageCircle, Search, ShieldCheck } from 'lucide-react';
-import LanguageSwitch from './LanguageSwitch';
 import BayahibeRealMedia from './BayahibeRealMedia';
 import { TripAdvisorReviewLink } from './TripAdvisorReviews';
 import { getProduct, whatsappHref } from '../lib/buggyProducts';
@@ -23,11 +24,7 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
 
   return (
     <main className="search-landing-page">
-      <header className="site-header">
-        <a className="brand" href={home} aria-label="Caribbean Buggy"><span>Caribbean</span><b>Buggy</b></a>
-        <nav aria-label={isEn ? 'Excursion guide' : 'Guía de excursión'}><a href="#answer">{isEn ? 'Answer' : 'Respuesta'}</a><a href="#details">{isEn ? 'Details' : 'Detalles'}</a><a href="#faq">FAQ</a></nav>
-        <div className="header-actions"><LanguageSwitch current={locale} esHref={searchLandingPath(landing, 'es')} enHref={searchLandingPath(landing, 'en')} /><a className="header-cta" href={bookingHref}>{isEn ? 'Book now' : 'Reservar'}</a></div>
-      </header>
+      <CbHeader locale={locale} esHref={searchLandingPath(landing, 'es')} enHref={searchLandingPath(landing, 'en')} bookingHref={bookingHref} />
 
       <section className="search-intent-hero">
         <div className="wrap search-intent-hero-grid">
@@ -52,6 +49,8 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
         <div className="wrap search-direct-answer"><span><Compass size={20} /></span><div><small>{isEn ? 'DIRECT ANSWER' : 'RESPUESTA DIRECTA'}</small><h2>{copy.answer}</h2></div></div>
       </section>
 
+      <FunnelBand locale={locale} destination={landing.destination} defaultTravelers={product.capacityNumber} source={{ pageType: 'search', slug: copy.slug }} />
+
       <section id="details" className="section search-detail-section">
         <div className="wrap search-detail-grid">
           <article className="seo-guide-article">
@@ -73,7 +72,7 @@ export default function SearchLandingPage({ landing, locale }: { landing: Search
         <div className="wrap related-question-grid">{related.map((item) => <a href={searchLandingPath(item, locale)} key={item.id}><span>{searchCategoryLabels[locale][item.category]}</span><b>{item[locale].title}</b><ArrowRight size={17} /></a>)}</div>
       </section>
 
-      <footer className="footer"><div className="wrap footer-grid"><div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Direct buggy booking in Punta Cana and Bayahibe.' : 'Reserva directa de buggy en Punta Cana y Bayahibe.'}</p></div><div><h3>{isEn ? 'Explore' : 'Explorar'}</h3><a href={searchLandingsPath(locale)}>{isEn ? 'All excursion searches' : 'Todas las búsquedas'}</a><a href={isEn ? '/en/questions' : '/preguntas'}>{isEn ? '100 questions' : '100 preguntas'}</a></div><div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={bookingHref}>{isEn ? 'Tour and price' : 'Tour y precio'}</a><a href={whatsappHref(message)}>WhatsApp</a></div></div><div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
+      <CbFooter locale={locale} />
     </main>
   );
 }

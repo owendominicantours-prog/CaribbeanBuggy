@@ -1,11 +1,14 @@
 import '../app/globals.css';
 import '../app/adventure.css';
 import '../app/marketplace.css';
+import '../app/polish06.css';
+import '../app/cb.css';
 import type { Metadata } from 'next';
 import Script from 'next/script';
 import AdventureMotion from '../components/AdventureMotion';
 import AnalyticsEvents from '../components/AnalyticsEvents';
 import VisitTracker from '../components/VisitTracker';
+import AttributionTracker from '../components/cb/AttributionTracker';
 import { siteUrl } from '../lib/buggyProducts';
 
 
@@ -82,6 +85,7 @@ export default function SiteRoot({ children, locale }: { children: React.ReactNo
         <AdventureMotion />
         <AnalyticsEvents />
         <VisitTracker />
+        <AttributionTracker />
         <Script id="booking-analytics" src="/booking-analytics.js?v=20261004" strategy="afterInteractive" />
       </body>
     </html>

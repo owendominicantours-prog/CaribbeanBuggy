@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { CbFooter, CbHeader } from './cb/Chrome';
+import FunnelBand from './cb/FunnelBand';
 import { ArrowLeft, ArrowRight, BookOpenCheck, CheckCircle2, MessageCircle, ShieldCheck } from 'lucide-react';
-import LanguageSwitch from './LanguageSwitch';
 import { getProduct, whatsappHref } from '../lib/buggyProducts';
 import { buggyQuestions, questionPath, type QuestionCategory as BuggyQuestionCategory } from '../lib/buggyQuestions';
 import { getRelatedSeoGuides, guideCategoryLabels, guidePath, guidesPath, type SeoGuide, type SeoGuideLocale } from '../lib/seoGuides';
@@ -25,11 +26,7 @@ export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide
 
   return (
     <main className="seo-guide-landing">
-      <header className="site-header">
-        <a className="brand" href={home} aria-label="Caribbean Buggy"><span>Caribbean</span><b>Buggy</b></a>
-        <nav aria-label={isEn ? 'Guide navigation' : 'Navegación de guía'}><a href="#guide">{isEn ? 'Guide' : 'Guía'}</a><a href="#faq">FAQ</a><a href="#related">{isEn ? 'Related' : 'Relacionadas'}</a></nav>
-        <div className="header-actions"><LanguageSwitch current={locale} esHref={guidePath(guide, 'es')} enHref={guidePath(guide, 'en')} /><a className="header-cta" href={bookingHref}>{isEn ? 'Book now' : 'Reservar'}</a></div>
-      </header>
+      <CbHeader locale={locale} esHref={guidePath(guide, 'es')} enHref={guidePath(guide, 'en')} bookingHref={bookingHref} />
 
       <section className="seo-guide-hero">
         <div className="wrap">
@@ -61,6 +58,8 @@ export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide
 
       {guide.destination === 'bayahibe' ? <BayahibeRealMedia locale={locale} /> : null}
 
+      <FunnelBand locale={locale} destination={guide.destination === 'bayahibe' ? 'bayahibe' : 'punta-cana'} defaultTravelers={product.capacityNumber} source={{ pageType: 'guide', slug: copy.slug }} />
+
       <section id="related" className="section related-question-section">
         <div className="wrap section-head"><span className="kicker">{isEn ? 'Topic cluster' : 'Clúster relacionado'}</span><h2>{isEn ? 'Continue with related guides.' : 'Continúa con guías relacionadas.'}</h2></div>
         <div className="wrap seo-guide-related-grid">{relatedGuides.map((item) => <a href={guidePath(item, locale)} key={item.id}><span>{item[locale].eyebrow}</span><b>{item[locale].title}</b><ArrowRight size={17} /></a>)}</div>
@@ -68,7 +67,7 @@ export default function SeoGuideLandingPage({ guide, locale }: { guide: SeoGuide
         <div className="wrap related-question-grid">{relatedQuestions.map((question) => <a href={questionPath(question, locale)} key={question.id}><span>FAQ</span><b>{question[locale].question}</b><ArrowRight size={17} /></a>)}</div>
       </section>
 
-      <footer className="footer"><div className="wrap footer-grid"><div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Direct booking guides for Punta Cana and Bayahibe.' : 'Guías para reservar directo en Punta Cana y Bayahibe.'}</p></div><div><h3>{isEn ? 'Guides' : 'Guías'}</h3><a href={guidesPath(locale)}>{isEn ? 'All guides' : 'Todas las guías'}</a><a href={isEn ? '/en/questions' : '/preguntas'}>{isEn ? '100 questions' : '100 preguntas'}</a></div><div><h3>{isEn ? 'Book' : 'Reservar'}</h3><a href={bookingHref}>{isEn ? 'Tour details' : 'Detalle del tour'}</a><a href={whatsappHref(whatsappMessage)}>WhatsApp</a></div></div><div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
+      <CbFooter locale={locale} />
     </main>
   );
 }

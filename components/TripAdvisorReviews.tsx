@@ -8,7 +8,7 @@ export function TripAdvisorReviewLink({ locale, destination, location = 'product
   return (
     <a className="tripadvisor-review-link" href={profile.urls[locale]} target="_blank" rel="noopener noreferrer" data-track-location={location} aria-label={isEn ? `Read ${destination === 'bayahibe' ? 'Bayahibe' : 'Punta Cana'} buggy reviews on Tripadvisor` : `Leer opiniones del buggy de ${destination === 'bayahibe' ? 'Bayahibe' : 'Punta Cana'} en Tripadvisor`}>
       <span className="tripadvisor-mark" aria-hidden="true">●●</span>
-      <span><small>Tripadvisor</small><b>{isEn ? 'Excellent traveler feedback' : 'Opiniones excelentes'}</b></span>
+      <span><small>Tripadvisor</small><b>{isEn ? 'Read traveler reviews' : 'Opiniones de viajeros'}</b></span>
       <ArrowUpRight size={16} />
     </a>
   );
@@ -24,9 +24,9 @@ export default function TripAdvisorReviews({ locale, destination, location = 'la
   return (
     <section className="tripadvisor-reviews" aria-label={isEn ? `${destinationName} buggy reviews on Tripadvisor` : `Opiniones del buggy de ${destinationName} en Tripadvisor`}>
       <div className="tripadvisor-reviews-copy">
-        <span><MessageSquareText size={17} /> {isEn ? 'Highlights from excellent reviews' : 'Lo mejor de las opiniones excelentes'}</span>
-        <h2>{isEn ? `Five-bubble experiences from ${destinationName} travelers.` : `Experiencias de cinco burbujas de viajeros en ${destinationName}.`}</h2>
-        <p>{isEn ? 'Editorial summaries of themes repeated in excellent Tripadvisor feedback. Read every rating on the official listing.' : 'Resúmenes editoriales de temas repetidos en opiniones excelentes. Consulta todas las valoraciones en la ficha oficial.'}</p>
+        <span><MessageSquareText size={17} /> {isEn ? 'What travelers mention' : 'Lo que mencionan los viajeros'}</span>
+        <h2>{isEn ? `What ${destinationName} buggy travelers talk about.` : `Lo que cuentan los viajeros del buggy en ${destinationName}.`}</h2>
+        <p>{isEn ? 'Editorial summary of themes that come up in Tripadvisor reviews. Read every rating, good or bad, on the official listing.' : 'Resumen editorial de temas que aparecen en las opiniones de Tripadvisor. Consulta todas las valoraciones, buenas y malas, en la ficha oficial.'}</p>
         <div className="tripadvisor-highlight-list">
           {profile.excellentHighlights[locale].map((highlight) => <span key={highlight}><CheckCircle2 size={17} /> {highlight}</span>)}
         </div>

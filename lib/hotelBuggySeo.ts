@@ -1,5 +1,5 @@
 import { faqs, products, siteUrl, type BuggyProduct } from './buggyProducts';
-import { hotelBuggyUrl, isBayahibeHotel, type HotelBuggyLanding } from './hotelBuggyLandings';
+import { hotelBuggyUrl, isBayahibeHotel, isMeetingPointHotel, type HotelBuggyLanding } from './hotelBuggyLandings';
 import { tripadvisorSchemaReference } from './tripadvisor';
 import { getPuntaCanaBuggyContent } from './puntaCanaBuggyContent';
 
@@ -57,6 +57,11 @@ function productName(product: BuggyProduct, locale: HotelBuggyLocale) {
 
 function productDescription(product: BuggyProduct, hotel: HotelBuggyLanding, locale: HotelBuggyLocale) {
   const bayahibe = isBayahibeHotel(hotel);
+  if (isMeetingPointHotel(hotel)) {
+    return locale === 'en'
+      ? `${productName(product, locale)} for guests of ${hotel.name}: meeting point at KFC Downtown near Coco Bongo, local guide, off-road route, cenote stop and Macao Beach when operated.`
+      : `${product.title} para huéspedes de ${hotel.name}: punto de encuentro en el KFC de Downtown, guía local, ruta off-road, parada en cenote y Playa Macao según operación.`;
+  }
   if (locale === 'en') {
     return bayahibe
       ? `${productName(product, locale)} with coordinated pickup from ${hotel.name}, local guide, sugar-cane roads, rural mud trails and a Chavón River stop.`
@@ -82,7 +87,9 @@ export function getHotelBuggySeoCopy(hotel: HotelBuggyLanding, locale: HotelBugg
       title: `Buggy tour from ${hotel.name} | From US$${lowPrice}`,
       description: bayahibe
         ? `Book a real Bayahibe buggy tour from ${hotel.name}. Pickup in ${hotel.zone}, sugar-cane roads, mud trails, Chavón River and secure payment.`
-        : `Book a buggy tour from ${hotel.name}. Hotel pickup in ${hotel.zone}, Macao off-road route, cenote stop, beach time and secure online payment.`,
+        : isMeetingPointHotel(hotel)
+          ? `Buggy tour for guests of ${hotel.name}: meet at KFC Downtown near Coco Bongo, Macao off-road route, cenote stop, beach time and secure online payment.`
+          : `Book a buggy tour from ${hotel.name}. Hotel pickup in ${hotel.zone}, Macao off-road route, cenote stop, beach time and secure online payment.`,
     };
   }
 
@@ -90,7 +97,9 @@ export function getHotelBuggySeoCopy(hotel: HotelBuggyLanding, locale: HotelBugg
     title: `Buggy tour desde ${hotel.name} | Desde US$${lowPrice}`,
     description: bayahibe
       ? `Reserva un tour real en buggy desde ${hotel.name}. Recogida en ${hotel.zone}, cañaverales, lodo, río Chavón y pago seguro.`
-      : `Reserva buggy tour desde ${hotel.name}. Recogida en ${hotel.zone}, ruta off-road en Macao, cenote, playa y pago seguro online.`,
+      : isMeetingPointHotel(hotel)
+        ? `Buggy tour para huéspedes de ${hotel.name}: encuentro en el KFC de Downtown, cerca de Coco Bongo, ruta off-road en Macao, cenote, playa y pago seguro online.`
+        : `Reserva buggy tour desde ${hotel.name}. Recogida en ${hotel.zone}, ruta off-road en Macao, cenote, playa y pago seguro online.`,
   };
 }
 
@@ -127,6 +136,10 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
     ? locale === 'en'
       ? `Real Bayahibe buggy tour with pickup from ${hotel.name}, sugar-cane roads, rural mud trails and a Chavón River stop.`
       : `Tour real en buggy por Bayahibe con recogida desde ${hotel.name}, cañaverales, caminos rurales de lodo y parada en el río Chavón.`
+    : isMeetingPointHotel(hotel)
+      ? locale === 'en'
+        ? `Buggy tour for guests of ${hotel.name} with a meeting point at KFC Downtown near Coco Bongo, Macao off-road route, Dominican ranch, cenote stop and Macao Beach.`
+        : `Buggy tour para huéspedes de ${hotel.name} con punto de encuentro en el KFC de Downtown, cerca de Coco Bongo, ruta off-road en Macao, rancho dominicano, cenote y Playa Macao.`
     : locale === 'en'
       ? `Buggy tour with coordinated pickup from ${hotel.name}, Macao off-road route, Dominican ranch, cenote stop and Macao Beach.`
       : `Buggy tour con recogida coordinada desde ${hotel.name}, ruta off-road en Macao, rancho dominicano, cenote y Playa Macao.`;
@@ -168,7 +181,7 @@ export function buildHotelBuggyJsonLd(hotel: HotelBuggyLanding, locale: HotelBug
         description: routeDescription,
         ...tripadvisorSchemaReference(isBayahibeHotel(hotel) ? 'bayahibe' : 'punta-cana', locale),
         provider: { '@id': `${siteUrl}/#business` },
-        serviceType: 'Buggy tour with hotel pickup',
+        serviceType: isMeetingPointHotel(hotel) ? 'Buggy tour with meeting point' : 'Buggy tour with hotel pickup',
         areaServed: { '@type': 'Place', name: hotel.zone },
         availableChannel: {
           '@type': 'ServiceChannel',

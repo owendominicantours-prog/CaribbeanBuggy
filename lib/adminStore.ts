@@ -37,6 +37,7 @@ export type AdminRecord = {
     vehicles?: number;
     fleet?: Record<string,number>;
     fleetSummary?: string;
+    attribution?: { firstPage?: string; firstReferrer?: string; firstAt?: string; sessionPage?: string; sessionReferrer?: string; bookingPage?: string };
   };
   notes?: string[];
   commandCenterSyncedAt?: string;

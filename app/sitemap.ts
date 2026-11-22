@@ -4,22 +4,42 @@ import { hotelBuggyLandings, hotelBuggyUrl } from '../lib/hotelBuggyLandings';
 import { buggyQuestions, questionPath, questionsPath } from '../lib/buggyQuestions';
 import { guideCanonical, guidesPath, seoGuides } from '../lib/seoGuides';
 import { searchLandingCanonical, searchLandings, searchLandingsPath } from '../lib/searchLandings';
+import { photosFor, puntaCanaPhotos } from '../lib/sitePhotos';
+import { isBayahibeHotel } from '../lib/hotelBuggyLandings';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date("2026-10-04T00:00:00.000Z");
+  const lastModified = new Date("2026-11-22T00:00:00.000Z");
+  // Pages rebuilt in the Caribbean Buggy redesign (22 Nov 2026): home, products, hotels, hotel directory and every guide/question/search page (new funnel block).
+  const redesigned = new Date("2026-11-22T00:00:00.000Z");
+  const img = (src: string) => `${siteUrl}${src}`;
+  const homeImages = puntaCanaPhotos.slice(0, 10).map((p) => img(p.src));
 
   const entries: MetadataRoute.Sitemap = [
     {
       url: siteUrl,
-      lastModified,
+      lastModified: redesigned,
       changeFrequency: 'weekly',
       priority: 1,
+      images: homeImages,
     },
     {
       url: `${siteUrl}/en`,
-      lastModified,
+      lastModified: redesigned,
       changeFrequency: 'weekly',
       priority: 0.98,
+      images: homeImages,
+    },
+    {
+      url: `${siteUrl}/es/buggy-tour`,
+      lastModified: redesigned,
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${siteUrl}/en/buggy-tour`,
+      lastModified: redesigned,
+      changeFrequency: 'weekly',
+      priority: 0.88,
     },
     {
       url: `${siteUrl}${questionsPath('es')}`,
@@ -59,26 +79,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...products.map((product) => ({
       url: `${siteUrl}/buggy/${product.id}`,
-      lastModified,
+      lastModified: redesigned,
+      images: [img(product.image), ...(product.destination.includes('Bayahibe') ? [] : photosFor(product.id, 4).map((p) => img(p.src)))],
       changeFrequency: 'weekly' as const,
       priority: 0.9,
     })),
     ...products.map((product) => ({
       url: `${siteUrl}/en/buggy/${product.id}`,
-      lastModified,
+      lastModified: redesigned,
+      images: [img(product.image), ...(product.destination.includes('Bayahibe') ? [] : photosFor(product.id, 4).map((p) => img(p.src)))],
       changeFrequency: 'weekly' as const,
       priority: 0.88,
     })),
     ...buggyQuestions.flatMap((question) => [
       {
         url: `${siteUrl}${questionPath(question, 'es')}`,
-        lastModified,
+        lastModified: redesigned,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
       },
       {
         url: `${siteUrl}${questionPath(question, 'en')}`,
-        lastModified,
+        lastModified: redesigned,
         changeFrequency: 'monthly' as const,
         priority: 0.68,
       },
@@ -86,13 +108,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...seoGuides.flatMap((guide) => [
       {
         url: guideCanonical(guide, 'es'),
-        lastModified,
+        lastModified: redesigned,
+        images: [img(guide.image)],
         changeFrequency: 'monthly' as const,
         priority: 0.8,
       },
       {
         url: guideCanonical(guide, 'en'),
-        lastModified,
+        lastModified: redesigned,
+        images: [img(guide.image)],
         changeFrequency: 'monthly' as const,
         priority: 0.78,
       },
@@ -100,13 +124,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...searchLandings.flatMap((landing) => [
       {
         url: searchLandingCanonical(landing, 'es'),
-        lastModified,
+        lastModified: redesigned,
         changeFrequency: 'monthly' as const,
         priority: 0.76,
       },
       {
         url: searchLandingCanonical(landing, 'en'),
-        lastModified,
+        lastModified: redesigned,
         changeFrequency: 'monthly' as const,
         priority: 0.74,
       },
@@ -114,13 +138,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...hotelBuggyLandings.flatMap((hotel) => [
       {
         url: hotelBuggyUrl(hotel.slug, 'es'),
-        lastModified,
+        lastModified: redesigned,
+        images: isBayahibeHotel(hotel) ? undefined : photosFor(hotel.slug, 4).map((p) => img(p.src)),
         changeFrequency: 'weekly' as const,
         priority: 0.85,
       },
       {
         url: hotelBuggyUrl(hotel.slug, 'en'),
-        lastModified,
+        lastModified: redesigned,
+        images: isBayahibeHotel(hotel) ? undefined : photosFor(hotel.slug, 4).map((p) => img(p.src)),
         changeFrequency: 'weekly' as const,
         priority: 0.84,
       },

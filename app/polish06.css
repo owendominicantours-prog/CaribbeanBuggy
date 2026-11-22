@@ -1,0 +1,7 @@
+/* Caribbean Buggy · ajustes de legibilidad 22/11/2026. Se carga el último (SiteRoot). */
+html body .booking-flow-grid article b{background:#007f5f;color:#fff}
+html body .route-grid article b{color:#fff}
+html body .info-card h2{font-size:clamp(24px,2.4vw,32px);letter-spacing:-.8px;line-height:1.12}
+@media (max-width:760px){html body .hero-bg{background:linear-gradient(180deg,#102016d9 0%,#102016c7 55%,#102016f2 100%)}html body .hero-copy>p,html body .hero-proof-row span{color:#e8eee2}}
+html body .tour-service-lists .tour-checklist{grid-template-columns:1fr}
+html body .tour-service-lists .tour-checklist span{font-size:14px;font-weight:700;line-height:1.45}

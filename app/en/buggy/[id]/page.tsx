@@ -1,32 +1,15 @@
-import { PickupInformation } from "../../../../components/PickupInformation";
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
-import { ArrowLeft, ArrowRight, BadgeDollarSign, CalendarCheck2, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
-import BookingCalculator from '../../../../components/BookingCalculator';
-import AdventureHeader from '../../../../components/AdventureHeader';
-import AdventureGallery from '../../../../components/AdventureGallery';
-import { getProduct, products, proactivitisPhone, siteUrl } from '../../../../lib/buggyProducts';
-import { guidePath, seoGuides } from '../../../../lib/seoGuides';
-import TripAdvisorReviews from '../../../../components/TripAdvisorReviews';
+import ProductLanding from '../../../../components/cb/ProductLanding';
+import { getProduct, products, siteUrl } from '../../../../lib/buggyProducts';
+import { seoGuides } from '../../../../lib/seoGuides';
 import { tripadvisorSchemaReference } from '../../../../lib/tripadvisor';
-import BayahibeRealMedia from '../../../../components/BayahibeRealMedia';
 import { getPuntaCanaBuggyContent } from '../../../../lib/puntaCanaBuggyContent';
 
 type DetailPageProps = {
   params: Promise<{ id: string }>;
 };
 
-const included = [
-  'Round-trip hotel pickup',
-  'Buggy according to selected option',
-  'Helmet and safety briefing',
-  'Multilingual local guide',
-  'Coffee, cacao and mamajuana tasting',
-  'Cenote stop',
-  'Macao Beach visit',
-  'Route support during the tour',
-];
 
 const bayahibeIncluded = [
   'Round-trip transport from the hotel or confirmed meeting point',
@@ -51,12 +34,6 @@ const bring = [
   'Optional cash for photos, drinks or souvenirs.',
 ];
 
-const faqs = [
-  ['Is the price per person or per vehicle?', 'The listed price is per vehicle depending on the option: single, double or family buggy.'],
-  ['Is hotel pickup included?', 'Yes, pickup and return are included from main Bavaro and Punta Cana hotel zones.'],
-  ['Do we visit Macao Beach?', 'Yes, the route normally includes Macao Beach and a cenote stop, subject to daily operations.'],
-  ['Will I get muddy?', 'Yes. This is an off-road buggy experience with mud, rural roads and water stops. Old clothes are recommended.'],
-];
 
 const bayahibeFaqs = [
   ['Is the price per person or per vehicle?', 'The published price is per vehicle according to the selected option.'],
@@ -79,7 +56,7 @@ function englishDescription(destination: string) {
   if (destination.includes('Bayahibe')) {
     return 'A Bayahibe and La Romana off-road buggy route with coordinated pickup, rural trails, local assistance and WhatsApp confirmation before departure.';
   }
-  return 'A Punta Cana buggy adventure with hotel pickup, muddy Macao trails, Dominican ranch, cenote stop and Macao Beach in one organized tour.';
+  return 'A Punta Cana buggy adventure with pickup in covered areas, muddy Macao trails, Dominican ranch, cenote stop and Macao Beach in one organized tour.';
 }
 
 export function generateStaticParams() {
@@ -128,7 +105,6 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
   if (!product) notFound();
 
   const title = englishTitle(product.title);
-  const related = products.filter((item) => item.id !== product.id);
   const isBayahibe = product.destination.toLowerCase().includes('bayahibe');
   const completeContent = getPuntaCanaBuggyContent(product, 'en');
   const localizedIncluded = isBayahibe ? bayahibeIncluded : completeContent.included;
@@ -185,185 +161,29 @@ export default async function EnglishBuggyDetailPage({ params }: DetailPageProps
   };
 
   return (
-    <main className="detail-page">
+    <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
-
-      <AdventureHeader locale="en" esHref={`/buggy/${product.id}`} enHref={`/en/buggy/${product.id}`} bookingHref="#book" />
-
-      <section className="detail-hero">
-        <div className="wrap detail-hero-grid">
-          <div>
-            <a className="back-link" href="/en"><ArrowLeft size={17} /> Back to all buggies</a>
-            <span className="eyebrow"><MapPin size={16} /> {product.destination}</span>
-            <h1>{title} in {product.destination}</h1>
-            <p>{isBayahibe ? englishDescription(product.destination) : completeContent.summary}</p>
-            <div className="detail-badges">
-              <span><Users size={17} /> {product.capacityLabel}</span>
-              <span><Clock3 size={17} /> {product.durationLabel}</span>
-              <span><BadgeDollarSign size={17} /> From US${product.promo}</span>
-            </div>
-          </div>
-          <AdventureGallery cover={product.image} title={product.title} bayahibe={isBayahibe} locale="en" />
-        </div>
-      </section>
-
-      {!isBayahibe && <PickupInformation locale="en" />}
-      <div className="wrap viator-detail-layout"><div className="viator-detail-content">
-      <section id="overview" className="section detail-booking-section">
-        <div className="wrap detail-booking-grid">
-          
-          <div className="detail-copy">
-            <span className="kicker">Complete booking details</span>
-            <h2>Choose your day. Pay. Your adventure is confirmed.</h2>
-            <p>
-              The booking tool calculates the vehicles needed for your group and pickup zone, then prepares a
-              booking you can pay directly by card. Your confirmed e-ticket is sent after payment verification.
-            </p>
-            <div className="logic-grid">
-              <article><b>1</b><span>Select date, hotel, pickup zone and travelers.</span></article>
-              <article><b>2</b><span>Review your total and pay securely through Stripe.</span></article>
-              <article><b>3</b><span>Receive your e-ticket. We contact you one day before your tour.</span></article>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="included" className="section">
-        <div className="wrap detail-info-grid">
-          <article className="info-card">
-            <span className="kicker">Included</span>
-            <h2>What you get with {title}.</h2>
-            <div className="check-grid">
-              {localizedIncluded.map((item) => <span key={item}><CheckCircle2 size={17} /> {item}</span>)}
-            </div>
-          </article>
-          <article className="info-card dark">
-            <span className="kicker">Safety</span>
-            <h2>Before driving.</h2>
-            <ul>{localizedRequirements.map((item) => <li key={item}>{item}</li>)}</ul>
-          </article>
-          <article className="info-card bring">
-            <span className="kicker">What to bring</span>
-            <h2>Get ready for mud.</h2>
-            <ul>{localizedBring.map((item) => <li key={item}>{item}</li>)}</ul>
-          </article>
-          {!isBayahibe ? (
-            <article className="info-card">
-              <span className="kicker">Not included</span>
-              <h2>Extras and optional purchases.</h2>
-              <ul>{completeContent.notIncluded.map((item) => <li key={item}>{item}</li>)}</ul>
-            </article>
-          ) : null}
-        </div>
-      </section>
-
-      {!isBayahibe ? (
-        <section className="section">
-          <div className="wrap">
-            <div className="section-head">
-              <span className="kicker">Complete itinerary</span>
-              <h2>From pickup to return.</h2>
-              <p><strong>{completeContent.activityDuration}.</strong> {completeContent.totalDuration}. Times are approximate.</p>
-            </div>
-            <div className="tour-steps">
-              {completeContent.itinerary.map((step, index) => (
-                <article key={step.title}>
-                  <b>{index + 1}</b>
-                  <div>
-                    <span className="kicker">{step.time}</span>
-                    <h3>{step.title}</h3>
-                    <p>{step.description}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
-      <section className="detail-route">
-        <div className="wrap detail-route-grid">
-          <Image src={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'} alt={isBayahibe ? 'Real buggy route through Bayahibe sugar cane fields' : 'Buggy route in Macao'} width={1000} height={663} sizes="(max-width: 980px) 100vw, 46vw" />
-          <div>
-            <span className="kicker">Tour route</span>
-            <h2>{isBayahibe ? 'Bayahibe, La Romana and rural roads.' : completeContent.routeHeading}</h2>
-            <p>
-              {isBayahibe
-                ? 'The experience combines off-road driving, local culture and natural stops. The exact order may change depending on operation, weather and road conditions.'
-                : completeContent.pickup}
-            </p>
-            <div className="route-note">
-              <ShieldCheck />
-              <span>{isBayahibe ? 'The team confirms the exact pickup time by WhatsApp before the service.' : completeContent.routeNote}</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {isBayahibe ? <BayahibeRealMedia locale="en" /> : null}
-
-      <section id="faq" className="section faq-section">
-        <div className="wrap section-head">
-          <span className="kicker">FAQ</span>
-          <h2>Common questions about {title}.</h2>
-        </div>
-        <div className="wrap faq-grid">
-          {localizedFaqs.map(([question, answer]) => (
-            <article key={question}>
-              <h3>{question}</h3>
-              <p>{answer}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="tripadvisor" className="section tripadvisor-section"><div className="wrap"><TripAdvisorReviews locale="en" destination={isBayahibe ? 'bayahibe' : 'punta-cana'} location={`product_landing_${product.id}`} /></div></section>
-
-      <section className="section related-section">
-        <div className="wrap section-head"><span className="kicker">Booking guides</span><h2>Understand the route before paying.</h2></div>
-        <div className="wrap seo-guide-related-grid">{productGuides.map((guide) => <a href={guidePath(guide, 'en')} key={guide.id}><span>{guide.en.eyebrow}</span><b>{guide.en.title}</b><ArrowRight size={17} /></a>)}</div>
-      </section>
-
-      <section className="section related-section">
-        <div className="wrap section-head">
-          <span className="kicker">More options</span>
-          <h2>You can also book.</h2>
-        </div>
-        <div className="wrap related-grid">
-          {related.map((item) => (
-            <a href={`/en/buggy/${item.id}`} key={item.id}>
-              <Image src={item.image} alt={englishTitle(item.title)} width={600} height={398} sizes="(max-width: 680px) 100vw, 33vw" />
-              <span>{item.subtitle}</span>
-              <b>{englishTitle(item.title)}</b>
-              <strong>US${item.promo}</strong>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      </div><aside id="book" className="viator-booking-sidebar"><BookingCalculator product={product} locale="en" /></aside></div>
-      <footer className="footer">
-        <div className="wrap footer-grid">
-          <div>
-            <a className="brand footer-brand" href="/en"><span>Caribbean</span><b>Buggy</b></a>
-            <p>Local booking support from Proactivitis: {proactivitisPhone}.</p>
-          </div>
-          <div>
-            <h3>Products</h3>
-            {products.map((item) => <a href={`/en/buggy/${item.id}`} key={item.id}>{englishTitle(item.title)}</a>)}
-          </div>
-          <div>
-            <h3>Booking</h3>
-            <a href="#book">Calculator</a>
-            <a href="/en#prices">See prices</a>
-            <a href="/en/guides">Buggy guides</a>
-          </div>
-        </div>
-      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
-
-      <a className="detail-floating-cta" href="#book">
-        <CalendarCheck2 size={19} /> Book from US${product.promo}
-      </a>
-    </main>
+      <ProductLanding
+        product={product}
+        locale="en"
+        h1={`${title} in ${product.destination}`}
+        displayTitle={title}
+        summary={isBayahibe ? englishDescription(product.destination) : completeContent.summary}
+        included={localizedIncluded}
+        notIncluded={isBayahibe ? undefined : completeContent.notIncluded}
+        requirements={localizedRequirements}
+        bring={localizedBring}
+        faqs={localizedFaqs}
+        itinerary={isBayahibe ? undefined : completeContent.itinerary}
+        activityDuration={isBayahibe ? undefined : completeContent.activityDuration}
+        totalDuration={isBayahibe ? undefined : completeContent.totalDuration}
+        routeHeading={isBayahibe ? 'Bayahibe, La Romana and rural roads.' : completeContent.routeHeading}
+        routeBody={isBayahibe ? 'The experience combines off-road driving, local culture and natural stops. The exact order may change depending on operation, weather and road conditions.' : englishDescription(product.destination)}
+        routeNote={isBayahibe ? 'The team confirms the exact pickup time by WhatsApp before the service.' : completeContent.routeNote}
+        routeImage={isBayahibe ? '/buggy/bayahibe/convoy-rural-bayahibe.jpg' : '/buggy/ruta-1.jpeg'}
+        routeImageAlt={isBayahibe ? 'Real buggy route through Bayahibe sugar cane fields' : 'Buggy route in Macao'}
+        guides={productGuides}
+      />
+    </>
   );
 }

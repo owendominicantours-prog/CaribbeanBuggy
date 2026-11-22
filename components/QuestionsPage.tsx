@@ -1,5 +1,5 @@
 import { ArrowLeft, BookOpenCheck, CheckCircle2, MessageCircle } from 'lucide-react';
-import LanguageSwitch from './LanguageSwitch';
+import { CbFooter, CbHeader } from './cb/Chrome';
 import QuestionsDirectory from './QuestionsDirectory';
 import { buggyQuestions, questionsPath, type QuestionLocale } from '../lib/buggyQuestions';
 import { whatsappHref } from '../lib/buggyProducts';
@@ -14,20 +14,7 @@ export default function QuestionsPage({ locale }: { locale: QuestionLocale }) {
 
   return (
     <main className="questions-page">
-      <header className="site-header">
-        <a className="brand" href={home} aria-label="Caribbean Buggy"><span>Caribbean</span><b>Buggy</b></a>
-        <nav aria-label={isEn ? 'Questions navigation' : 'Navegación de preguntas'}>
-          <a href="#prices">{isEn ? 'Prices' : 'Precios'}</a>
-          <a href="#pickup">{isEn ? 'Pickup' : 'Recogida'}</a>
-          <a href="#safety">{isEn ? 'Safety' : 'Seguridad'}</a>
-          <a href="#route">{isEn ? 'Route' : 'Ruta'}</a>
-          <a href={guidesPath(locale)}>{isEn ? 'Guides' : 'Guías'}</a>
-        </nav>
-        <div className="header-actions">
-          <LanguageSwitch current={locale} esHref={questionsPath('es')} enHref={questionsPath('en')} />
-          <a className="header-cta" href={`${home}#${isEn ? 'prices' : 'precios'}`}>{isEn ? 'Book now' : 'Reservar'}</a>
-        </div>
-      </header>
+      <CbHeader locale={locale} esHref={questionsPath('es')} enHref={questionsPath('en')} bookingHref={`${home}#${isEn ? 'prices' : 'precios'}`} />
 
       <section className="questions-hero">
         <div className="wrap questions-hero-grid">
@@ -64,13 +51,7 @@ export default function QuestionsPage({ locale }: { locale: QuestionLocale }) {
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="wrap footer-grid">
-          <div><a className="brand footer-brand" href={home}><span>Caribbean</span><b>Buggy</b></a><p>{isEn ? 'Direct booking answers for Punta Cana and Bayahibe buggy tours.' : 'Respuestas para reservar buggy directamente en Punta Cana y Bayahibe.'}</p></div>
-          <div><h3>{isEn ? 'Questions' : 'Preguntas'}</h3><a href="#prices">{isEn ? 'Prices' : 'Precios'}</a><a href="#pickup">{isEn ? 'Pickup' : 'Recogida'}</a><a href="#safety">{isEn ? 'Safety' : 'Seguridad'}</a><a href={guidesPath(locale)}>{isEn ? 'Complete guides' : 'Guías completas'}</a></div>
-          <div><h3>{isEn ? 'Booking' : 'Reserva'}</h3><a href={whatsappHref(whatsappMessage)}>{isEn ? 'WhatsApp support' : 'Ayuda por WhatsApp'}</a><a href={`${home}#${isEn ? 'prices' : 'precios'}`}>{isEn ? 'See buggy options' : 'Ver opciones'}</a></div>
-        </div>
-      <div className="mt-6 border-t border-current/20 pt-4 text-sm"><a href="https://proactivitis.com/arrival-excursions" className="font-semibold underline underline-offset-4">Booked your arrival? Explore your 10% excursion benefit · ¿Reservaste tu llegada? Consulta tu 10 % en excursiones elegibles</a><p className="mt-2 text-xs">Paid PUJ arrivals · Same booking email · Best single offer · Llegadas pagadas desde PUJ · Mismo correo · No acumulable</p></div></footer>
+      <CbFooter locale={locale} />
     </main>
   );
 }
