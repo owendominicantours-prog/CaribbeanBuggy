@@ -104,7 +104,7 @@ export default function FunnelOffer({
     return pick(2);
   })() || choices[0].id;
   const params = new URLSearchParams({ personas: String(travelers) });
-  if(picked){params.set('pickupGoogleRef',picked.id);params.set('pickupHotel',picked.name);}
+  if(picked){params.set('pickupGoogleRef',picked.id);params.set('pickupHotel',picked.name);if(area)params.set('pickupAreaId',area.id);}
   const href = `${locale === 'en' ? '/en' : ''}/buggy/${target}?${params.toString()}#${locale === 'en' ? 'book' : 'reservar'}`;
   const status = picked&&!picked.areaId?(locale==='en'?'We confirm pickup or the meeting point for your exact location.':'Confirmamos la recogida o el punto de encuentro para tu ubicación exacta.'):picked && bayahibe
     ? t.bayahibe

@@ -211,7 +211,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
       if (best) setFleet(best.fleet);
     }
     const ref=params.get('pickupGoogleRef'),googleHotel=params.get('pickupHotel');
-    if(ref&&googleHotel&&ref.length<=200&&googleHotel.length<=180){setHotel(googleHotel);setInitialGoogleHotel(googleHotel);setInitialGoogleRef(ref);}
+    if(ref&&googleHotel&&ref.length<=200&&googleHotel.length<=180){setHotel(googleHotel);setInitialGoogleHotel(googleHotel);setInitialGoogleRef(ref);setArea(isBayahibe?bayahibeArea:pickupAreas.find(a=>a.id===params.get('pickupAreaId'))||areaFromText(googleHotel));}
     const slug = params.get('hotel');
     const landing = slug ? getHotelBuggyLanding(slug) : undefined;
     if (landing && !isBayahibe) { setHotel(landing.name); setInitialGoogleHotel(landing.name); setArea(areaForHotel(landing)); }
