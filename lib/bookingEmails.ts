@@ -6,6 +6,7 @@ import { renderBookingEmail } from './bookingEmailTemplate';
 export type BookingEmailPayload = {
   productId: string; date: string; passengers: number; pickupZone: string;
   hotel: string; name: string; phone: string; email: string; language: string;
+  googlePickupRef?:string;googlePickupMapsUrl?:string;
   locale?: string; fleet?: Record<string, number>; pickupWindow: string;
   paymentPreference: string; photos: boolean; privatePickup: boolean;
 };

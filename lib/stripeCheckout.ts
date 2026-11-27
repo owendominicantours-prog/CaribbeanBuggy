@@ -3,7 +3,7 @@ import { Pool } from "pg";
 export type Order = { id:string; amount:number; email:string; title:string; details?:Record<string,string|number|undefined>; payload:unknown };
 export function paymentMetadata(site:string,order:Order){
  const metadata:Record<string,string>={site,bookingId:order.id,booking_reference:order.id,product_name:order.title.slice(0,450),amount_due:order.amount.toFixed(2),currency:"USD",payment_mode:"full"};
- const allowed=["product_id","activity_date","pickup_time","hotel","pickup_zone","travelers","vehicles","vehicle_summary","customer_name","customer_email","customer_phone","language","source_url"];
+ const allowed=["product_id","activity_date","pickup_time","hotel","pickup_zone","google_pickup_ref","google_pickup_maps","travelers","vehicles","vehicle_summary","customer_name","customer_email","customer_phone","language","source_url"];
  for(const key of allowed){const value=order.details?.[key];if(value===undefined||value===null)continue;let text=String(value).trim();if(key==="source_url"){try{const u=new URL(text);if(!["https:","http:"].includes(u.protocol))continue;text=u.origin+u.pathname;}catch{continue;}}if(text)metadata[key]=text.slice(0,450);}
  return metadata;
 }

@@ -27,6 +27,8 @@ export type AdminRecord = {
     date?: string;
     pickupWindow?: string;
     hotel?: string;
+    googlePickupRef?:string;
+    googlePickupMapsUrl?:string;
     pickupZone?: string;
     passengers?: number;
     language?: string;

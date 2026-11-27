@@ -1,0 +1,850 @@
+{
+  "source": "Previously verified public Google identities; no coordinates or keys",
+  "bindings": [
+    {
+      "slug": "aeropuerto-internacional-las-americas",
+      "name": "Aeropuerto Internacional Las Américas",
+      "placeId": "ChIJAc--WP5_pY4RlxhC1JejMCM"
+    },
+    {
+      "slug": "aeropuerto-las-américas",
+      "name": "Aeropuerto Internacional Las Américas",
+      "placeId": "ChIJAc--WP5_pY4RlxhC1JejMCM"
+    },
+    {
+      "slug": "all-seasons-hotel",
+      "name": "All Seasons Hotel",
+      "placeId": "ChIJ2_qL7ImrqI4Rc5QkcX_LwAc"
+    },
+    {
+      "slug": "azs-airport",
+      "name": "Samana El Catey International Airport (AZS)",
+      "placeId": "ChIJf-JAl5pWro4REM_v-6Sz-i8"
+    },
+    {
+      "slug": "bahia-principe-ambar",
+      "name": "Bahia Principe Luxury Ambar",
+      "placeId": "ChIJaykD-cbrqI4RiOMEvry6R2g"
+    },
+    {
+      "slug": "bahia-principe-fantasia-punta-cana",
+      "name": "Bahia Principe Fantasia Punta Cana",
+      "placeId": "ChIJpaPPscDrqI4R-iMD6BrSX-I"
+    },
+    {
+      "slug": "bahia-principe-grand-bavaro",
+      "name": "Bahia Principe Grand Bavaro",
+      "placeId": "ChIJI3OEr87vr44RfxPsUrmy4bk"
+    },
+    {
+      "slug": "bahia-principe-grand-la-romana",
+      "name": "Bahia Principe Grand La Romana",
+      "placeId": "ChIJ7yYHKy1Zr44RPQD8fHhR1zk"
+    },
+    {
+      "slug": "bahia-principe-grand-punta-cana",
+      "name": "Bahia Principe Grand Punta Cana",
+      "placeId": "ChIJQ_gc07nrqI4RaEKS9WYHIc8"
+    },
+    {
+      "slug": "barcelo-bavaro-beach",
+      "name": "Barceló Bávaro Beach",
+      "placeId": "ChIJh960QcHsqI4Rq1BQDC0BqcE"
+    },
+    {
+      "slug": "barcelo-bavaro-palace",
+      "name": "Barceló Bávaro Palace",
+      "placeId": "ChIJo4O50MTsqI4RacWokkFE5sY"
+    },
+    {
+      "slug": "barcelo-santo-domingo",
+      "name": "Barceló Santo Domingo",
+      "placeId": "ChIJFzKpxc2Jr44REkJcErbvSH0"
+    },
+    {
+      "slug": "billini-hotel",
+      "name": "Billini Hotel",
+      "placeId": "ChIJn-u_2TyIr44Rlci_WwhOAn4"
+    },
+    {
+      "slug": "breathless-punta-cana",
+      "name": "Breathless Punta Cana Resort & Spa",
+      "placeId": "ChIJvWSV_wbDqI4R7Ql05WZ7ECw"
+    },
+    {
+      "slug": "caribe-deluxe-princess",
+      "name": "Caribe Deluxe Princess",
+      "placeId": "ChIJucWNnq2SqI4REuPMQVLDE4E"
+    },
+    {
+      "slug": "casa-de-campo-resort-and-villas",
+      "name": "Casa de Campo Resort & Villas",
+      "placeId": "ChIJS1K23U-qqI4Rf06RBib3KH8"
+    },
+    {
+      "slug": "catalonia-bavaro",
+      "name": "Catalonia Bávaro Beach Golf & Casino Resort",
+      "placeId": "ChIJaYGqd5brqI4Rwek-f8QUMVo"
+    },
+    {
+      "slug": "catalonia-bayahibe",
+      "name": "Catalonia Bayahibe",
+      "placeId": "ChIJlerlAwaqqI4RwSe99APa_bk"
+    },
+    {
+      "slug": "catalonia-royal-bavaro",
+      "name": "Catalonia Royal Bávaro - Adults Only",
+      "placeId": "ChIJtb_dA1aTqI4RzkM9cdPP29o"
+    },
+    {
+      "slug": "catalonia-royal-la-romana",
+      "name": "Catalonia Royal La Romana",
+      "placeId": "ChIJExcKpkRUr44RwHjhLLg6E7c"
+    },
+    {
+      "slug": "catalonia-santo-domingo",
+      "name": "Catalonia Santo Domingo",
+      "placeId": "ChIJIfvt7X5ipY4RgGRt6FLUqIQ"
+    },
+    {
+      "slug": "courtyard-marriott-santo-domingo",
+      "name": "Courtyard by Marriott Santo Domingo",
+      "placeId": "ChIJ-5zX7NOJr44RFtjpy3wpoXM"
+    },
+    {
+      "slug": "crowne-plaza-santo-domingo",
+      "name": "Crowne Plaza Santo Domingo",
+      "placeId": "ChIJ379JvSiIr44RQWxsniRCyJA"
+    },
+    {
+      "slug": "dreams-cap-cana",
+      "name": "Dreams Cap Cana Resort & Spa",
+      "placeId": "ChIJV3aofQCRqI4R-btPLkXuovY"
+    },
+    {
+      "slug": "dreams-flora",
+      "name": "Dreams Flora Resort & Spa",
+      "placeId": "ChIJXfGQXtftqI4RuMMAQEJhjkA"
+    },
+    {
+      "slug": "dreams-la-romana-resort-and-spa",
+      "name": "Dreams La Romana Resort & Spa",
+      "placeId": "ChIJufXvtj6rqI4Rlbh-_cTZdjI"
+    },
+    {
+      "slug": "dreams-macao-beach",
+      "name": "Dreams Macao Beach Punta Cana",
+      "placeId": "ChIJK60Xww3CqI4R_sIFD8I7ido"
+    },
+    {
+      "slug": "dreams-onyx",
+      "name": "Dreams Onyx Resort & Spa",
+      "placeId": "ChIJ3de0VAHDqI4RSrf0EsGlmjo"
+    },
+    {
+      "slug": "dreams-royal-beach",
+      "name": "Dreams Royal Beach Punta Cana",
+      "placeId": "ChIJ7WRXGpHsqI4RFmu7HpEo_sY"
+    },
+    {
+      "slug": "eden-roc-cap-cana",
+      "name": "Eden Roc Cap Cana",
+      "placeId": "ChIJNRWCqx6aqI4R_IK4Mv2xpNM"
+    },
+    {
+      "slug": "el-beso-ocean-el-faro",
+      "name": "El Beso en Ocean El Faro",
+      "placeId": "ChIJXS0dcQDDqI4RA96_rh2nSsQ"
+    },
+    {
+      "slug": "el-embajador-royal-hideaway-hotel",
+      "name": "El Embajador Royal Hideaway Hotel",
+      "placeId": "ChIJqXGv_gxipY4RvwHAkLd28Ss"
+    },
+    {
+      "slug": "excellence-el-carmen",
+      "name": "Excellence El Carmen",
+      "placeId": "ChIJEwAAAAfDqI4RAsjXIwBmXRU"
+    },
+    {
+      "slug": "excellence-punta-cana",
+      "name": "Excellence Punta Cana",
+      "placeId": "ChIJeyDn0GvDqI4RZMaM4QRjHs0"
+    },
+    {
+      "slug": "finest-punta-cana",
+      "name": "Finest Punta Cana by The Excellence Collection",
+      "placeId": "ChIJYZCX-L-TqI4RQiLD_JhANbg"
+    },
+    {
+      "slug": "four-points-puntacana-village",
+      "name": "Four Points by Sheraton Puntacana Village",
+      "placeId": "ChIJLQQSHimSqI4R8ZG7hXggRck"
+    },
+    {
+      "slug": "grand-bavaro-princess",
+      "name": "Grand Bavaro Princess",
+      "placeId": "ChIJdTS3EoLrqI4RO70kVSqtw3g"
+    },
+    {
+      "slug": "grand-palladium-punta-cana",
+      "name": "Grand Palladium Punta Cana Resort & Spa",
+      "placeId": "ChIJZ-PhCYHsqI4RKCXBM3WUMbk"
+    },
+    {
+      "slug": "grand-sirenis-punta-cana",
+      "name": "Grand Sirenis Punta Cana Resort",
+      "placeId": "ChIJPVCi5Q3DqI4RIpT_VmfFLAw"
+    },
+    {
+      "slug": "green-oasis-hotel",
+      "name": "Green Oasis Hotel",
+      "placeId": "ChIJXajzzW5Ur44REAnxxKksc5o"
+    },
+    {
+      "slug": "hard-rock-hotel-punta-cana",
+      "name": "Hard Rock Hotel & Casino Punta Cana",
+      "placeId": "ChIJEzYcgy3qqI4RpcXk0JY4Gqg"
+    },
+    {
+      "slug": "hilton-la-romana-family-resort",
+      "name": "Hilton La Romana Family Resort",
+      "placeId": "ChIJw03sxk-qqI4RTjS8ZpXE0fY"
+    },
+    {
+      "slug": "hm-alma-de-bayahibe",
+      "name": "HM Alma de Bayahibe",
+      "placeId": "ChIJY6neBRKqqI4Rf0CynZncPYI"
+    },
+    {
+      "slug": "hodelpa-caribe-colonial",
+      "name": "Hodelpa Caribe Colonial",
+      "placeId": "ChIJv3aHHRaIr44RWnhFWj3Gwlk"
+    },
+    {
+      "slug": "hodelpa-garden-suites",
+      "name": "Hodelpa Garden Suites",
+      "placeId": "ChIJRwUXZV1ir44RUIqChqAKnMM"
+    },
+    {
+      "slug": "hodelpa-nicolas-de-ovando",
+      "name": "Hodelpa Nicolás de Ovando",
+      "placeId": "ChIJ9aILCRaIr44RyEfVC0VJgrE"
+    },
+    {
+      "slug": "holiday-inn-santo-domingo",
+      "name": "Holiday Inn Santo Domingo",
+      "placeId": "ChIJSXsut-iJr44RSKOjeZti_1Q"
+    },
+    {
+      "slug": "hotel-alkquimia",
+      "name": "Hotel Alkquimia",
+      "placeId": "ChIJse-gc5GrqI4Rbhw6jeiu_XA"
+    },
+    {
+      "slug": "hotel-el-navegante",
+      "name": "Hotel El Navegante",
+      "placeId": "ChIJjTZeV0GqqI4Rr_4qyUcESS0"
+    },
+    {
+      "slug": "hotel-frano",
+      "name": "Hotel Frano",
+      "placeId": "ChIJNR3kc25Ur44Ry4Szwo52j0U"
+    },
+    {
+      "slug": "hotel-karma",
+      "name": "Hotel Karma",
+      "placeId": "ChIJs3HMLwBVr44RKl2NRP_LtUY"
+    },
+    {
+      "slug": "hotel-la-casona-mc",
+      "name": "Hotel La Casona MC",
+      "placeId": "ChIJO-tFULBVr44RQo--5xcMEQY"
+    },
+    {
+      "slug": "hotel-magallanes-bayahibe",
+      "name": "Hotel Magallanes Bayahibe",
+      "placeId": "ChIJyWS6CDCrqI4R41gpOEn0E0A"
+    },
+    {
+      "slug": "hotel-napolitano",
+      "name": "Hotel Napolitano",
+      "placeId": "ChIJ_2ynRiSIr44R5s3heLJ6da0"
+    },
+    {
+      "slug": "hotel-olimpo",
+      "name": "Hotel Olimpo",
+      "placeId": "ChIJK8xQ8mhUr44RHeeYvDRd9ik"
+    },
+    {
+      "slug": "hotel-river-view",
+      "name": "Hotel River View",
+      "placeId": "ChIJgahmd11Ur44Rv6J8BPMg5l4"
+    },
+    {
+      "slug": "hotel-romana-center",
+      "name": "Hotel Romana Center",
+      "placeId": "ChIJHff-R25Ur44RVk32sIQKfrc"
+    },
+    {
+      "slug": "hotel-silvestre",
+      "name": "Hotel Silvestre",
+      "placeId": "ChIJHfl-AB1Ur44Rus3h6qZVqh0"
+    },
+    {
+      "slug": "hotel-villa-iguana",
+      "name": "Hotel Villa Iguana",
+      "placeId": "ChIJR68WOUGqqI4RLe5BFJSe-OA"
+    },
+    {
+      "slug": "hyatt-zilara-cap-cana",
+      "name": "Hyatt Zilara Cap Cana",
+      "placeId": "ChIJDdKRsK6RqI4R2nW8KTMT5L0"
+    },
+    {
+      "slug": "hyatt-ziva-cap-cana",
+      "name": "Hyatt Ziva Cap Cana",
+      "placeId": "ChIJxYSCdGORqI4R-6UqCvJTKi8"
+    },
+    {
+      "slug": "iberostar-bavaro-suites",
+      "name": "Iberostar Selection Bavaro Suites",
+      "placeId": "ChIJsf28fXjrqI4R508vUWqjer8"
+    },
+    {
+      "slug": "iberostar-grand-bavaro",
+      "name": "Iberostar Grand Bavaro",
+      "placeId": "ChIJFeINhr3rqI4RCG_mnXABaok"
+    },
+    {
+      "slug": "iberostar-selection-hacienda-dominicus",
+      "name": "Iberostar Selection Hacienda Dominicus",
+      "placeId": "ChIJ4YKwXQWqqI4ReouGRDj4dME"
+    },
+    {
+      "slug": "impressive-punta-cana",
+      "name": "Impressive Punta Cana",
+      "placeId": "ChIJgeSdQontqI4RRz4CNXT1-6s"
+    },
+    {
+      "slug": "intercontinental-real-santo-domingo",
+      "name": "InterContinental Real Santo Domingo",
+      "placeId": "ChIJE-nyvuOJr44RkYRed-uU7Zs"
+    },
+    {
+      "slug": "jw-marriott-santo-domingo",
+      "name": "JW Marriott Hotel Santo Domingo",
+      "placeId": "ChIJRdBV4eSJr44RIkjWFKtj_9I"
+    },
+    {
+      "slug": "live-aqua-punta-cana",
+      "name": "Live Aqua Beach Resort Punta Cana",
+      "placeId": "ChIJGyPZZIDDqI4RSbaK-N3mtfE"
+    },
+    {
+      "slug": "lopesan-costa-bavaro",
+      "name": "Lopesan Costa Bávaro Resort Spa & Casino",
+      "placeId": "ChIJXWV6ScDsqI4RGyVNRBFsp_Y"
+    },
+    {
+      "slug": "lrm-airport",
+      "name": "La Romana International Airport (LRM)",
+      "placeId": "ChIJyWbsi0mrqI4RsVoD5SfnjxA"
+    },
+    {
+      "slug": "luca-hotel",
+      "name": "Luca Hotel",
+      "placeId": "ChIJm-v-SDyIr44RieV7OgWrX2k"
+    },
+    {
+      "slug": "majestic-colonial",
+      "name": "Majestic Colonial Punta Cana",
+      "placeId": "ChIJf-Q83pbrqI4R4vEuHldZUyE"
+    },
+    {
+      "slug": "majestic-elegance",
+      "name": "Majestic Elegance Punta Cana",
+      "placeId": "ChIJDbWDZc_rqI4RjE1S8zWz9YU"
+    },
+    {
+      "slug": "majestic-mirage",
+      "name": "Majestic Mirage Punta Cana",
+      "placeId": "ChIJyV7elMXrqI4RjCwk3RXRkiQ"
+    },
+    {
+      "slug": "melia-caribe-beach",
+      "name": "Melia Caribe Beach Resort",
+      "placeId": "ChIJR4v8a5XsqI4RSUqfi1KiWaQ"
+    },
+    {
+      "slug": "melia-punta-cana-beach",
+      "name": "Meliá Punta Cana Beach Resort",
+      "placeId": "ChIJCWgFIpLtqI4R1RnNEdGZNzE"
+    },
+    {
+      "slug": "moon-palace-the-grand-punta-cana",
+      "name": "Moon Palace The Grand – Punta Cana",
+      "placeId": "ChIJOQeLlVbrqI4RdmX6BURmIrQ"
+    },
+    {
+      "slug": "nickelodeon-punta-cana",
+      "name": "Nickelodeon Hotels & Resorts Punta Cana",
+      "placeId": "ChIJJ6G0IKvDqI4RN0_fuwFImkw"
+    },
+    {
+      "slug": "occidental-caribe",
+      "name": "Occidental Caribe",
+      "placeId": "ChIJi1aUKR7qqI4RBcP7HqVKRQM"
+    },
+    {
+      "slug": "occidental-punta-cana",
+      "name": "Occidental Punta Cana",
+      "placeId": "ChIJ44Xi9n_rqI4RSLwI2U071hg"
+    },
+    {
+      "slug": "ocean-blue-and-sand",
+      "name": "Ocean Blue & Sand",
+      "placeId": "ChIJfTsxxWjrqI4RgwnOwSAk73U"
+    },
+    {
+      "slug": "ocean-el-faro",
+      "name": "Ocean El Faro",
+      "placeId": "ChIJB-FRSU7CqI4RvQjDqBEM4gg"
+    },
+    {
+      "slug": "paradisus-grand-cana",
+      "name": "Paradisus Grand Cana",
+      "placeId": "ChIJpYSWo1vtqI4RzEbA4Iwplgk"
+    },
+    {
+      "slug": "paradisus-palma-real",
+      "name": "Paradisus Palma Real Golf & Spa Resort",
+      "placeId": "ChIJkX-175bsqI4RxisWPEkPvj4"
+    },
+    {
+      "slug": "playa-palmera-beach-resort",
+      "name": "Playa Palmera Beach Resort",
+      "placeId": "ChIJ29sH9jnDqI4RHWrqte0lNOM"
+    },
+    {
+      "slug": "plaza-florida-suites",
+      "name": "Plaza Florida Suites",
+      "placeId": "ChIJowL5ytiJr44RtdMV3MfnVMM"
+    },
+    {
+      "slug": "puj-airport",
+      "name": "Punta Cana International Airport (PUJ)",
+      "placeId": "ChIJiY_kLBeSqI4RjA8X2iSmepU"
+    },
+    {
+      "slug": "punta-cana-princess",
+      "name": "Punta Cana Princess Adults Only",
+      "placeId": "ChIJdTS3EoLrqI4RwatNGouIuTI"
+    },
+    {
+      "slug": "radisson-blu-punta-cana",
+      "name": "Radisson Blu Resort Punta Cana",
+      "placeId": "ChIJI7HSfErtqI4RqGq6snS_82M"
+    },
+    {
+      "slug": "radisson-santo-domingo",
+      "name": "Radisson Hotel Santo Domingo",
+      "placeId": "ChIJzeHB98OJr44RBzCuiXpewTQ"
+    },
+    {
+      "slug": "renaissance-jaragua-santo-domingo",
+      "name": "Renaissance Santo Domingo Jaragua Hotel & Casino",
+      "placeId": "ChIJ5WQToymIr44RSzUfzUux5as"
+    },
+    {
+      "slug": "riu-bambu",
+      "name": "Riu Bambu",
+      "placeId": "ChIJ44Chbb_rqI4RBzRmDQ6ztg0"
+    },
+    {
+      "slug": "riu-naiboa",
+      "name": "Riu Naiboa",
+      "placeId": "ChIJGQRPf77rqI4Rha1CfhSz5rU"
+    },
+    {
+      "slug": "riu-palace-bavaro",
+      "name": "Riu Palace Bavaro",
+      "placeId": "ChIJ26MzIL7rqI4R_OvX3jnXFV4"
+    },
+    {
+      "slug": "riu-palace-macao",
+      "name": "Riu Palace Macao",
+      "placeId": "ChIJycs8aejrqI4RqIxzAzhZA_U"
+    },
+    {
+      "slug": "riu-palace-punta-cana",
+      "name": "Riu Palace Punta Cana",
+      "placeId": "ChIJT1oJt7jrqI4RRboUVk5mceI"
+    },
+    {
+      "slug": "riu-republica",
+      "name": "Riu Republica",
+      "placeId": "ChIJE61Ge8rrqI4RX4c3RmM8FZA"
+    },
+    {
+      "slug": "royalton-bavaro",
+      "name": "Royalton Bavaro Resort & Spa",
+      "placeId": "ChIJidUR4cXrqI4RMwPeB5ttVw0"
+    },
+    {
+      "slug": "royalton-chic-punta-cana",
+      "name": "Royalton CHIC Punta Cana",
+      "placeId": "ChIJxfKjbYTsqI4RzA5n-HFBCeE"
+    },
+    {
+      "slug": "royalton-punta-cana",
+      "name": "Royalton Punta Cana Resort & Casino",
+      "placeId": "ChIJXTlAUM7rqI4RcIAzfNrYhJ8"
+    },
+    {
+      "slug": "royalton-splash-punta-cana",
+      "name": "Royalton Splash Punta Cana",
+      "placeId": "ChIJjW6I-s7rqI4R45haBchslbg"
+    },
+    {
+      "slug": "sanctuary-cap-cana",
+      "name": "Sanctuary Cap Cana, a Luxury Collection Resort",
+      "placeId": "ChIJdzaEI5yQqI4RUvY1cgZq38w"
+    },
+    {
+      "slug": "sdq-airport",
+      "name": "Las Americas International Airport (SDQ)",
+      "placeId": "ChIJAc--WP5_pY4RlxhC1JejMCM"
+    },
+    {
+      "slug": "secrets-cap-cana",
+      "name": "Secrets Cap Cana Resort & Spa",
+      "placeId": "ChIJlaY2HQCRqI4RzRWT1vBYg5M"
+    },
+    {
+      "slug": "secrets-la-romana-resort-and-spa",
+      "name": "Secrets La Romana Resort & Spa",
+      "placeId": "ChIJXRSEV8qrqI4R-o9P4PIEPAM"
+    },
+    {
+      "slug": "secrets-royal-beach",
+      "name": "Secrets Royal Beach Punta Cana",
+      "placeId": "ChIJ8bb_XoTsqI4R9mW0k6l7RsU"
+    },
+    {
+      "slug": "secrets-tides-punta-cana",
+      "name": "Secrets Tides Punta Cana",
+      "placeId": "ChIJ0-Q2ilPDqI4RskQQzT-y7Eg"
+    },
+    {
+      "slug": "serenade-all-suites-adults-only",
+      "name": "Serenade All Suites Adults Only",
+      "placeId": "ChIJw1Soo3PtqI4RnZlKFBPnVHU"
+    },
+    {
+      "slug": "serenade-punta-cana",
+      "name": "Serenade Punta Cana Beach & Spa Resort",
+      "placeId": "ChIJXUA4mu3tqI4RD5B-vKBUApk"
+    },
+    {
+      "slug": "sheraton-santo-domingo",
+      "name": "Sheraton Santo Domingo Hotel",
+      "placeId": "ChIJORNGYDtipY4RpCZyaTekO2o"
+    },
+    {
+      "slug": "soficu-hotel-on-the-beach",
+      "name": "Soficu Hotel On The Beach",
+      "placeId": "ChIJvf4aSJarqI4RQZ5R1oblGm8"
+    },
+    {
+      "slug": "st-regis-cap-cana",
+      "name": "The St. Regis Cap Cana Resort",
+      "placeId": "ChIJ9701yJibqI4R2OeUYjuQJ9A"
+    },
+    {
+      "slug": "sti-airport",
+      "name": "Cibao International Airport (STI)",
+      "placeId": "ChIJl0hj7DPQsY4RwkG9FooGVcw"
+    },
+    {
+      "slug": "sunscape-dominicus-la-romana",
+      "name": "Sunscape Dominicus La Romana",
+      "placeId": "ChIJ52UXzT8Bpo4RcQXLQhhhA4M"
+    },
+    {
+      "slug": "tropical-caribe-hotel",
+      "name": "Tropical Caribe Hotel",
+      "placeId": "ChIJ3XIoTkeqqI4RJl8-o9Dl4VM"
+    },
+    {
+      "slug": "tropical-deluxe-princess",
+      "name": "Tropical Deluxe Princess",
+      "placeId": "ChIJyXN6qL_sqI4RSlTw0jBRjjk"
+    },
+    {
+      "slug": "trs-turquesa",
+      "name": "TRS Turquesa Hotel",
+      "placeId": "ChIJ1cWgaIHsqI4Rs3Kd3VG95M8"
+    },
+    {
+      "slug": "vista-sol-punta-cana",
+      "name": "Vista Sol Punta Cana Beach Resort & Spa",
+      "placeId": "ChIJM-0NMITsqI4RTLMZm-i43xE"
+    },
+    {
+      "slug": "viva-dominicus-beach-by-wyndham",
+      "name": "Viva Dominicus Beach by Wyndham",
+      "placeId": "ChIJHfUG6W5Ur44RPsPO_0xqGYE"
+    },
+    {
+      "slug": "viva-dominicus-palace-by-wyndham",
+      "name": "Viva Dominicus Palace by Wyndham",
+      "placeId": "ChIJVVVVVWVUr44Rcrwx-pkZ-vg"
+    },
+    {
+      "slug": "w-punta-cana",
+      "name": "W Punta Cana",
+      "placeId": "ChIJm9R7TkPDqI4Rq99Cgxel6FI"
+    },
+    {
+      "slug": "westin-puntacana",
+      "name": "The Westin Puntacana Resort & Club",
+      "placeId": "ChIJZwmYleyRqI4R-O6wGagzfks"
+    },
+    {
+      "slug": "weston-suites-hotel",
+      "name": "Weston Suites Hotel",
+      "placeId": "ChIJUUtADuCJr44RpS5tyxQvGS4"
+    },
+    {
+      "slug": "whala-bavaro",
+      "name": "Whala! Bavaro",
+      "placeId": "ChIJcVm4xI_sqI4RuqRMveOONmM"
+    },
+    {
+      "slug": "whala-bayahibe",
+      "name": "Whala! Bayahibe",
+      "placeId": "ChIJLQrJUG2qqI4Rpt-0Lze300c"
+    },
+    {
+      "slug": "wp-santo-domingo",
+      "name": "W&P Santo Domingo",
+      "placeId": "ChIJG6gHIwxipY4Rz6vmSCErhWk"
+    },
+    {
+      "slug": "wyndham-alltra-punta-cana",
+      "name": "Wyndham Alltra Punta Cana",
+      "placeId": "ChIJo_53eQ_CqI4RA3X4o273Nvg"
+    },
+    {
+      "slug": "zoetry-agua",
+      "name": "Zoetry Agua Punta Cana",
+      "placeId": "ChIJ8SxVM6fEqI4RQqDgbPrrsHY"
+    },
+    {
+      "slug": "aeropuerto-internacional-la-isabela",
+      "name": "Aeropuerto Internacional La Isabela",
+      "placeId": "ChIJ2Z1q5myMr44RUjC5XGdn7D4"
+    },
+    {
+      "slug": "jbq-airport",
+      "name": "La Isabela International Airport (JBQ)",
+      "placeId": "ChIJ2Z1q5myMr44RUjC5XGdn7D4"
+    },
+    {
+      "slug": "pop-airport",
+      "name": "Puerto Plata International Airport (POP)",
+      "placeId": "ChIJoT6TcVTksY4RjjGMrpSmszE"
+    },
+    {
+      "slug": "dominican-fiesta-hotel-and-casino",
+      "name": "Dominican Fiesta Hotel & Casino",
+      "placeId": "ChIJi2w6L5JhpY4Rj5ay1ZOfOtw"
+    },
+    {
+      "slug": "hotel-sol-azul",
+      "name": "Hotel Sol Azul",
+      "placeId": "ChIJ9WUwXStUr44RJ8aziXw5C-A"
+    },
+    {
+      "slug": "ac-hotel-punta-cana",
+      "name": "AC Hotel Punta Cana",
+      "placeId": "ChIJv55dRjGTqI4RnqEyVWp0jRM"
+    },
+    {
+      "slug": "aquamarina-luxury-residences",
+      "name": "Aquamarina Luxury Residences",
+      "placeId": "ChIJQxMaiQOaqI4RhwWYjYkv-og"
+    },
+    {
+      "slug": "bahia-principe-escape-ambar",
+      "name": "Bahia Principe Escape Ambar",
+      "placeId": "ChIJaykD-cbrqI4RiOMEvry6R2g"
+    },
+    {
+      "slug": "bahia-principe-escape-aquamarine",
+      "name": "Bahia Principe Escape Aquamarine",
+      "placeId": "ChIJw6_nxRDqqI4RY3p2d6-4eMs"
+    },
+    {
+      "slug": "bahia-principe-escape-bouganville",
+      "name": "Bahia Principe Escape Bouganville",
+      "placeId": "ChIJRy3DyCxZr44Rzf_R2vZSEUw"
+    },
+    {
+      "slug": "bahia-principe-explore-la-romana",
+      "name": "Bahia Principe Explore La Romana",
+      "placeId": "ChIJ7yYHKy1Zr44RPQD8fHhR1zk"
+    },
+    {
+      "slug": "bahia-principe-explore-legend",
+      "name": "Bahia Principe Explore Legend",
+      "placeId": "ChIJpaPPscDrqI4R-iMD6BrSX-I"
+    },
+    {
+      "slug": "bahia-principe-explore-punta-cana",
+      "name": "Bahia Principe Explore Punta Cana",
+      "placeId": "ChIJQ_gc07nrqI4RaEKS9WYHIc8"
+    },
+    {
+      "slug": "bahia-principe-explore-turquesa",
+      "name": "Bahia Principe Explore Turquesa",
+      "placeId": "ChIJWZvYCLfrqI4RYqkY9DeOhQ8"
+    },
+    {
+      "slug": "bahia-principe-luxury-esmeralda",
+      "name": "Bahia Principe Explore Esmeralda",
+      "placeId": "ChIJU3pINMfrqI4RQTz7mQB8Yi8"
+    },
+    {
+      "slug": "club-med-punta-cana",
+      "name": "Club Med Punta Cana",
+      "placeId": "ChIJnUlk0fORqI4RFHOUvGWpKQU"
+    },
+    {
+      "slug": "dreams-playa-esmeralda-resort-and-spa",
+      "name": "Dreams Playa Esmeralda Resort & Spa",
+      "placeId": "ChIJLw4wHsopr44R9xS35Yaz79w"
+    },
+    {
+      "slug": "grand-palladium-bavaro-suites-resort-and-spa",
+      "name": "Grand Palladium Bavaro Suites Resort & Spa",
+      "placeId": "ChIJt9mh4hjrqI4RyHnEgqjZkX0"
+    },
+    {
+      "slug": "hm-bavaro-beach",
+      "name": "HM Bavaro Beach",
+      "placeId": "ChIJB9ydzo_sqI4R7E5aY_7X-zs"
+    },
+    {
+      "slug": "hotel-riu-palace-punta-cana",
+      "name": "Hotel Riu Palace Punta Cana",
+      "placeId": "ChIJT1oJt7jrqI4RRboUVk5mceI"
+    },
+    {
+      "slug": "hotel-riu-republica",
+      "name": "Hotel Riu Republica",
+      "placeId": "ChIJE61Ge8rrqI4RX4c3RmM8FZA"
+    },
+    {
+      "slug": "iberostar-waves-punta-cana",
+      "name": "Iberostar Waves Punta Cana",
+      "placeId": "ChIJxcelUCXrqI4RivMkmLJ4o00"
+    },
+    {
+      "slug": "lopesan-caoba-lagoon-resort",
+      "name": "Lopesan Caoba Lagoon Resort Spa & Casino",
+      "placeId": "ChIJC26NWr7sqI4RqOgWLDcPRec"
+    },
+    {
+      "slug": "melia-punta-cana-beach-wellness-inclusive-adults-only",
+      "name": "MeliÃ¡ Punta Cana Beach Wellness Inclusive - Adults only",
+      "placeId": "ChIJCWgFIpLtqI4R1RnNEdGZNzE"
+    },
+    {
+      "slug": "playa-turquesa",
+      "name": "Playa Turquesa",
+      "placeId": "ChIJYTL_7o_sqI4RlTWhitPnm-s"
+    },
+    {
+      "slug": "punta-cana-resort-and-club-tortuga-bay-b14",
+      "name": "Punta Cana Resort and Club Tortuga Bay B14",
+      "placeId": "ChIJt-EGComRqI4RT8cRTn7S1MI"
+    },
+    {
+      "slug": "reserva-real-by-harper",
+      "name": "Reserva Real By Harper",
+      "placeId": "ChIJT_GZZsHtqI4RM7PtcGRKHRI"
+    },
+    {
+      "slug": "royal-beach-hotel-punta-cana",
+      "name": "Royal Beach Hotel Punta Cana",
+      "placeId": "ChIJT_ICcgDtqI4RrV6e4ZeJgTY"
+    },
+    {
+      "slug": "royalton-splash-punta-cana-an-autograph-collection-all-inclusive-resort-and-casino",
+      "name": "Royalton Splash Punta Cana Resort & Casino",
+      "placeId": "ChIJjW6I-s7rqI4R45haBchslbg"
+    },
+    {
+      "slug": "secrets-macao-beach-punta-cana",
+      "name": "Secrets Macao Beach Punta Cana",
+      "placeId": "ChIJz7rTVQDDqI4RjoP8s2yQGeU"
+    },
+    {
+      "slug": "secrets-playa-esmeralda-resort-spa",
+      "name": "Secrets Playa Esmeralda Resort & Spa",
+      "placeId": "ChIJEYE3SwApr44ROWvz6_uxtiY"
+    },
+    {
+      "slug": "serenade-caribe-club",
+      "name": "Serenade Caribe Club",
+      "placeId": "ChIJ186ADwDtqI4R0GpplIJEy6E"
+    },
+    {
+      "slug": "serenade-caribe-club-family-beach-resort",
+      "name": "Serenade Caribe Club Family Beach Resort",
+      "placeId": "ChIJ186ADwDtqI4R0GpplIJEy6E"
+    },
+    {
+      "slug": "sol-tropical-residences",
+      "name": "Sol Tropical Residences",
+      "placeId": "ChIJ3fi1oYTsqI4R9oSgJYBsSnk"
+    },
+    {
+      "slug": "sunscape-coco-punta-cana",
+      "name": "Sunscape Coco Punta Cana",
+      "placeId": "ChIJ71iOmU7tqI4RZW683OFXEhI"
+    },
+    {
+      "slug": "tortuga-bay-hotel-at-puntacana-resort",
+      "name": "Tortuga Bay Hotel at Puntacana Resort",
+      "placeId": "ChIJg9Nw97uRqI4RnoyrmKiFehI"
+    },
+    {
+      "slug": "viva-miches-by-wyndham",
+      "name": "Viva Miches by Wyndham",
+      "placeId": "ChIJJ89SZwAvr44RFnUNqneh8e0"
+    },
+    {
+      "slug": "w-punta-cana-adult-all-inclusive",
+      "name": "W Punta Cana, Adult All-Inclusive",
+      "placeId": "ChIJm9R7TkPDqI4Rq99Cgxel6FI"
+    },
+    {
+      "slug": "wyndham-alltra-samana-resort",
+      "name": "Wyndham Alltra Samana Resort",
+      "placeId": "ChIJTaKY5jLnro4RX96LJfk4tL4"
+    },
+    {
+      "slug": "zel-punta-cana-all-suites-all-inclusive",
+      "name": "Zel Punta Cana, All Suites",
+      "placeId": "ChIJJ6RBbe7tqI4RTZHjoB549PE"
+    },
+    {
+      "slug": "zemi-miches-punta-cana-all-inclusive-resort-by-hilton",
+      "name": "Zemi Miches Punta Cana All-Inclusive Resort, Curio Collection by Hilton",
+      "placeId": "ChIJSylFVlgpr44RdXY4RnvEXEk"
+    }
+  ]
+}

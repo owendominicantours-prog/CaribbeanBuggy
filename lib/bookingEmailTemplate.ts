@@ -21,6 +21,7 @@ export function renderBookingEmail(input: {booking: BookingEmailPayload; pricing
     [t('Fecha del tour','Tour date'),date], [t('Turno elegido','Selected session'),turn],
     [t('Hotel / alojamiento','Hotel / accommodation'), b.hotel || t('No indicado','Not provided')],
     [t('Zona de recogida','Pickup area'), b.pickupZone],
+    ...(b.googlePickupMapsUrl?[[t('Ubicación Google Maps','Google Maps location'),b.googlePickupMapsUrl] as [string,string]]:[]),
     [t('Viajeros','Travelers'),p.passengers], [t('Vehículos reservados','Vehicles booked'), p.vehicles],
     [t('Distribución de buggies','Your buggy selection'),fleet],
     [t('Idioma solicitado para el tour','Requested tour language'),b.language],

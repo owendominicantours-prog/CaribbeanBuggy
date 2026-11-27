@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { ArrowLeft, ArrowRight, CalendarDays, Check, CreditCard, Loader2, LockKeyhole, MapPin, MessageCircle, Minus, Pencil, Plus, Search, Users } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CalendarDays, Check, CreditCard, Loader2, LockKeyhole, MapPin, MessageCircle, Minus, Pencil, Plus, Users } from 'lucide-react';
 import type { BuggyProduct } from '../../lib/buggyProducts';
 import { bookingFleetProducts, calculateBookingTotal, pickupZones, whatsappHref } from '../../lib/buggyProducts';
 import { fleetOptions, fleetTotals, money } from '../../lib/bookingFleet';
 import { areaForHotel, areaFromText, bayahibeArea, pickupAreas, searchHotels, type PickupArea } from '../../lib/pickupLookup';
 import { getHotelBuggyLanding } from '../../lib/hotelBuggyLandings';
+import GooglePickupField from './GooglePickupField';
+import type {GooglePickup} from '../../lib/googlePickup';
 import { readAttribution } from '../../lib/attribution';
 
 type Locale = 'es' | 'en';
@@ -185,7 +187,9 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
   const [area, setArea] = useState<PickupArea | null>(
     isBayahibe ? bayahibeArea : defaultLanding ? areaForHotel(defaultLanding) : (defaultHotel ? areaFromText(defaultHotel) : null),
   );
-  const [hotelFocus, setHotelFocus] = useState(false);
+  const [googlePickup,setGooglePickup]=useState<GooglePickup|null>(null);
+  const [initialGoogleHotel,setInitialGoogleHotel]=useState(defaultHotel);
+  const [initialGoogleRef,setInitialGoogleRef]=useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -206,9 +210,11 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
       const best = fleetOptions(choices, people, 1)[0];
       if (best) setFleet(best.fleet);
     }
+    const ref=params.get('pickupGoogleRef'),googleHotel=params.get('pickupHotel');
+    if(ref&&googleHotel&&ref.length<=200&&googleHotel.length<=180){setHotel(googleHotel);setInitialGoogleHotel(googleHotel);setInitialGoogleRef(ref);}
     const slug = params.get('hotel');
     const landing = slug ? getHotelBuggyLanding(slug) : undefined;
-    if (landing && !isBayahibe) { setHotel(landing.name); setArea(areaForHotel(landing)); }
+    if (landing && !isBayahibe) { setHotel(landing.name); setInitialGoogleHotel(landing.name); setArea(areaForHotel(landing)); }
   }, [choices, isBayahibe, product.capacityNumber]);
 
   const options = useMemo(() => fleetOptions(choices, travelers, 3), [choices, travelers]);
@@ -267,7 +273,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
       return go('pickup');
     }
     if (current === 'pickup') {
-      if (!hotel.trim() || !area) return fail(t.errHotel, 'tour_details');
+      if (!hotel.trim() || !area || !googlePickup) return fail(t.errHotel, 'tour_details');
       return go('contact');
     }
     if (current === 'contact') {
@@ -293,6 +299,9 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
       fleetConfirmed,
       pickupZone: area?.calculatorZone || '',
       hotel: hotelForPayload(),
+      pickupAreaId:area?.id,
+      googlePickupRef:googlePickup?.id,
+      googlePickupMapsUrl:googlePickup?.mapsUrl,
       name: name.trim(),
       phone: phone.trim(),
       email: email.trim(),
@@ -343,6 +352,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
   async function pay() {
     setError('');
     if (!fleetConfirmed || !totals.valid) return go('group');
+    if(!googlePickup)return go('pickup');
     const attribution = readAttribution();
     window.dataLayer?.push({ event: 'begin_checkout', product_id: product.id, value: total, currency: 'USD', first_page: attribution.firstPage, session_page: attribution.sessionPage });
     setPaying(true);
@@ -358,8 +368,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
     }
   }
 
-  const exactHotel = searchHotels(hotel, isBayahibe, 1)[0]?.name === hotel.trim();
-  const suggestions = hotelFocus && !isBayahibe ? searchHotels(hotel, false, 6) : hotelFocus && isBayahibe ? searchHotels(hotel, true, 6) : [];
+  const exactHotel=!!googlePickup?.areaId;
   const dateChips = today ? Array.from({ length: 8 }, (_, i) => addDays(today, i)) : [];
   const fmtDay = (iso: string) => new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'es-DO', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
   const statusText = area ? ({ included: t.included, meeting: t.meeting, capcana: t.capcana, bayahibe: t.bayahibe } as const)[area.status] : '';
@@ -447,35 +456,8 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
           <section aria-labelledby={`q-pickup-${product.id}`}>
             <h3 id={`q-pickup-${product.id}`}><MapPin size={20} /> {t.pickupQ}</h3>
             <p className="cb-hint">{t.pickupHint}</p>
-            <div className="cb-search">
-              <Search size={18} />
-              <input
-                value={hotel}
-                placeholder={t.pickupPlaceholder}
-                autoComplete="off"
-                aria-label={t.pickupQ}
-                onFocus={() => setHotelFocus(true)}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setHotel(value);
-                  setHotelFocus(true);
-                  setError('');
-                  if (!isBayahibe) setArea(areaFromText(value));
-                }}
-              />
-            </div>
-            {suggestions.length ? (
-              <ul className="cb-suggestions">
-                {suggestions.map((h) => (
-                  <li key={h.slug}>
-                    <button type="button" onClick={() => { setHotel(h.name); setArea(isBayahibe ? bayahibeArea : areaForHotel(h)); setHotelFocus(false); }}>
-                      <b>{h.name}</b><span>{h.zone}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-            {!isBayahibe && hotel.trim().length >= 2 && !suggestions.length && !exactHotel ? (
+            <GooglePickupField value={hotel} selected={googlePickup} initialValue={initialGoogleHotel} initialRef={initialGoogleRef} region={isBayahibe?'la-romana':'punta-cana'} locale={locale} label={t.pickupQ} placeholder={t.pickupPlaceholder} onChange={value=>{setHotel(value);setGooglePickup(null);setArea(isBayahibe?bayahibeArea:null);setError('');}} onSelect={place=>{setGooglePickup(place);setHotel(place.name);setArea(isBayahibe?bayahibeArea:pickupAreas.find(a=>a.id===place.areaId)||areaFromText(place.name+' '+place.address));setError('');}} />
+            {!isBayahibe && hotel.trim().length >= 2 && googlePickup && !exactHotel ? (
               <>
                 <p className="cb-hint">{t.notListed}</p>
                 <div className="cb-chips">
@@ -483,7 +465,7 @@ export default function BookingWizard({ product, defaultHotel = '', locale = 'es
                 </div>
               </>
             ) : null}
-            {area && hotel.trim() ? <p className={`cb-status cb-status-${area.status}`}>{statusText}</p> : null}
+            {area && hotel.trim() ? <p className={`cb-status cb-status-${area.status}`}>{googlePickup&&!googlePickup.areaId?(locale==='en'?'We will confirm pickup or the meeting point for this exact location.':'Confirmaremos la recogida o el punto de encuentro para esta ubicación exacta.'):statusText}</p> : null}
           </section>
         ) : null}
 

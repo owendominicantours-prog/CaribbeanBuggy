@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, MapPin, MessageCircle, Minus, Plus, Search } from 'lucide-react';
+import { ArrowRight, MapPin, MessageCircle, Minus, Plus } from 'lucide-react';
 import { products, pickupZones, whatsappHref } from '../../lib/buggyProducts';
 import { fleetOptions, money } from '../../lib/bookingFleet';
-import { areaForHotel, areaFromText, searchHotels, type PickupArea } from '../../lib/pickupLookup';
-import type { HotelBuggyLanding } from '../../lib/hotelBuggyLandings';
+import { areaFromText, pickupAreas, bayahibeArea, type PickupArea } from '../../lib/pickupLookup';
+import type {GooglePickup} from '../../lib/googlePickup';
+import GooglePickupField from './GooglePickupField';
 
 type Locale = 'es' | 'en';
 type Destination = 'punta-cana' | 'bayahibe';
@@ -76,8 +77,7 @@ export default function FunnelOffer({
   const choices = useMemo(() => products.filter((p) => p.destination.includes('Bayahibe') === bayahibe), [bayahibe]);
   const [travelers, setTravelers] = useState(defaultTravelers);
   const [query, setQuery] = useState('');
-  const [picked, setPicked] = useState<HotelBuggyLanding | null>(null);
-  const [focus, setFocus] = useState(false);
+  const [picked, setPicked] = useState<GooglePickup | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const best = useMemo(() => fleetOptions(choices, travelers, 1)[0], [choices, travelers]);
   const track = { page_type: source.pageType, page_slug: source.slug, destination };
@@ -92,8 +92,7 @@ export default function FunnelOffer({
     return () => observer.disconnect();
   }, [source.pageType, source.slug, destination]);
 
-  const suggestions = focus && !picked ? searchHotels(query, bayahibe, 5) : [];
-  const area: PickupArea | null = picked ? areaForHotel(picked) : bayahibe ? null : areaFromText(query);
+  const area: PickupArea | null = picked ? pickupAreas.find(a=>a.id===picked.areaId)||(bayahibe?bayahibeArea:areaFromText(picked.name+' '+picked.address)) : null;
   const zoneFee = area ? (pickupZones.find((zone) => zone.label === area.calculatorZone)?.fee ?? 0) : 0;
   const quoteTotal = (best?.total ?? 0) + zoneFee;
   const label = (cap: number) => (cap === 1 ? t.single : cap === 2 ? t.double : t.family);
@@ -105,9 +104,9 @@ export default function FunnelOffer({
     return pick(2);
   })() || choices[0].id;
   const params = new URLSearchParams({ personas: String(travelers) });
-  if (picked && !bayahibe) params.set('hotel', picked.slug);
+  if(picked){params.set('pickupGoogleRef',picked.id);params.set('pickupHotel',picked.name);}
   const href = `${locale === 'en' ? '/en' : ''}/buggy/${target}?${params.toString()}#${locale === 'en' ? 'book' : 'reservar'}`;
-  const status = picked && bayahibe
+  const status = picked&&!picked.areaId?(locale==='en'?'We confirm pickup or the meeting point for your exact location.':'Confirmamos la recogida o el punto de encuentro para tu ubicación exacta.'):picked && bayahibe
     ? t.bayahibe
     : area
       ? ({ included: t.included, meeting: t.meeting, capcana: t.capcana, bayahibe: t.bayahibe } as const)[area.status]
@@ -134,24 +133,9 @@ export default function FunnelOffer({
           <span>US${quoteTotal} {t.total}</span>
         </div>
       ) : null}
-      <label className="cb-quote-hotel">
-        <span><MapPin size={15} /> {t.hotel}</span>
-        <span className="cb-search">
-          <Search size={17} />
-          <input value={query} placeholder={t.hotelPh} autoComplete="off" onFocus={() => setFocus(true)} onChange={(e) => { setQuery(e.target.value); setPicked(null); setFocus(true); }} />
-        </span>
-      </label>
-      {suggestions.length ? (
-        <ul className="cb-suggestions">
-          {suggestions.map((h) => (
-            <li key={h.slug}>
-              <button type="button" onClick={() => { setPicked(h); setQuery(h.name); setFocus(false); push('funnel_hotel_check', { ...track, hotel_slug: h.slug, pickup_status: bayahibe ? 'bayahibe' : areaForHotel(h).status }); }}>
-                <b>{h.name}</b><span>{h.zone}</span>
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      <div className="cb-quote-hotel"><span><MapPin size={15} /> {t.hotel}</span>
+        <GooglePickupField value={query} selected={picked} region={bayahibe?'la-romana':'punta-cana'} locale={locale} label={t.hotel} placeholder={t.hotelPh} onChange={value=>{setQuery(value);setPicked(null);}} onSelect={place=>{setPicked(place);setQuery(place.name);push('funnel_hotel_check',{...track,hotel_slug:place.id,pickup_status:place.areaId||'confirmation'});}} />
+      </div>
       {status ? <p className={`cb-status cb-status-${picked && bayahibe ? 'bayahibe' : area?.status || 'unknown'}`}>{status}</p> : null}
       <a className="cb-cta" href={href} data-track-event="booking_cta_click" data-track-location={`funnel_${source.pageType}`} onClick={() => push('funnel_cta_click', { ...track, travelers, value: best ? quoteTotal : undefined, currency: 'USD', target_product: target })}>{t.cta} <ArrowRight size={18} /></a>
       <p className="cb-quote-note">{t.note}</p>
